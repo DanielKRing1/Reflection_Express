@@ -15,10 +15,18 @@ import { PORT } from "./config/server.config";
 const app: Express = express();
 
 // MIDDLEWARE
-app.use(loggingMiddleware);
 app.use(cors());
+// parse requests of content-type - application/json
+app.use(express.json());
+// parse requests of content-type - application/x-www-form-urlencoded
+app.use(
+  express.urlencoded({
+    extended: true,
+  })
+);
+app.use(loggingMiddleware);
 
-// ROUTER
+// GRAPHQL
 app.use(genRouter());
 
 // START SERVER
