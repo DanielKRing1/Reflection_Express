@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "lib": ["ES2020"],
+    "module": "Node16",
+    "moduleResolution": "node",
+    "target": "ES2017",
+    "outDir": "./dist",
+    "strict": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true
+  },
+  "include": ["src"],
+  "exclude": ["*.test.ts"],
+  "ts-node": {
+    "files": true
+  }
+}

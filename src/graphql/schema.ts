@@ -18,9 +18,4 @@ export default `
         ${JournalEntrySchemaFragment.Mutation}
         ${JournalSchemaFragment.Mutation}
     }
-
-    schema {
-        query: Query
-        mutation: Mutation
-    }
 `;

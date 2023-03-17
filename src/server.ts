@@ -5,11 +5,8 @@ import cors from "cors";
 // MIDDLEWARE
 import loggingMiddleware from "./middlewares/logging.middleware";
 
-// ROUTES
-import genRouter from "./routes";
-
-// CONFIG
-import { PORT } from "./config/server.config";
+// GRAPHQL
+import gqlServer from "./gqlServer";
 
 // APP
 const app: Express = express();
@@ -26,8 +23,5 @@ app.use(
 );
 app.use(loggingMiddleware);
 
-// GRAPHQL
-app.use(genRouter());
-
-// START SERVER
-app.listen(PORT, () => console.log(`Server listening on port ${PORT}!`));
+// Start GraphQL Server
+gqlServer(app);

@@ -12,7 +12,7 @@ export default {
     inklings: [Inkling]
   `,
   Mutation: `
-    commitInklings(userId: Int!, journalId: Int!, inklings: [Inkling]!): Boolean
+    commitInklings(userId: Int!, journalId: Int!, inklingText: [String]!): Boolean
   `,
 } as SchemaFragment;
 
