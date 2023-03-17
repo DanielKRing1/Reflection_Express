@@ -3,26 +3,50 @@ import { SchemaFragment } from "../types/schema.types";
 export default {
   Types: `
     type JournalEntry {
-      timeId: String!
-      journalId: ID!
+      timeId: Int!
+      journalId: Int!
       reflections: [Reflection]!
     }
 
     type Thought {
-      timeId: String!
+      timeId: Int!
+      journalId: Int!
       text: String!
     }
 
     type Reflection {
-      thoughtId: String!
-      keep: Boolean!
+      thoughtId: Int!
+      decision: Int!
     }
   `,
   Query: `
-    journalEntries(userId: ID!, journalId: ID!, cursorId: String, count: Int): [JournalEntry]!
-    thoughts(userId: ID!, journalId: ID!, thoughtIds: [String!]): [Thought]!
+    journalEntries(userId: Int!, journalId: Int!, cursorTime: Int!, count: Int): [JournalEntry]!
+    thoughts(userId: Int!, journalId: ID!, thoughtIds: [Int]!): [Thought]!
   `,
   Mutation: `
-    createJournalEntry(userId: ID!, journalId: ID!, keepIds: [String]!, discardIds: [String]!): Boolean!
+    createJournalEntry(userId: Int!, journalId: Int!, keepIds: [Int]!, discardIds: [Int]!): Boolean!
   `,
 } as SchemaFragment;
+
+export type JournalEntry = {
+  timeId: number;
+  journalId: number;
+  reflections: Reflection[];
+};
+
+export type Thought = {
+  timeId: number;
+  journalId: number;
+  text: string;
+};
+
+export enum ReflectionDecision {
+  DiscardThought,
+  KeepThought,
+  KeepInkling,
+  DiscardInkling,
+}
+export type Reflection = {
+  thoughtId: number;
+  decision: ReflectionDecision;
+};

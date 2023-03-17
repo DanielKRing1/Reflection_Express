@@ -3,9 +3,8 @@ import { SchemaFragment } from "../types/schema.types";
 export default {
   Types: `
     type Inkling {
-      timeId: String!
-      userId: ID!
-      journalId: ID!
+      timeId: Int!
+      journalId: Int!
       text: String!
     }
   `,
@@ -13,6 +12,12 @@ export default {
     inklings: [Inkling]
   `,
   Mutation: `
-    commitInklings(userId: String!, journalId: String!, inklings: [Inkling]!): Boolean
+    commitInklings(userId: Int!, journalId: Int!, inklings: [Inkling]!): Boolean
   `,
 } as SchemaFragment;
+
+export type Inkling = {
+  timeId: number;
+  journalId: number;
+  text: string;
+};

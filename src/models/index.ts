@@ -6,13 +6,15 @@
  *      -> map Reflections to Thoughts
  *
  * USER
- * [unique id] pk [lastUsedJournalId] fk
+ *
+ * create table t2 (id bigserial primary key generated always as identity);
+ * [serial id] pk [lastUsedJournalId] fk
  *
  * INKLINGS
- * [time id | [userId] fk [journalId] fk] pk [data]
+ * [time id [journalId] fk] pk [data]
  *
  * JOURNAL
- * [unique id] pk [userId] fk [name]
+ * [bigserial id] pk [userId] fk [name]
  *
  * JOURNAL ENTRY
  * [time id | [journalId] fk] pk
@@ -24,9 +26,9 @@
  *
  * REFLECTION
  * [
- *      [thought time id | journalId] fk |
- *      [journalEntry time id | journalId] fk
- * ] pk [keep]
+ *      [thoughtId | journalId] fk |
+ *      [journalEntryId | journalId] fk
+ * ] pk [keep | newThought]
  *
  */
 
