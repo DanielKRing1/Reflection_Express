@@ -7,5 +7,76 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = env("DATABASE_URL_LOCAL")
+}
+
+model User {
+  id                          BigInt              @id @default(autoincrement())
+
+  user_lastUsedJournalId      Journal             @relation(name: "user_lastUsedJournalId", fields: [lastUsedJId], references: [id])
+  lastUsedJId                 BigInt              @unique
+
+  journal_userId              Journal[]           @relation(name: "journal_userId")
+}
+
+model Journal {
+  user_lastUsedJournalId      User?               @relation(name: "user_lastUsedJournalId")
+  inkling_journalId           Inkling[]           @relation(name: "inkling_journalId")
+  journalentry_journalId      JournalEntry[]      @relation(name: "journalentry_journalId")
+  thought_journalId           Thought[]           @relation(name: "thought_journalId")
+  reflection_journalId        Reflection[]        @relation(name: "reflection_journalId")
+  id                          BigInt              @id @default(autoincrement())
+  
+  journal_userId              User                @relation(name: "journal_userId", fields: [userId], references: [id])
+  userId                      BigInt
+
+  @@index([userId])
+}
+
+model Inkling {
+  timeId                      DateTime            @db.Timestamptz(3)
+
+  inkling_journalId           Journal             @relation(name: "inkling_journalId", fields: [journalId], references: [id])
+  journalId                   BigInt
+
+  text                        String
+
+  @@id([journalId, timeId])
+}
+
+model JournalEntry {
+  reflection_journalEntryId   Reflection[]        @relation(name: "reflection_journalEntryId")
+  timeId                      DateTime            @db.Timestamptz(3)
+
+  journalentry_journalId      Journal             @relation(name: "journalentry_journalId", fields: [journalId], references: [id])
+  journalId                   BigInt
+
+  @@id([journalId, timeId])
+}
+
+model Thought {
+  reflection_thoughtId        Reflection[]        @relation(name: "reflection_thoughtId")
+  timeId                      DateTime            @db.Timestamptz(3)
+
+  thought_journalId           Journal             @relation(name: "thought_journalId", fields: [journalId], references: [id])
+  journalId                   BigInt
+
+  text                        String
+
+  @@id([journalId, timeId])
+}
+
+model Reflection {
+  reflection_journalId        Journal             @relation(name: "reflection_journalId", fields: [journalId], references: [id])
+  journalId                   BigInt
+
+  reflection_journalEntryId   JournalEntry        @relation(name: "reflection_journalEntryId", fields: [journalId, journalEntryId], references: [journalId, timeId])
+  journalEntryId              DateTime
+
+  reflection_thoughtId        Thought             @relation(name: "reflection_thoughtId", fields: [journalId, thoughtId], references: [journalId, timeId])
+  thoughtId                   DateTime
+
+  decision                    Int                 @db.SmallInt
+
+  @@id([journalEntryId, thoughtId])
 }
