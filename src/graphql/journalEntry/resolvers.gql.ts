@@ -74,6 +74,7 @@ export default {
           2. DELETE INKLINGS
           3. CREATE JOURNALENTRY
           4. INSERT REFLECTION ROWS
+          5. GET REFLECTION ROWS
           
           1.
           INSERT INTO Thought (timeId, journalId, text)
@@ -103,19 +104,95 @@ export default {
             WHERE j.orderID = <journalId> AND j.userId = <userId>
           );
 
-          4.
-          INSERT INTO Reflection (timeId, journalId, thoughtId, journalEntryId, text, decision)
-          SELECT <timeId>, j.id, t.timeId, je.timeId, t.text,
+          4. Version 1
+          INSERT INTO Reflection (journalId, thoughtId, journalEntryId, decision)
+          SELECT j.id, t.timeId, <jeTimeId>,
                 CASE WHEN t.timeId IN (<thoughtIds1>) THEN 0
                       WHEN t.timeId IN (<thoughtIds2>) THEN 1
                       WHEN t.timeId IN (<thoughtIds3>) THEN 2
                       WHEN t.timeId IN (<thoughtIds4>) THEN 3
                       ELSE NULL END as decision
           FROM (VALUES (<thoughtId1>), (<thoughtId2>), ..., (<thoughtIdn>)) AS temp(timeId)
-          JOIN Thought t ON t.timeId = temp.timeId
+          JOIN Thought t ON t.timeId = temp.timeId AND t.journalId = <journalId>
           JOIN JournalEntry je ON je.journalId = t.journalId
           JOIN Journal j ON j.id = je.journalId AND j.userId = <userId> AND j.id = <journalId>;
 
+          4. Version 2
+INSERT INTO Reflection (journalId, thoughtId, journalEntryId, decision)
+SELECT j.id, t.timeId, <jeTimeId>,
+       CASE WHEN t.timeId IN (<thoughtIds1>) THEN 0
+            WHEN t.timeId IN (<thoughtIds2>) THEN 1
+            WHEN t.timeId IN (<thoughtIds3>) THEN 2
+            WHEN t.timeId IN (<thoughtIds4>) THEN 3
+            ELSE NULL END as decision
+FROM 
+(
+  SELECT *
+  FROM Journal
+  WHERE id = <journalId> AND userId = <userId>
+) j
+JOIN JournalEntry je ON je.journalId = j.id
+JOIN (
+  SELECT *
+  FROM (
+    VALUES (<thoughtId1>), (<thoughtId2>), ..., (<thoughtIdn>)
+  ) AS temp(timeId)
+  JOIN Thought t ON t.id = temp.id
+) AS temp_thought ON temp_thought.journalId = j.id
+
+          4. Version 3
+BEGIN;
+
+DECLARE @journalEntryId int;
+
+IF NOT EXISTS (SELECT 1 FROM Journal WHERE id = <journalId> AND userId = <userId>) THEN
+    RAISE EXCEPTION 'Row with journalId=% and userId=% not found', <journalId>, <userId>;
+    ROLLBACK;
+END IF;
+
+-- Insert a new journal entry
+INSERT INTO JournalEntry (journalId, timeId)
+VALUES (<journalId>, NOW())
+RETURNING timeId INTO @journalEntryId;
+
+-- Bulk Insert Reflection rows
+INSERT INTO Reflection (journalId, thoughtId, @journalEntryId, decision)
+SELECT j.id, temp_thought.timeId, @journalEntryId,
+       CASE WHEN temp_thought.timeId IN (<thoughtIds1>) THEN 0
+            WHEN temp_thought.timeId IN (<thoughtIds2>) THEN 1
+            WHEN temp_thought.timeId IN (<thoughtIds3>) THEN 2
+            WHEN temp_thought.timeId IN (<thoughtIds4>) THEN 3
+            ELSE NULL END as decision
+FROM (
+  SELECT *
+  FROM Journal
+  WHERE id = <journalId> AND userId = <userId>
+) j
+JOIN (
+  SELECT *
+  FROM (
+    VALUES (<thoughtId1>), (<thoughtId2>), ..., (<thoughtIdn>)
+  ) AS temp(timeId)
+  JOIN Thought t ON t.id = temp.id
+) AS temp_thought ON temp_thought.journalId = j.id
+WHERE j.id = <journalId>;
+
+COMMIT;
+
+-- Insert a new journal entry
+INSERT INTO JournalEntry (journalId, timeId)
+VALUES (<journalId>, NOW())
+
+          5.
+          SELECT *
+          FROM (
+            SELECT *
+            FROM JournalEntry je
+            JOIN Journal j ON j.id = je.journalId AND j.id = <journalId> AND j.userId = <userId> AND je.timeId <= <timestamp> 
+            LIMIT <10>
+          ) subq
+          JOIN Reflection r ON r.journalEntryId = subq.timeId
+          JOIN Thought t ON t.timeId = r.thoughtId
          */
 
         // 0. Ignore attempts to insert into a journal not owned by user
