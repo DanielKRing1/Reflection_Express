@@ -1,8 +1,8 @@
 import DateScalarFragment from "./scalars/date.gql";
 
-import InklingSchemaFragment from "./inkling/resolvers.gql";
-import JournalEntrySchemaFragment from "./journalEntry/resolvers.gql";
-import JournalSchemaFragment from "./journal/resolvers.gql";
+import InklingSchemaFragment from "./routes/inkling/resolvers.gql";
+import JournalEntrySchemaFragment from "./routes/journalEntry/resolvers.gql";
+import JournalSchemaFragment from "./routes/journal/resolvers.gql";
 
 export default {
   ...DateScalarFragment.Resolver,

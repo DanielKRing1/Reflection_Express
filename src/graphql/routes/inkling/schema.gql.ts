@@ -1,5 +1,5 @@
-import { TimestampTzPg } from "../../types/db.types";
-import { SchemaFragment } from "../types/schema.types";
+import { TimestampTzPg } from "../../../types/db.types";
+import { SchemaFragment } from "../../types/schema.types";
 
 export default {
   Types: `
@@ -10,24 +10,24 @@ export default {
     }
   `,
   Query: `
-    inklings(userId: Int!, journalId: Int!): [Inkling]
+    inklings(userId: String!, journalId: Int!): [Inkling]
   `,
   Mutation: `
-    commitInklings(userId: Int!, journalId: Int!, inklingText: [String]!): Boolean
+    commitInklings(userId: String!, journalId: Int!, inklingText: [String]!): Boolean
   `,
 } as SchemaFragment;
 
 // QUERY RESOLVERS
 
 export type InklingsArgs = {
-  userId: number;
+  userId: string;
   journalId: number;
 };
 
 // MUTATION RESOLVERS
 
 export type CommitInklingsArgs = {
-  userId: number;
+  userId: string;
   journalId: number;
   inklingTexts: string[];
 };

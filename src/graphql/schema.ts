@@ -1,8 +1,8 @@
 import DateScalarFragment from "./scalars/date.gql";
 
-import InklingSchemaFragment from "./inkling/schema.gql";
-import JournalEntrySchemaFragment from "./journalEntry/schema.gql";
-import JournalSchemaFragment from "./journal/schema.gql";
+import InklingSchemaFragment from "./routes/inkling/schema.gql";
+import JournalEntrySchemaFragment from "./routes/journalEntry/schema.gql";
+import JournalSchemaFragment from "./routes/journal/schema.gql";
 
 export default `
     ${DateScalarFragment.Schema}

@@ -1,9 +1,9 @@
-import { TimestampTzPg } from "../../types/db.types";
-import { serializeDate } from "../../utils/date";
-import dummyData from "../dummyData";
+import { TimestampTzPg } from "../../../types/db.types";
+import { serializeDate } from "../../../utils/date";
+import dummyData from "../../dummyData";
 import { Inkling } from "../inkling/schema.gql";
 import { Journal } from "../journal/schema.gql";
-import { ResolverFragment } from "../types/schema.types";
+import { ResolverFragment } from "../../types/schema.types";
 import {
   CreateJournalEntryArgs,
   JournalEntriesArgs,
@@ -220,8 +220,8 @@ VALUES (<journalId>, NOW())
 
         // 0. Ignore attempts to insert into a journal not owned by user
         const journal: Journal = dummyData.Journals[journalId];
-        console.log(journalId);
-        console.log(dummyData.Journals);
+        // console.log(journal.userId);
+        // console.log(userId);
         if (journal.userId !== userId)
           throw new Error(
             `createJournalEntry() received an invalid request to insert into journal ${journalId}, which does not correspond with user ${userId}`

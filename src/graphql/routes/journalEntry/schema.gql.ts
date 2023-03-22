@@ -1,5 +1,5 @@
-import { TimestampTzPg } from "../../types/db.types";
-import { SchemaFragment } from "../types/schema.types";
+import { TimestampTzPg } from "../../../types/db.types";
+import { SchemaFragment } from "../../types/schema.types";
 
 export default {
   Types: `
@@ -21,11 +21,11 @@ export default {
     }
   `,
   Query: `
-    journalEntries(userId: Int!, journalId: Int!, cursorTime: DateTime, count: Int): [JournalEntry]!
-    thoughts(userId: Int!, journalId: ID!, thoughtIds: [DateTime]!): [Thought]!
+    journalEntries(userId: String!, journalId: Int!, cursorTime: DateTime, count: Int): [JournalEntry]!
+    thoughts(userId: String!, journalId: ID!, thoughtIds: [DateTime]!): [Thought]!
   `,
   Mutation: `
-    createJournalEntry(userId: Int!, journalId: Int!, keepIds: [DateTime]!, discardIds: [DateTime]!): Boolean!
+    createJournalEntry(userId: String!, journalId: Int!, keepIds: [DateTime]!, discardIds: [DateTime]!): Boolean!
   `,
 } as SchemaFragment;
 
@@ -38,14 +38,14 @@ export type JournalEntry = {
 // QUERY RESOLVERS
 
 export type JournalEntriesArgs = {
-  userId: number;
+  userId: string;
   journalId: number;
   cursorTime: TimestampTzPg;
   count: number;
 };
 
 export type ThoughtsArgs = {
-  userId: number;
+  userId: string;
   journalId: number;
   thoughtIds: TimestampTzPg[];
 };
@@ -53,7 +53,7 @@ export type ThoughtsArgs = {
 // MUTATION RESOLVERS
 
 export type CreateJournalEntryArgs = {
-  userId: number;
+  userId: string;
   journalId: number;
   keepIds: TimestampTzPg[];
   discardIds: TimestampTzPg[];

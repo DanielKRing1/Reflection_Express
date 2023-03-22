@@ -1,28 +1,59 @@
 import { Dict } from "../types/global.types";
 import { serializeDate } from "../utils/date";
-import { Inkling } from "./inkling/schema.gql";
-import { Journal } from "./journal/schema.gql";
+
+import { Password, User } from "./routes/auth/schema.gql";
+import { Inkling } from "./routes/inkling/schema.gql";
+import { Journal } from "./routes/journal/schema.gql";
 import {
   JournalEntry,
   ReflectionDecision,
   Thought,
-} from "./journalEntry/schema.gql";
+} from "./routes/journalEntry/schema.gql";
 
 export default {
+  Users: {
+    1: {
+      name: "User1",
+      email: "1",
+      lastUsedJId: null,
+    },
+    2: {
+      name: "User2",
+      email: "2",
+      lastUsedJId: null,
+    },
+    3: {
+      name: "User3",
+      email: "3",
+      lastUsedJId: null,
+    },
+    4: {
+      name: "User4",
+      email: "4",
+      lastUsedJId: null,
+    },
+  },
+  Passwords: {
+    1: {
+      userId: "1",
+      passwordHash: "1",
+      salt: "1",
+    },
+  },
   Journals: {
     1: {
       id: 1,
-      userId: 1,
+      userId: "1",
       name: "Journal1",
     },
     2: {
       id: 2,
-      userId: 1,
+      userId: "1",
       name: "Journal2",
     },
     3: {
       id: 3,
-      userId: 1,
+      userId: "1",
       name: "Journal3",
     },
   },
@@ -186,6 +217,8 @@ export default {
     },
   },
 } as {
+  Users: Dict<User>;
+  Passwords: Dict<Password>;
   Journals: Dict<Journal>;
   Inklings: Dict<Inkling>;
   JournalEntries: Dict<JournalEntry>;

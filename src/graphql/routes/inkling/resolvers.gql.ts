@@ -1,8 +1,8 @@
-import { TimestampTzPg } from "../../types/db.types";
-import { serializeDate } from "../../utils/date";
-import dummyData from "../dummyData";
+import { TimestampTzPg } from "../../../types/db.types";
+import { serializeDate } from "../../../utils/date";
+import dummyData from "../../dummyData";
 import { Journal } from "../journal/schema.gql";
-import { ResolverFragment } from "../types/schema.types";
+import { ResolverFragment } from "../../types/schema.types";
 import { CommitInklingsArgs, Inkling, InklingsArgs } from "./schema.gql";
 
 export default {

@@ -1,5 +1,5 @@
-import dummyData from "../dummyData";
-import { ResolverFragment } from "../types/schema.types";
+import dummyData from "../../dummyData";
+import { ResolverFragment } from "../../types/schema.types";
 import { CreateJournalArgs, Journal, JournalsArgs } from "./schema.gql";
 
 export default {

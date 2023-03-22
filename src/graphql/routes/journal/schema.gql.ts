@@ -1,4 +1,4 @@
-import { SchemaFragment } from "../types/schema.types";
+import { SchemaFragment } from "../../types/schema.types";
 
 export default {
   Types: `
@@ -9,28 +9,28 @@ export default {
 
     type Journal {
       id: Int!
-      userId: Int!
+      userId: String!
       name: String!
     }
   `,
   Query: `
-    journals(userId: Int!): [Journal]!
+    journals(userId: String!): [Journal]!
   `,
   Mutation: `
-    createJournal(userId: Int!, journalName: String!): Int!
+    createJournal(userId: String!, journalName: String!): Int!
   `,
 } as SchemaFragment;
 
 // QUERY RESOLVERS
 
 export type JournalsArgs = {
-  userId: number;
+  userId: string;
 };
 
 // MUTATION RESOLVERS
 
 export type CreateJournalArgs = {
-  userId: number;
+  userId: string;
   journalName: string;
 };
 
@@ -38,6 +38,6 @@ export type CreateJournalArgs = {
 
 export type Journal = {
   id: number;
-  userId: number;
+  userId: string;
   name: string;
 };

@@ -11,12 +11,22 @@ datasource db {
 }
 
 model User {
-  id                          BigInt              @id @default(autoincrement())
-
-  user_lastUsedJournalId      Journal             @relation(name: "user_lastUsedJournalId", fields: [lastUsedJId], references: [id])
-  lastUsedJId                 BigInt              @unique
-
+  name                        String              @unique
+  
+  password_userId             Password?           @relation(name: "password_userId")
   journal_userId              Journal[]           @relation(name: "journal_userId")
+  email                       String              @id
+
+  user_lastUsedJournalId      Journal?            @relation(name: "user_lastUsedJournalId", fields: [lastUsedJId], references: [id])
+  lastUsedJId                 BigInt?             @unique
+}
+
+model Password {
+  password_userId             User                @relation(name: "password_userId", fields: [userId], references: [email])
+  userId                      String              @id
+
+  hash                        String
+  salt                        String
 }
 
 model Journal {
@@ -27,8 +37,8 @@ model Journal {
   reflection_journalId        Reflection[]        @relation(name: "reflection_journalId")
   id                          BigInt              @id @default(autoincrement())
   
-  journal_userId              User                @relation(name: "journal_userId", fields: [userId], references: [id])
-  userId                      BigInt
+  journal_userId              User                @relation(name: "journal_userId", fields: [userId], references: [email])
+  userId                      String
 
   @@index([userId])
 }

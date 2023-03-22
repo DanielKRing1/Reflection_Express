@@ -7,9 +7,11 @@ import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHt
 import http from "http";
 import typeDefs from "./graphql/schema";
 import resolvers from "./graphql/resolvers";
+import GqlContext, { RequestWGqlContext } from "./graphql/types/context.types";
 
 // CONFIG
 import { PORT } from "./config/server.config";
+import { GQL_PATH } from "./graphql/constants";
 
 export default async (app: Express) => {
   // Our httpServer handles incoming requests to our Express app.
@@ -17,13 +19,9 @@ export default async (app: Express) => {
   // enabling our servers to shut down gracefully.
   const httpServer = http.createServer(app);
 
-  interface MyContext {
-    token?: string;
-    dbConn?: any;
-  }
   // Same ApolloServer initialization as before, plus the drain plugin
   // for our httpServer.
-  const server = new ApolloServer<MyContext>({
+  const server = new ApolloServer<GqlContext>({
     typeDefs,
     resolvers,
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
@@ -34,9 +32,13 @@ export default async (app: Express) => {
   // expressMiddleware accepts the same arguments:
   // an Apollo Server instance and optional configuration options
   app.use(
-    "/graphql",
+    GQL_PATH,
     expressMiddleware(server, {
-      context: async ({ req }) => ({ token: req.headers.token }),
+      // TODO Add 'gqlContext' object to req object in auth middleware
+      context: async ({ req, res }): Promise<GqlContext> => ({
+        ...(req as RequestWGqlContext).gqlContext,
+        res,
+      }),
     })
   );
 
