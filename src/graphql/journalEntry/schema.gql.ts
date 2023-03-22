@@ -1,41 +1,68 @@
+import { TimestampTzPg } from "../../types/db.types";
 import { SchemaFragment } from "../types/schema.types";
 
 export default {
   Types: `
     type JournalEntry {
-      timeId: Int!
+      timeId: DateTime!
       journalId: Int!
       reflections: [Reflection]!
     }
 
     type Thought {
-      timeId: Int!
+      timeId: DateTime!
       journalId: Int!
       text: String!
     }
 
     type Reflection {
-      thoughtId: Int!
+      thoughtId: DateTime!
       decision: Int!
     }
   `,
   Query: `
-    journalEntries(userId: Int!, journalId: Int!, cursorTime: Int!, count: Int): [JournalEntry]!
-    thoughts(userId: Int!, journalId: ID!, thoughtIds: [Int]!): [Thought]!
+    journalEntries(userId: Int!, journalId: Int!, cursorTime: DateTime, count: Int): [JournalEntry]!
+    thoughts(userId: Int!, journalId: ID!, thoughtIds: [DateTime]!): [Thought]!
   `,
   Mutation: `
-    createJournalEntry(userId: Int!, journalId: Int!, keepIds: [Int]!, discardIds: [Int]!): Boolean!
+    createJournalEntry(userId: Int!, journalId: Int!, keepIds: [DateTime]!, discardIds: [DateTime]!): Boolean!
   `,
 } as SchemaFragment;
 
 export type JournalEntry = {
-  timeId: number;
+  timeId: TimestampTzPg;
   journalId: number;
   reflections: Reflection[];
 };
 
+// QUERY RESOLVERS
+
+export type JournalEntriesArgs = {
+  userId: number;
+  journalId: number;
+  cursorTime: TimestampTzPg;
+  count: number;
+};
+
+export type ThoughtsArgs = {
+  userId: number;
+  journalId: number;
+  thoughtIds: TimestampTzPg[];
+};
+
+// MUTATION RESOLVERS
+
+export type CreateJournalEntryArgs = {
+  userId: number;
+  journalId: number;
+  keepIds: TimestampTzPg[];
+  discardIds: TimestampTzPg[];
+};
+
+// TYPES
+
 export type Thought = {
-  timeId: number;
+  timeId: TimestampTzPg;
   journalId: number;
   text: string;
 };
@@ -47,6 +74,6 @@ export enum ReflectionDecision {
   DiscardInkling,
 }
 export type Reflection = {
-  thoughtId: number;
+  thoughtId: TimestampTzPg;
   decision: ReflectionDecision;
 };

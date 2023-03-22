@@ -1,16 +1,39 @@
+import { TimestampTzPg } from "../../types/db.types";
+import { serializeDate } from "../../utils/date";
 import dummyData from "../dummyData";
 import { Journal } from "../journal/schema.gql";
 import { ResolverFragment } from "../types/schema.types";
+import { CommitInklingsArgs, Inkling, InklingsArgs } from "./schema.gql";
 
 export default {
   Query: {
-    inklings: () => Object.values(dummyData.Inklings),
+    inklings: (
+      _: undefined,
+      { userId, journalId }: InklingsArgs,
+      contextValue: any,
+      info: any
+    ) => {
+      try {
+        const journal: Journal = dummyData.Journals[journalId];
+        if (journal.userId !== userId)
+          throw new Error(
+            `inklings() received an invalid request to fetch from journal ${journalId}, which does not correspond with user ${userId}`
+          );
+
+        return Object.values(dummyData.Inklings).filter(
+          (i: Inkling) => i.journalId === journalId
+        );
+      } catch (err) {
+        return [];
+      }
+    },
   },
   Mutation: {
     commitInklings: (
-      userId: number,
-      journalId: number,
-      inklingTexts: string[]
+      _: undefined,
+      { userId, journalId, inklingTexts }: CommitInklingsArgs,
+      contextValue: any,
+      info: any
     ) => {
       /**
         INSERT INTO Comment (postId, userId, text)
@@ -26,7 +49,9 @@ export default {
           );
 
         inklingTexts.forEach((text: string) => {
-          const id = Math.random() * 1000000;
+          const id: TimestampTzPg = serializeDate(
+            new Date(Math.random() * 1000000)
+          );
 
           dummyData.Inklings[id] = {
             timeId: id,

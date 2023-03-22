@@ -1,15 +1,25 @@
 import dummyData from "../dummyData";
 import { ResolverFragment } from "../types/schema.types";
-import { Journal } from "./schema.gql";
+import { CreateJournalArgs, Journal, JournalsArgs } from "./schema.gql";
 
 export default {
   Query: {
-    journals: (): Journal[] => {
+    journals: (
+      _: undefined,
+      { userId }: JournalsArgs,
+      contextValue: any,
+      info: any
+    ): Journal[] => {
       return Object.values(dummyData.Journals);
     },
   },
   Mutation: {
-    createJournal: (userId: number, journalName: string): number => {
+    createJournal: (
+      _: undefined,
+      { userId, journalName }: CreateJournalArgs,
+      contextValue: any,
+      info: any
+    ): number => {
       try {
         const id: number = Date.now();
 

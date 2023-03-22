@@ -1,23 +1,42 @@
+import { TimestampTzPg } from "../../types/db.types";
+import { serializeDate } from "../../utils/date";
 import dummyData from "../dummyData";
 import { Inkling } from "../inkling/schema.gql";
 import { Journal } from "../journal/schema.gql";
 import { ResolverFragment } from "../types/schema.types";
-import { JournalEntry, ReflectionDecision, Thought } from "./schema.gql";
+import {
+  CreateJournalEntryArgs,
+  JournalEntriesArgs,
+  JournalEntry,
+  ReflectionDecision,
+  Thought,
+  ThoughtsArgs,
+} from "./schema.gql";
 
 export default {
   Query: {
     journalEntries: (
-      userId: number,
-      journalId: number,
-      cursorTime: number,
-      count: number
+      _: undefined,
+      {
+        userId,
+        journalId,
+        cursorTime = new Date().toISOString() as TimestampTzPg,
+        count,
+      }: JournalEntriesArgs,
+      contextValue: any,
+      info: any
     ): JournalEntry[] => {
+      console.log(dummyData.JournalEntries);
+
       return (
         Object.values(dummyData.JournalEntries)
           // Same journal id
           .filter((je) => je.journalId === journalId)
           // Time cursor
-          .filter((je) => je.timeId <= cursorTime)
+          .filter(
+            (je) =>
+              new Date(je.timeId).getTime() <= new Date(cursorTime).getTime()
+          )
           // Add userId
           .map((je) => ({
             userId: dummyData.Journals[je.journalId].userId,
@@ -26,14 +45,18 @@ export default {
           // Same userId
           .filter((je) => je.userId === userId)
           // Get most recent
-          .sort((a, b) => a.timeId - b.timeId)
+          .sort(
+            (a, b) =>
+              new Date(a.timeId).getTime() - new Date(b.timeId).getTime()
+          )
           .slice(0, count)
       );
     },
     thoughts: (
-      userId: number,
-      journalId: number,
-      thoughtIds: number[]
+      _: undefined,
+      { userId, journalId, thoughtIds }: ThoughtsArgs,
+      contextValue: any,
+      info: any
     ): Thought[] => {
       const thoughtIdSet = new Set(thoughtIds);
       return Object.values(dummyData.Thoughts)
@@ -45,10 +68,10 @@ export default {
   },
   Mutation: {
     createJournalEntry: (
-      userId: number,
-      journalId: number,
-      keepIds: number[],
-      discardIds: number[]
+      _: undefined,
+      { userId, journalId, keepIds, discardIds }: CreateJournalEntryArgs,
+      contextValue: any,
+      info: any
     ): boolean => {
       try {
         /**
@@ -197,6 +220,8 @@ VALUES (<journalId>, NOW())
 
         // 0. Ignore attempts to insert into a journal not owned by user
         const journal: Journal = dummyData.Journals[journalId];
+        console.log(journalId);
+        console.log(dummyData.Journals);
         if (journal.userId !== userId)
           throw new Error(
             `createJournalEntry() received an invalid request to insert into journal ${journalId}, which does not correspond with user ${userId}`
@@ -208,26 +233,26 @@ VALUES (<journalId>, NOW())
         );
 
         // 2. Clear Inklings
-        const inklingIds: Set<number> = new Set(
+        const inklingIds: Set<TimestampTzPg> = new Set(
           Object.values(dummyData.Inklings).map((i: Inkling) => i.timeId)
         );
         dummyData.Inklings = {};
 
         // 3. Create JournalEntry
-        const keepThoughts: number[] = keepIds.filter(
+        const keepThoughts: TimestampTzPg[] = keepIds.filter(
           (id) => !inklingIds.has(id)
         );
-        const keepInklings: number[] = keepIds.filter((id) =>
+        const keepInklings: TimestampTzPg[] = keepIds.filter((id) =>
           inklingIds.has(id)
         );
-        const discardThoughts: number[] = discardIds.filter(
+        const discardThoughts: TimestampTzPg[] = discardIds.filter(
           (id) => !inklingIds.has(id)
         );
-        const discardInklings: number[] = discardIds.filter((id) =>
+        const discardInklings: TimestampTzPg[] = discardIds.filter((id) =>
           inklingIds.has(id)
         );
 
-        const id: number = Date.now();
+        const id: TimestampTzPg = serializeDate(new Date());
         dummyData.JournalEntries[id] = {
           timeId: id,
           journalId: journalId,
@@ -250,9 +275,11 @@ VALUES (<journalId>, NOW())
             })),
           ],
         };
+        console.log(dummyData.JournalEntries);
 
         return true;
       } catch (err) {
+        console.log(err);
         return false;
       }
     },

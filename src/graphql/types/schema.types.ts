@@ -1,4 +1,7 @@
+import { GraphQLScalarType } from "graphql";
 import { Dict } from "../../types/global.types";
+
+// CORE
 
 export type SchemaFragment = {
   Types: String;
@@ -9,4 +12,11 @@ export type SchemaFragment = {
 export type ResolverFragment = {
   Query: Dict<any>;
   Mutation: Dict<any>;
+};
+
+// CUSTOM SCALARS
+
+export type ScalarFragment = {
+  Schema: String;
+  Resolver: Dict<GraphQLScalarType>;
 };

@@ -1,4 +1,5 @@
 import { Dict } from "../types/global.types";
+import { serializeDate } from "../utils/date";
 import { Inkling } from "./inkling/schema.gql";
 import { Journal } from "./journal/schema.gql";
 import {
@@ -26,55 +27,55 @@ export default {
     },
   },
   Inklings: {
-    1: {
-      timeId: 1,
+    [serializeDate(new Date(1))]: {
+      timeId: serializeDate(new Date(1)),
       journalId: 1,
       text: "Inkling1",
     },
-    2: {
-      timeId: 2,
+    [serializeDate(new Date(2))]: {
+      timeId: serializeDate(new Date(2)),
       journalId: 1,
       text: "Inkling2",
     },
-    3: {
-      timeId: 3,
+    [serializeDate(new Date(3))]: {
+      timeId: serializeDate(new Date(3)),
       journalId: 1,
       text: "Inkling3",
     },
-    4: {
-      timeId: 4,
+    [serializeDate(new Date(4))]: {
+      timeId: serializeDate(new Date(4)),
       journalId: 1,
       text: "Inkling4",
     },
-    5: {
-      timeId: 5,
+    [serializeDate(new Date(5))]: {
+      timeId: serializeDate(new Date(5)),
       journalId: 1,
       text: "Inkling5",
     },
   },
   JournalEntries: {
-    1: {
-      timeId: 1,
+    [serializeDate(new Date(1))]: {
+      timeId: serializeDate(new Date(1)),
       journalId: 1,
       reflections: [
         {
-          thoughtId: 1,
+          thoughtId: serializeDate(new Date(1)),
           decision: ReflectionDecision.KeepInkling,
         },
         {
-          thoughtId: 2,
+          thoughtId: serializeDate(new Date(2)),
           decision: ReflectionDecision.KeepInkling,
         },
         {
-          thoughtId: 3,
+          thoughtId: serializeDate(new Date(3)),
           decision: ReflectionDecision.DiscardInkling,
         },
         {
-          thoughtId: 4,
+          thoughtId: serializeDate(new Date(4)),
           decision: ReflectionDecision.DiscardInkling,
         },
         {
-          thoughtId: 5,
+          thoughtId: serializeDate(new Date(5)),
           decision: ReflectionDecision.DiscardInkling,
         },
       ],
@@ -133,53 +134,53 @@ export default {
     },
   },
   Thoughts: {
-    1: {
-      timeId: 1,
+    [serializeDate(new Date(1))]: {
+      timeId: serializeDate(new Date(1)),
       journalId: 1,
       text: "Thought1",
     },
-    2: {
-      timeId: 2,
+    [serializeDate(new Date(2))]: {
+      timeId: serializeDate(new Date(2)),
       journalId: 1,
       text: "Thought3",
     },
-    3: {
-      timeId: 3,
+    [serializeDate(new Date(3))]: {
+      timeId: serializeDate(new Date(3)),
       journalId: 1,
       text: "Thought3",
     },
-    4: {
-      timeId: 4,
+    [serializeDate(new Date(4))]: {
+      timeId: serializeDate(new Date(4)),
       journalId: 1,
       text: "Thought4",
     },
-    5: {
-      timeId: 5,
+    [serializeDate(new Date(5))]: {
+      timeId: serializeDate(new Date(5)),
       journalId: 1,
       text: "Thought5",
     },
-    6: {
-      timeId: 6,
+    [serializeDate(new Date(6))]: {
+      timeId: serializeDate(new Date(6)),
       journalId: 1,
       text: "Thought6",
     },
-    7: {
-      timeId: 7,
+    [serializeDate(new Date(7))]: {
+      timeId: serializeDate(new Date(7)),
       journalId: 1,
       text: "Thought7",
     },
-    8: {
-      timeId: 8,
+    [serializeDate(new Date(8))]: {
+      timeId: serializeDate(new Date(8)),
       journalId: 1,
       text: "Thought8",
     },
-    9: {
-      timeId: 9,
+    [serializeDate(new Date(9))]: {
+      timeId: serializeDate(new Date(9)),
       journalId: 1,
       text: "Thought9",
     },
-    10: {
-      timeId: 10,
+    [serializeDate(new Date(10))]: {
+      timeId: serializeDate(new Date(10)),
       journalId: 1,
       text: "Thought10",
     },
