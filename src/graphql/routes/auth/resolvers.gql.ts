@@ -39,7 +39,6 @@ export default {
         dummyData.Passwords[email] = {
           userId: email,
           passwordHash: email,
-          salt: email,
         };
 
         return true;
@@ -71,7 +70,6 @@ export default {
         dummyData.Passwords[email] = {
           userId: email,
           passwordHash: email,
-          salt: email,
         };
 
         return true;

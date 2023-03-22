@@ -26,7 +26,6 @@ model Password {
   userId                      String              @id
 
   hash                        String
-  salt                        String
 }
 
 model Journal {

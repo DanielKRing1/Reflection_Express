@@ -62,5 +62,4 @@ export type User = {
 export type Password = {
   userId: string;
   passwordHash: string;
-  salt: string;
 };
