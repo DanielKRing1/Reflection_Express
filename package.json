@@ -4,7 +4,9 @@
   "description": "",
   "main": "src/server.ts",
   "scripts": {
-    "start": "nodemon src/server.ts",
+    "compile": "tsc",
+    "start": "npm run compile && node ./dist/index.js",
+    "dev": "nodemon src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
