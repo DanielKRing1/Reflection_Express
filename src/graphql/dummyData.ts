@@ -37,7 +37,6 @@ export default {
     1: {
       userId: "1",
       passwordHash: "1",
-      salt: "1",
     },
   },
   Journals: {
