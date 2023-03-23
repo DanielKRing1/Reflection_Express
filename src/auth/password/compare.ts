@@ -7,7 +7,7 @@ import bcrypt from "bcrypt";
  * @param plaintext String to hash+compare with 'hash'
  * @param hash Stored, hashed password
  */
-export default async function compare(plaintext, hash) {
+export default async function compare(plaintext: string, hash: string) {
   const isValid = await new Promise((resolve, reject) => {
     bcrypt.compare(plaintext, hash, function (err, result) {
       if (result === true) return resolve(true);
