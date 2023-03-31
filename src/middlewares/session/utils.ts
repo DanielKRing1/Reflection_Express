@@ -1,6 +1,7 @@
 import session from "express-session";
 import { createClient } from "redis";
 import RedisStore from "connect-redis";
+import { Request } from "express";
 
 type CreateRedisSession = {
   redisPrefix: string;
@@ -76,5 +77,16 @@ export const createSession = ({
       httpOnly: true, // if true prevent client side JS from reading the cookie
       maxAge,
     },
+  });
+};
+
+export const destroySession = async (req: Request) => {
+  await new Promise<boolean>((res, rej) => {
+    // TODO: Check if this is necessary? Or does req.session.destroy() handle this?
+    req.session = null; // Deletes the cookie.
+    req.session.destroy((err) => {
+      if (err) return rej(err);
+      else return res(true);
+    });
   });
 };
