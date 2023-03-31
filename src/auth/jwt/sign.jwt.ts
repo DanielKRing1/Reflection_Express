@@ -2,13 +2,13 @@ import jwt from "jsonwebtoken";
 import { Dict } from "../../types/global.types";
 
 type SignOptions = {
-  algorithm: jwt.Algorithm;
-  expiresIn: number;
+  algorithm?: jwt.Algorithm;
+  expiresIn?: number;
 };
 export default async (
   payload: Dict<any>,
   secret: string,
-  { algorithm, expiresIn }: SignOptions = { algorithm: "HS256", expiresIn: 0 }
+  { algorithm = "HS256", expiresIn = 0 }: SignOptions = {}
 ) => {
   // 1. Await token generation
   const token: string | undefined = await new Promise<string | undefined>(
