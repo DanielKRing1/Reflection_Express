@@ -14,9 +14,9 @@ export default async (
   const token: string | undefined = await new Promise<string | undefined>(
     (res, rej) =>
       jwt.sign(
-        { expiresIn, ...payload },
+        payload,
         secret,
-        { algorithm },
+        { algorithm, expiresIn },
         function (err, token) {
           if (err) return res(undefined);
 
