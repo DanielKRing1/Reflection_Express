@@ -3,7 +3,9 @@ import GqlContext from "../../types/context.types";
 import { ResolverFragment } from "../../types/schema.types";
 import { UserArgs, CreateUserArgs, LoginArgs, User } from "./schema.gql";
 
-export default {
+import compare from "../../../auth/password/compare";
+
+const resolvers = {
   Query: {
     user: (
       _: undefined,
@@ -15,12 +17,12 @@ export default {
     },
   },
   Mutation: {
-    createUser: (
+    createUser: async (
       _: undefined,
       { email, password }: CreateUserArgs,
       contextValue: GqlContext,
       info: undefined
-    ): boolean => {
+    ): Promise<boolean> => {
       try {
         if (dummyData.Users[email] !== undefined)
           throw new Error(
@@ -41,36 +43,35 @@ export default {
           passwordHash: email,
         };
 
-        return true;
+        return await resolvers.Mutation.login(
+          _,
+          { email, password },
+          contextValue,
+          info
+        );
       } catch (err) {
         return false;
       }
     },
-    login: (
+    login: async (
       _: undefined,
       { email, password }: CreateUserArgs,
       contextValue: GqlContext,
       info: undefined
-    ): boolean => {
+    ): Promise<boolean> => {
       try {
         if (dummyData.Users[email] !== undefined)
           throw new Error(
             `createUser() received an invalid request to create a user that already exists ${email}`
           );
 
-        // 1. Create User
-        const name: string = new Date().toISOString();
-        dummyData.Users[email] = {
-          name,
-          email,
-          lastUsedJId: null,
-        };
+        // 1. Get user password hash
+        const hash: string = dummyData.Passwords[email].passwordHash;
 
-        // 2. Create Password
-        dummyData.Passwords[email] = {
-          userId: email,
-          passwordHash: email,
-        };
+        // 2. Authenticate password
+        const isAuthentic: boolean = await compare(password, hash);
+
+        // 3. Create session for user
 
         return true;
       } catch (err) {
@@ -79,3 +80,5 @@ export default {
     },
   },
 } as ResolverFragment;
+
+export default resolvers;
