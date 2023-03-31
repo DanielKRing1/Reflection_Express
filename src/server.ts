@@ -6,10 +6,20 @@ import * as dotenv from "dotenv"; // see https://github.com/motdotla/dotenv#how-
 dotenv.config();
 console.log(process.env); // remove this after you've confirmed it is working
 
-import loggingMiddleware from "./middlewares/logging.middleware";
-import authorizeMiddleware from "./middlewares/authorize";
-
+// SERVER
 import gqlServer from "./gqlServer";
+
+// SESSION
+import accessSession from "./middlewares/session/access";
+import refreshSession from "./middlewares/session/refresh";
+
+// MIDDLEWARE
+import loggingMiddleware from "./middlewares/logging.middleware";
+import authorizeMiddleware from "./middlewares/session/genAuthorizeSession.middleware";
+
+// ROUTER
+import genLoginRouter from "./routes/Login";
+import genRefreshRouter from "./routes/Refresh";
 
 // APP
 const app: Express = express();
@@ -33,7 +43,8 @@ app.use(
 );
 app.use(loggingMiddleware);
 // // Auth routes
-// app.use("/", authRoutes);
+app.use("/login", accessSession, genLoginRouter());
+app.use("/refresh", refreshSession, genRefreshRouter());
 // Auth middleware
 app.use(authorizeMiddleware);
 // // All else
@@ -41,4 +52,4 @@ app.use(authorizeMiddleware);
 
 // GRAPHQL
 // Start GraphQL Server
-gqlServer(app);
+gqlServer(app, accessSession);
