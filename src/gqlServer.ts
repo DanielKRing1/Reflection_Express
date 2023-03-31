@@ -1,4 +1,4 @@
-import { Express } from "express";
+import { Express, NextFunction, Request, Response } from "express";
 
 // GRAPHQL
 import { ApolloServer } from "@apollo/server";
@@ -13,7 +13,10 @@ import GqlContext, { RequestWGqlContext } from "./graphql/types/context.types";
 import { PORT } from "./config/server.config";
 import { GQL_PATH } from "./graphql/constants";
 
-export default async (app: Express) => {
+export default async (
+  app: Express,
+  ...middlewares: ((req: Request, res: Response, next: NextFunction) => void)[]
+) => {
   // Our httpServer handles incoming requests to our Express app.
   // Below, we tell Apollo Server to "drain" this httpServer,
   // enabling our servers to shut down gracefully.
@@ -33,6 +36,7 @@ export default async (app: Express) => {
   // an Apollo Server instance and optional configuration options
   app.use(
     GQL_PATH,
+    ...middlewares,
     expressMiddleware(server, {
       // TODO Add 'gqlContext' object to req object in auth middleware
       context: async ({ req, res }): Promise<GqlContext> => ({
