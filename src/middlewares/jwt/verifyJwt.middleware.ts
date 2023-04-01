@@ -6,7 +6,7 @@ import { Dict } from "../../types/global.types";
 /**
  * This middleware checks for a jwt string on the req.body
  * verifies the jwt
- * and attaches the jwt payload to req.jwt
+ * and attaches the jwt payload to req.jwtPayload
  */
 type JwtBody = {
   jwt: string;
@@ -14,7 +14,7 @@ type JwtBody = {
 export type JwtReq = {
   jwt: Dict<any>;
 };
-export default (
+export default async (
   req: Request<{}, {}, JwtBody>,
   res: Response,
   next: NextFunction
@@ -31,10 +31,13 @@ export default (
 
     // 3. Get jwt payload
     // May throw error if invalid
-    const payload: Dict<any> = verifyJwt(jwt, process.env.JWT_SECRET as string);
+    const payload: Dict<any> = await verifyJwt(
+      jwt,
+      process.env.JWT_SECRET as string
+    );
 
     // 4. Attach 'jwt' to req object
-    req.jwt = payload;
+    req.jwtPayload = payload;
 
     // 5. Next
     return next();
