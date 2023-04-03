@@ -82,12 +82,12 @@ export const createSession = ({
 
 export const destroySession = async (req: Request) => {
   await new Promise<boolean>((res, rej) => {
-    // TODO: Check if this is necessary? Or does req.session.destroy() handle this?
-    // @ts-ignore
-    req.session = null; // Deletes the cookie.
     req.session.destroy((err) => {
       if (err) return rej(err);
       else return res(true);
     });
+    // TODO: Check if this is necessary? Or does req.session.destroy() handle this?
+    // @ts-ignore
+    req.session = null; // Deletes the cookie.
   });
 };
