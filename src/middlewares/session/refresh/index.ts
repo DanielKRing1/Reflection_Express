@@ -1,5 +1,7 @@
 import { createSession, createRedisSession } from "../utils";
 
+export const maxAge = 1000 * 60 * 60 * 24 * 30; // 30 days
+
 // export default createRedisSession({
 //   redisPrefix: "rfltn-refresh:",
 //   sessionName: "rfltn-refresh",
@@ -12,7 +14,7 @@ import { createSession, createRedisSession } from "../utils";
 export default createSession({
   sessionName: "rfltn-refresh",
   secret: process.env.SESSION_SECRET as string,
-  maxAge: 1000 * 60 * 60 * 24 * 30, // 30 days
+  maxAge,
   // TODO Put in config file to use to also defined refresh route
   cookiePath: "/refresh",
 });

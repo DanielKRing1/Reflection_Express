@@ -1,5 +1,7 @@
 import { createSession, createRedisSession } from "../utils";
 
+export const maxAge = 1000 * 60 * 60; // 1 hour
+
 // export default createRedisSession({
 //   redisPrefix: "rfltn-access:",
 //   sessionName: "rfltn-access",
@@ -11,6 +13,6 @@ import { createSession, createRedisSession } from "../utils";
 export default createSession({
   sessionName: "rfltn-access",
   secret: process.env.SESSION_SECRET as string,
-  maxAge: 1000 * 60 * 60, // 1 hour
+  maxAge,
   cookiePath: "/",
 });
