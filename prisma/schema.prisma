@@ -11,18 +11,18 @@ datasource db {
 }
 
 model User {
-  name                        String              @unique
-  
   password_userId             Password?           @relation(name: "password_userId")
   journal_userId              Journal[]           @relation(name: "journal_userId")
-  email                       String              @id
+  email                       String              @id @unique
 
-  user_lastUsedJournalId      Journal?            @relation(name: "user_lastUsedJournalId", fields: [lastUsedJId], references: [id])
+  // Set to null when delete Journal + Update id if Journal id updated
+  user_lastUsedJournalId      Journal?            @relation(name: "user_lastUsedJournalId", fields: [lastUsedJId], references: [id], onDelete: SetNull, onUpdate: Cascade)
   lastUsedJId                 BigInt?             @unique
 }
 
 model Password {
-  password_userId             User                @relation(name: "password_userId", fields: [userId], references: [email])
+  // Cascade delete/update with User
+  password_userId             User                @relation(name: "password_userId", fields: [userId], references: [email], onDelete: Cascade, onUpdate: Cascade)
   userId                      String              @id
 
   hash                        String
@@ -36,7 +36,8 @@ model Journal {
   reflection_journalId        Reflection[]        @relation(name: "reflection_journalId")
   id                          BigInt              @id @default(autoincrement())
   
-  journal_userId              User                @relation(name: "journal_userId", fields: [userId], references: [email])
+  // Cascade delete/update with User
+  journal_userId              User                @relation(name: "journal_userId", fields: [userId], references: [email], onDelete: Cascade, onUpdate: Cascade)
   userId                      String
 
   @@index([userId])
@@ -45,7 +46,8 @@ model Journal {
 model Inkling {
   timeId                      DateTime            @db.Timestamptz(3)
 
-  inkling_journalId           Journal             @relation(name: "inkling_journalId", fields: [journalId], references: [id])
+  // Cascade delete/update with Journal
+  inkling_journalId           Journal             @relation(name: "inkling_journalId", fields: [journalId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   journalId                   BigInt
 
   text                        String
@@ -57,7 +59,8 @@ model JournalEntry {
   reflection_journalEntryId   Reflection[]        @relation(name: "reflection_journalEntryId")
   timeId                      DateTime            @db.Timestamptz(3)
 
-  journalentry_journalId      Journal             @relation(name: "journalentry_journalId", fields: [journalId], references: [id])
+  // Cascade delete/update with Journal
+  journalentry_journalId      Journal             @relation(name: "journalentry_journalId", fields: [journalId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   journalId                   BigInt
 
   @@id([journalId, timeId])
@@ -67,7 +70,8 @@ model Thought {
   reflection_thoughtId        Reflection[]        @relation(name: "reflection_thoughtId")
   timeId                      DateTime            @db.Timestamptz(3)
 
-  thought_journalId           Journal             @relation(name: "thought_journalId", fields: [journalId], references: [id])
+  // Cascade delete/update with Journal
+  thought_journalId           Journal             @relation(name: "thought_journalId", fields: [journalId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   journalId                   BigInt
 
   text                        String
@@ -76,14 +80,17 @@ model Thought {
 }
 
 model Reflection {
-  reflection_journalId        Journal             @relation(name: "reflection_journalId", fields: [journalId], references: [id])
+  // Cascade delete/update with Journal
+  reflection_journalId        Journal             @relation(name: "reflection_journalId", fields: [journalId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   journalId                   BigInt
 
-  reflection_journalEntryId   JournalEntry        @relation(name: "reflection_journalEntryId", fields: [journalId, journalEntryId], references: [journalId, timeId])
-  journalEntryId              DateTime
+  // Cascade delete/update with JournalEntry
+  reflection_journalEntryId   JournalEntry        @relation(name: "reflection_journalEntryId", fields: [journalId, journalEntryId], references: [journalId, timeId], onDelete: Cascade, onUpdate: Cascade)
+  journalEntryId              DateTime            @db.Timestamptz(3)
 
-  reflection_thoughtId        Thought             @relation(name: "reflection_thoughtId", fields: [journalId, thoughtId], references: [journalId, timeId])
-  thoughtId                   DateTime
+  // Cascade delete/update with Thought
+  reflection_thoughtId        Thought             @relation(name: "reflection_thoughtId", fields: [journalId, thoughtId], references: [journalId, timeId], onDelete: Cascade, onUpdate: Cascade)
+  thoughtId                   DateTime            @db.Timestamptz(3)
 
   decision                    Int                 @db.SmallInt
 
