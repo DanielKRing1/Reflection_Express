@@ -41,6 +41,7 @@ export default async (
       // TODO Add 'gqlContext' object to req object in auth middleware
       context: async ({ req, res }): Promise<GqlContext> => ({
         ...(req as RequestWGqlContext).gqlContext,
+        req,
         res,
       }),
     })
