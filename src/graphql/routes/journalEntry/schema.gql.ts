@@ -25,7 +25,7 @@ export default {
     thoughts(userId: String!, journalId: ID!, thoughtIds: [DateTime]!): [Thought]!
   `,
   Mutation: `
-    createJournalEntry(userId: String!, journalId: Int!, keepIds: [DateTime]!, discardIds: [DateTime]!): Boolean!
+    createJournalEntry(userId: String!, journalId: Int!, keepIdsInkling: [DateTime]!, keepIdsThought: [DateTime]!, discardIdsThought: [DateTime]!, discardIdsInkling: [DateTime]!): Boolean!
   `,
 } as SchemaFragment;
 
@@ -55,8 +55,10 @@ export type ThoughtsArgs = {
 export type CreateJournalEntryArgs = {
   userId: string;
   journalId: number;
-  keepIds: TimestampTzPg[];
-  discardIds: TimestampTzPg[];
+  discardIdsThought: TimestampTzPg[];
+  keepIdsThought: TimestampTzPg[];
+  keepIdsInkling: TimestampTzPg[];
+  discardIdsInkling: TimestampTzPg[];
 };
 
 // TYPES
