@@ -13,17 +13,29 @@ import { Journal, Thought } from "@prisma/client";
 
 export default {
     Query: {
-        journalEntries: (
+        journalEntries: async (
             _: undefined,
             {
-                userId,
                 journalId,
                 cursorTime = new Date().toISOString() as TimestampTzPg,
                 count,
             }: JournalEntriesArgs,
             contextValue: any,
             info: any
-        ): Journal[] => {
+        ): Promise<Journal[]> => {
+            const userId = contextValue.req.session.userId;
+
+            const result: number = await prisma.$executeRaw`
+            BEGIN;
+            
+            -- 1. Confirm "User" owns "JournalId" 
+            IF NOT EXISTS (SELECT 1 FROM Journal WHERE id = ${journalId} AND userId = ${userId}) THEN
+                RAISE EXCEPTION 'Row with journalId=% and userId=% not found', ${journalId}, ${userId};
+                ROLLBACK;
+            END IF;
+
+            COMMIT;`;
+
             // console.log(dummyData.JournalEntries);
             // return (
             //     Object.values(dummyData.JournalEntries)
@@ -53,21 +65,33 @@ export default {
 
             return [];
         },
-        thoughts: (
+        thoughts: async (
             _: undefined,
-            { userId, journalId, thoughtIds }: ThoughtsArgs,
+            { journalId, thoughtIds }: ThoughtsArgs,
             contextValue: any,
             info: any
-        ): Thought[] => {
-            // const thoughtIdSet = new Set(thoughtIds);
-            // return Object.values(dummyData.Thoughts)
-            //     .filter((t) => t.journalId === journalId)
-            //     .filter((t) => thoughtIdSet.has(t.timeId))
-            //     .map((t) => ({
-            //         userId: dummyData.Journals[t.journalId].userId,
-            //         ...t,
-            //     }))
-            //     .filter((t) => t.userId === userId);
+        ): Promise<Thought[]> => {
+            const userId = contextValue.req.session.userId;
+
+            const result: number = await prisma.$executeRaw`
+            BEGIN;
+            
+            -- 1. Confirm "User" owns "JournalId" 
+            IF NOT EXISTS (SELECT 1 FROM Journal WHERE id = ${journalId} AND userId = ${userId}) THEN
+                RAISE EXCEPTION 'Row with journalId=% and userId=% not found', ${journalId}, ${userId};
+                ROLLBACK;
+            END IF;
+
+            SELECT * FROM ${process.env.DATABASE_SCHEMA}."Thought"
+            WHERE "journalId" = ${journalId}
+              AND "timeId" = ANY('{${thoughtIds.join()}}')
+            JOIN ${process.env.DATABASE_SCHEMA}."Journal" j
+              ON j."id" = t."journalId"
+              AND j."userId" = ${userId};
+
+            COMMIT;`;
+
+            console.log(result);
 
             return [];
         },

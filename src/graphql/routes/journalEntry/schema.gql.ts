@@ -21,25 +21,23 @@ export default {
     }
   `,
     Query: `
-    journalEntries(userId: String!, journalId: Int!, cursorTime: DateTime, count: Int): [JournalEntry]!
-    thoughts(userId: String!, journalId: ID!, thoughtIds: [DateTime]!): [Thought]!
+    journalEntries(journalId: Int!, cursorTime: DateTime, count: Int): [JournalEntry]!
+    thoughts(journalId: ID!, thoughtIds: [DateTime]!): [Thought]!
   `,
     Mutation: `
-    createJournalEntry(userId: String!, journalId: Int!, keepIdsInkling: [DateTime]!, keepIdsThought: [DateTime]!, discardIdsThought: [DateTime]!, discardIdsInkling: [DateTime]!): Boolean!
+    createJournalEntry(journalId: Int!, keepIdsInkling: [DateTime]!, keepIdsThought: [DateTime]!, discardIdsThought: [DateTime]!, discardIdsInkling: [DateTime]!): Boolean!
   `,
 } as SchemaFragment;
 
 // QUERY RESOLVERS
 
 export type JournalEntriesArgs = {
-    userId: string;
     journalId: number;
     cursorTime: TimestampTzPg;
     count: number;
 };
 
 export type ThoughtsArgs = {
-    userId: string;
     journalId: number;
     thoughtIds: TimestampTzPg[];
 };
@@ -47,7 +45,6 @@ export type ThoughtsArgs = {
 // MUTATION RESOLVERS
 
 export type CreateJournalEntryArgs = {
-    userId: string;
     journalId: number;
     discardIdsThought: TimestampTzPg[];
     keepIdsThought: TimestampTzPg[];
