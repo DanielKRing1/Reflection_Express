@@ -1,7 +1,7 @@
 import { SchemaFragment } from "../../types/schema.types";
 
 export default {
-  Types: `
+    Types: `
     type User {
       id: Int!
       lastUsedJournalId: Int
@@ -13,10 +13,10 @@ export default {
       name: String!
     }
   `,
-  Query: `
+    Query: `
     journals(userId: String!): [Journal]!
   `,
-  Mutation: `
+    Mutation: `
     createJournal(userId: String!, journalName: String!): Int!
   `,
 } as SchemaFragment;
@@ -24,20 +24,12 @@ export default {
 // QUERY RESOLVERS
 
 export type JournalsArgs = {
-  userId: string;
+    userId: string;
 };
 
 // MUTATION RESOLVERS
 
 export type CreateJournalArgs = {
-  userId: string;
-  journalName: string;
-};
-
-// TYPES
-
-export type Journal = {
-  id: number;
-  userId: string;
-  name: string;
+    userId: string;
+    journalName: string;
 };

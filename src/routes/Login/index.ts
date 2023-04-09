@@ -50,7 +50,7 @@ const createUserController = async function (
             );
 
         // 3. Hash password
-        const passwordHash: string = await hashAndSalt(password);
+        const hash: string = await hashAndSalt(password);
 
         // 4. Create user in database if not exists
         const createStatus = await prisma.user.create({
@@ -58,7 +58,7 @@ const createUserController = async function (
                 email: userId,
                 password_userId: {
                     create: {
-                        hash: passwordHash,
+                        hash: hash,
                     },
                 },
             },

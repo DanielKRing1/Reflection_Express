@@ -1,225 +1,225 @@
+import {
+    User,
+    Password,
+    Journal,
+    JournalEntry,
+    Inkling,
+    Thought,
+    Reflection,
+} from "@prisma/client";
 import { Dict } from "../types/global.types";
 import { serializeDate } from "../utils/date";
 
-import { Password, User } from "./routes/auth/schema.gql";
-import { Inkling } from "./routes/inkling/schema.gql";
-import { Journal } from "./routes/journal/schema.gql";
-import {
-  JournalEntry,
-  ReflectionDecision,
-  Thought,
-} from "./routes/journalEntry/schema.gql";
+import { ReflectionDecision } from "./routes/journalEntry/schema.gql";
 
 export default {
-  Users: {
-    1: {
-      name: "User1",
-      email: "1",
-      lastUsedJId: null,
-    },
-    2: {
-      name: "User2",
-      email: "2",
-      lastUsedJId: null,
-    },
-    3: {
-      name: "User3",
-      email: "3",
-      lastUsedJId: null,
-    },
-    4: {
-      name: "User4",
-      email: "4",
-      lastUsedJId: null,
-    },
-  },
-  Passwords: {
-    1: {
-      userId: "1",
-      passwordHash: "1",
-    },
-  },
-  Journals: {
-    1: {
-      id: 1,
-      userId: "1",
-      name: "Journal1",
-    },
-    2: {
-      id: 2,
-      userId: "1",
-      name: "Journal2",
-    },
-    3: {
-      id: 3,
-      userId: "1",
-      name: "Journal3",
-    },
-  },
-  Inklings: {
-    [serializeDate(new Date(1))]: {
-      timeId: serializeDate(new Date(1)),
-      journalId: 1,
-      text: "Inkling1",
-    },
-    [serializeDate(new Date(2))]: {
-      timeId: serializeDate(new Date(2)),
-      journalId: 1,
-      text: "Inkling2",
-    },
-    [serializeDate(new Date(3))]: {
-      timeId: serializeDate(new Date(3)),
-      journalId: 1,
-      text: "Inkling3",
-    },
-    [serializeDate(new Date(4))]: {
-      timeId: serializeDate(new Date(4)),
-      journalId: 1,
-      text: "Inkling4",
-    },
-    [serializeDate(new Date(5))]: {
-      timeId: serializeDate(new Date(5)),
-      journalId: 1,
-      text: "Inkling5",
-    },
-  },
-  JournalEntries: {
-    [serializeDate(new Date(1))]: {
-      timeId: serializeDate(new Date(1)),
-      journalId: 1,
-      reflections: [
-        {
-          thoughtId: serializeDate(new Date(1)),
-          decision: ReflectionDecision.KeepInkling,
+    Users: {
+        1: {
+            email: "1",
+            lastUsedJId: null,
         },
-        {
-          thoughtId: serializeDate(new Date(2)),
-          decision: ReflectionDecision.KeepInkling,
+        2: {
+            email: "2",
+            lastUsedJId: null,
         },
-        {
-          thoughtId: serializeDate(new Date(3)),
-          decision: ReflectionDecision.DiscardInkling,
+        3: {
+            email: "3",
+            lastUsedJId: null,
         },
-        {
-          thoughtId: serializeDate(new Date(4)),
-          decision: ReflectionDecision.DiscardInkling,
+        4: {
+            email: "4",
+            lastUsedJId: null,
         },
-        {
-          thoughtId: serializeDate(new Date(5)),
-          decision: ReflectionDecision.DiscardInkling,
-        },
-      ],
     },
-    2: {
-      timeId: 2,
-      journalId: 1,
-      reflections: [
-        {
-          thoughtId: 1,
-          decision: ReflectionDecision.KeepThought,
+    Passwords: {
+        1: {
+            userId: "1",
+            hash: "1",
         },
-        {
-          thoughtId: 2,
-          decision: ReflectionDecision.KeepThought,
+    },
+    Journals: {
+        1: {
+            id: 1 as unknown as bigint,
+            userId: "1",
+            name: "Journal1",
         },
-        {
-          thoughtId: 6,
-          decision: ReflectionDecision.KeepInkling,
+        2: {
+            id: 2 as unknown as bigint,
+            userId: "1",
+            name: "Journal2",
         },
-        {
-          thoughtId: 7,
-          decision: ReflectionDecision.DiscardInkling,
+        3: {
+            id: 3 as unknown as bigint,
+            userId: "1",
+            name: "Journal3",
         },
-        {
-          thoughtId: 8,
-          decision: ReflectionDecision.DiscardInkling,
+    },
+    Inklings: {
+        [serializeDate(new Date(1))]: {
+            timeId: new Date(1),
+            journalId: 1 as unknown as bigint,
+            text: "Inkling1",
         },
-      ],
-    },
-    3: {
-      timeId: 3,
-      journalId: 1,
-      reflections: [
-        {
-          thoughtId: 1,
-          decision: ReflectionDecision.KeepThought,
+        [serializeDate(new Date(2))]: {
+            timeId: new Date(2),
+            journalId: 1 as unknown as bigint,
+            text: "Inkling2",
         },
-        {
-          thoughtId: 6,
-          decision: ReflectionDecision.KeepThought,
+        [serializeDate(new Date(3))]: {
+            timeId: new Date(3),
+            journalId: 1 as unknown as bigint,
+            text: "Inkling3",
         },
-        {
-          thoughtId: 9,
-          decision: ReflectionDecision.KeepInkling,
+        [serializeDate(new Date(4))]: {
+            timeId: new Date(4),
+            journalId: 1 as unknown as bigint,
+            text: "Inkling4",
         },
-        {
-          thoughtId: 10,
-          decision: ReflectionDecision.DiscardInkling,
+        [serializeDate(new Date(5))]: {
+            timeId: new Date(5),
+            journalId: 1 as unknown as bigint,
+            text: "Inkling5",
         },
-        {
-          thoughtId: 11,
-          decision: ReflectionDecision.DiscardInkling,
+    },
+    JournalEntries: {
+        [serializeDate(new Date(1))]: {
+            timeId: new Date(1),
+            journalId: 1 as unknown as bigint,
+            reflections: [
+                {
+                    thoughtId: new Date(1),
+                    decision: ReflectionDecision.KeepInkling,
+                },
+                {
+                    thoughtId: new Date(2),
+                    decision: ReflectionDecision.KeepInkling,
+                },
+                {
+                    thoughtId: new Date(3),
+                    decision: ReflectionDecision.DiscardInkling,
+                },
+                {
+                    thoughtId: new Date(4),
+                    decision: ReflectionDecision.DiscardInkling,
+                },
+                {
+                    thoughtId: new Date(5),
+                    decision: ReflectionDecision.DiscardInkling,
+                },
+            ],
         },
-      ],
+        2: {
+            timeId: new Date(2),
+            journalId: 1 as unknown as bigint,
+            reflections: [
+                {
+                    thoughtId: new Date(1),
+                    decision: ReflectionDecision.KeepThought,
+                },
+                {
+                    thoughtId: new Date(2),
+                    decision: ReflectionDecision.KeepThought,
+                },
+                {
+                    thoughtId: new Date(6),
+                    decision: ReflectionDecision.KeepInkling,
+                },
+                {
+                    thoughtId: new Date(7),
+                    decision: ReflectionDecision.DiscardInkling,
+                },
+                {
+                    thoughtId: new Date(8),
+                    decision: ReflectionDecision.DiscardInkling,
+                },
+            ],
+        },
+        3: {
+            timeId: new Date(3),
+            journalId: 1 as unknown as bigint,
+            reflections: [
+                {
+                    thoughtId: new Date(1),
+                    decision: ReflectionDecision.KeepThought,
+                },
+                {
+                    thoughtId: new Date(6),
+                    decision: ReflectionDecision.KeepThought,
+                },
+                {
+                    thoughtId: new Date(9),
+                    decision: ReflectionDecision.KeepInkling,
+                },
+                {
+                    thoughtId: new Date(10),
+                    decision: ReflectionDecision.DiscardInkling,
+                },
+                {
+                    thoughtId: new Date(11),
+                    decision: ReflectionDecision.DiscardInkling,
+                },
+            ],
+        },
     },
-  },
-  Thoughts: {
-    [serializeDate(new Date(1))]: {
-      timeId: serializeDate(new Date(1)),
-      journalId: 1,
-      text: "Thought1",
+    Thoughts: {
+        [serializeDate(new Date(1))]: {
+            timeId: new Date(1),
+            journalId: 1 as unknown as bigint,
+            text: "Thought1",
+        },
+        [serializeDate(new Date(2))]: {
+            timeId: new Date(2),
+            journalId: 1 as unknown as bigint,
+            text: "Thought3",
+        },
+        [serializeDate(new Date(3))]: {
+            timeId: new Date(3),
+            journalId: 1 as unknown as bigint,
+            text: "Thought3",
+        },
+        [serializeDate(new Date(4))]: {
+            timeId: new Date(4),
+            journalId: 1 as unknown as bigint,
+            text: "Thought4",
+        },
+        [serializeDate(new Date(5))]: {
+            timeId: new Date(5),
+            journalId: 1 as unknown as bigint,
+            text: "Thought5",
+        },
+        [serializeDate(new Date(6))]: {
+            timeId: new Date(6),
+            journalId: 1 as unknown as bigint,
+            text: "Thought6",
+        },
+        [serializeDate(new Date(7))]: {
+            timeId: serializeDate(new Date(7)),
+            journalId: 1 as unknown as bigint,
+            text: "Thought7",
+        },
+        [serializeDate(new Date(8))]: {
+            timeId: new Date(8),
+            journalId: 1 as unknown as bigint,
+            text: "Thought8",
+        },
+        [serializeDate(new Date(9))]: {
+            timeId: new Date(9),
+            journalId: 1 as unknown as bigint,
+            text: "Thought9",
+        },
+        [serializeDate(new Date(10))]: {
+            timeId: new Date(10),
+            journalId: 1 as unknown as bigint,
+            text: "Thought10",
+        },
     },
-    [serializeDate(new Date(2))]: {
-      timeId: serializeDate(new Date(2)),
-      journalId: 1,
-      text: "Thought3",
-    },
-    [serializeDate(new Date(3))]: {
-      timeId: serializeDate(new Date(3)),
-      journalId: 1,
-      text: "Thought3",
-    },
-    [serializeDate(new Date(4))]: {
-      timeId: serializeDate(new Date(4)),
-      journalId: 1,
-      text: "Thought4",
-    },
-    [serializeDate(new Date(5))]: {
-      timeId: serializeDate(new Date(5)),
-      journalId: 1,
-      text: "Thought5",
-    },
-    [serializeDate(new Date(6))]: {
-      timeId: serializeDate(new Date(6)),
-      journalId: 1,
-      text: "Thought6",
-    },
-    [serializeDate(new Date(7))]: {
-      timeId: serializeDate(new Date(7)),
-      journalId: 1,
-      text: "Thought7",
-    },
-    [serializeDate(new Date(8))]: {
-      timeId: serializeDate(new Date(8)),
-      journalId: 1,
-      text: "Thought8",
-    },
-    [serializeDate(new Date(9))]: {
-      timeId: serializeDate(new Date(9)),
-      journalId: 1,
-      text: "Thought9",
-    },
-    [serializeDate(new Date(10))]: {
-      timeId: serializeDate(new Date(10)),
-      journalId: 1,
-      text: "Thought10",
-    },
-  },
 } as {
-  Users: Dict<User>;
-  Passwords: Dict<Password>;
-  Journals: Dict<Journal>;
-  Inklings: Dict<Inkling>;
-  JournalEntries: Dict<JournalEntry>;
-  Thoughts: Dict<Thought>;
+    Users: Dict<User>;
+    Passwords: Dict<Password>;
+    Journals: Dict<Journal>;
+    Inklings: Dict<Inkling>;
+    JournalEntries: Dict<
+        JournalEntry & { reflections: { thoughtId: Date; decision: number }[] }
+    >;
+    Thoughts: Dict<Thought>;
 };

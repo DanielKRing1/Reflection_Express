@@ -1,18 +1,17 @@
-import { TimestampTzPg } from "../../../types/db.types";
 import { SchemaFragment } from "../../types/schema.types";
 
 export default {
-  Types: `
+    Types: `
     type Inkling {
       timeId: DateTime!
       journalId: Int!
       text: String!
     }
   `,
-  Query: `
+    Query: `
     inklings(userId: String!, journalId: Int!): [Inkling]
   `,
-  Mutation: `
+    Mutation: `
     commitInklings(userId: String!, journalId: Int!, inklingText: [String]!): Boolean
   `,
 } as SchemaFragment;
@@ -20,22 +19,14 @@ export default {
 // QUERY RESOLVERS
 
 export type InklingsArgs = {
-  userId: string;
-  journalId: number;
+    userId: string;
+    journalId: number;
 };
 
 // MUTATION RESOLVERS
 
 export type CommitInklingsArgs = {
-  userId: string;
-  journalId: number;
-  inklingTexts: string[];
-};
-
-// TYPES
-
-export type Inkling = {
-  timeId: TimestampTzPg;
-  journalId: number;
-  text: string;
+    userId: string;
+    journalId: number;
+    inklingTexts: string[];
 };

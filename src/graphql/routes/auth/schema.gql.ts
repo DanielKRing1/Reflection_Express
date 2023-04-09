@@ -47,16 +47,3 @@ export type LoginArgs = {
     email: string;
     password: string;
 };
-
-// TYPES
-
-export type User = {
-    name: string;
-    email: string;
-    lastUsedJId: string | null;
-};
-
-export type Password = {
-    userId: string;
-    passwordHash: string;
-};

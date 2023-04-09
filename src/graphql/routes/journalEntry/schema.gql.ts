@@ -2,7 +2,7 @@ import { TimestampTzPg } from "../../../types/db.types";
 import { SchemaFragment } from "../../types/schema.types";
 
 export default {
-  Types: `
+    Types: `
     type JournalEntry {
       timeId: DateTime!
       journalId: Int!
@@ -20,62 +20,46 @@ export default {
       decision: Int!
     }
   `,
-  Query: `
+    Query: `
     journalEntries(userId: String!, journalId: Int!, cursorTime: DateTime, count: Int): [JournalEntry]!
     thoughts(userId: String!, journalId: ID!, thoughtIds: [DateTime]!): [Thought]!
   `,
-  Mutation: `
+    Mutation: `
     createJournalEntry(userId: String!, journalId: Int!, keepIdsInkling: [DateTime]!, keepIdsThought: [DateTime]!, discardIdsThought: [DateTime]!, discardIdsInkling: [DateTime]!): Boolean!
   `,
 } as SchemaFragment;
 
-export type JournalEntry = {
-  timeId: TimestampTzPg;
-  journalId: number;
-  reflections: Reflection[];
-};
-
 // QUERY RESOLVERS
 
 export type JournalEntriesArgs = {
-  userId: string;
-  journalId: number;
-  cursorTime: TimestampTzPg;
-  count: number;
+    userId: string;
+    journalId: number;
+    cursorTime: TimestampTzPg;
+    count: number;
 };
 
 export type ThoughtsArgs = {
-  userId: string;
-  journalId: number;
-  thoughtIds: TimestampTzPg[];
+    userId: string;
+    journalId: number;
+    thoughtIds: TimestampTzPg[];
 };
 
 // MUTATION RESOLVERS
 
 export type CreateJournalEntryArgs = {
-  userId: string;
-  journalId: number;
-  discardIdsThought: TimestampTzPg[];
-  keepIdsThought: TimestampTzPg[];
-  keepIdsInkling: TimestampTzPg[];
-  discardIdsInkling: TimestampTzPg[];
+    userId: string;
+    journalId: number;
+    discardIdsThought: TimestampTzPg[];
+    keepIdsThought: TimestampTzPg[];
+    keepIdsInkling: TimestampTzPg[];
+    discardIdsInkling: TimestampTzPg[];
 };
 
 // TYPES
 
-export type Thought = {
-  timeId: TimestampTzPg;
-  journalId: number;
-  text: string;
-};
-
 export enum ReflectionDecision {
-  DiscardThought,
-  KeepThought,
-  KeepInkling,
-  DiscardInkling,
+    DiscardThought,
+    KeepThought,
+    KeepInkling,
+    DiscardInkling,
 }
-export type Reflection = {
-  thoughtId: TimestampTzPg;
-  decision: ReflectionDecision;
-};

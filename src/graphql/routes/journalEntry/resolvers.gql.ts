@@ -1,19 +1,15 @@
 import { TimestampTzPg } from "../../../types/db.types";
 import { serializeDate } from "../../../utils/date";
 import dummyData from "../../dummyData";
-import { Inkling } from "../inkling/schema.gql";
-import { Journal } from "../journal/schema.gql";
 import { ResolverFragment } from "../../types/schema.types";
 import {
     CreateJournalEntryArgs,
     JournalEntriesArgs,
-    JournalEntry,
-    ReflectionDecision,
-    Thought,
     ThoughtsArgs,
 } from "./schema.gql";
 import GqlContext from "../../types/context.types";
 import prisma from "../../../prisma/client";
+import { Journal, Thought } from "@prisma/client";
 
 export default {
     Query: {
@@ -27,34 +23,35 @@ export default {
             }: JournalEntriesArgs,
             contextValue: any,
             info: any
-        ): JournalEntry[] => {
-            console.log(dummyData.JournalEntries);
+        ): Journal[] => {
+            // console.log(dummyData.JournalEntries);
+            // return (
+            //     Object.values(dummyData.JournalEntries)
+            //         // Same journal id
+            //         .filter((je) => je.journalId === journalId)
+            //         // Time cursor
+            //         .filter(
+            //             (je) =>
+            //                 new Date(je.timeId).getTime() <=
+            //                 new Date(cursorTime).getTime()
+            //         )
+            //         // Add userId
+            //         .map((je) => ({
+            //             userId: dummyData.Journals[je.journalId].userId,
+            //             ...je,
+            //         }))
+            //         // Same userId
+            //         .filter((je) => je.userId === userId)
+            //         // Get most recent
+            //         .sort(
+            //             (a, b) =>
+            //                 new Date(a.timeId).getTime() -
+            //                 new Date(b.timeId).getTime()
+            //         )
+            //         .slice(0, count)
+            // );
 
-            return (
-                Object.values(dummyData.JournalEntries)
-                    // Same journal id
-                    .filter((je) => je.journalId === journalId)
-                    // Time cursor
-                    .filter(
-                        (je) =>
-                            new Date(je.timeId).getTime() <=
-                            new Date(cursorTime).getTime()
-                    )
-                    // Add userId
-                    .map((je) => ({
-                        userId: dummyData.Journals[je.journalId].userId,
-                        ...je,
-                    }))
-                    // Same userId
-                    .filter((je) => je.userId === userId)
-                    // Get most recent
-                    .sort(
-                        (a, b) =>
-                            new Date(a.timeId).getTime() -
-                            new Date(b.timeId).getTime()
-                    )
-                    .slice(0, count)
-            );
+            return [];
         },
         thoughts: (
             _: undefined,
@@ -62,15 +59,17 @@ export default {
             contextValue: any,
             info: any
         ): Thought[] => {
-            const thoughtIdSet = new Set(thoughtIds);
-            return Object.values(dummyData.Thoughts)
-                .filter((t) => t.journalId === journalId)
-                .filter((t) => thoughtIdSet.has(t.timeId))
-                .map((t) => ({
-                    userId: dummyData.Journals[t.journalId].userId,
-                    ...t,
-                }))
-                .filter((t) => t.userId === userId);
+            // const thoughtIdSet = new Set(thoughtIds);
+            // return Object.values(dummyData.Thoughts)
+            //     .filter((t) => t.journalId === journalId)
+            //     .filter((t) => thoughtIdSet.has(t.timeId))
+            //     .map((t) => ({
+            //         userId: dummyData.Journals[t.journalId].userId,
+            //         ...t,
+            //     }))
+            //     .filter((t) => t.userId === userId);
+
+            return [];
         },
     },
     Mutation: {
