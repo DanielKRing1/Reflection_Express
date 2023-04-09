@@ -46,7 +46,7 @@ const createUserController = async function (
             })) !== undefined;
         if (userAlreadyExists)
             throw new Error(
-                `createUser() received an invalid request to create a user that already exists ${email}`
+                `createUser() received an invalid request to create a user that already exists ${userId}`
             );
 
         // 3. Hash password
