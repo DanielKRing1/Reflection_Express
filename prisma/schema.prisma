@@ -92,6 +92,10 @@ model Reflection {
   reflection_thoughtId        Thought             @relation(name: "reflection_thoughtId", fields: [journalId, thoughtId], references: [journalId, timeId], onDelete: Cascade, onUpdate: Cascade)
   thoughtId                   DateTime            @db.Timestamptz(3)
 
+  // 0 - DiscardThought
+  // 1 - KeepThought
+  // 2 - KeepInkling
+  // 3 - DiscardInkling
   decision                    Int                 @db.SmallInt
 
   @@id([journalEntryId, thoughtId])
