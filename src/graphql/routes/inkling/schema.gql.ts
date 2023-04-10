@@ -19,14 +19,12 @@ export default {
 // QUERY RESOLVERS
 
 export type InklingsArgs = {
-    userId: string;
     journalId: number;
 };
 
 // MUTATION RESOLVERS
 
 export type CommitInklingsArgs = {
-    userId: string;
     journalId: number;
     inklingTexts: string[];
 };

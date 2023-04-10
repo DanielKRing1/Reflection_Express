@@ -1,6 +1,5 @@
 import { TimestampTzPg } from "../../../types/db.types";
 import { serializeDate } from "../../../utils/date";
-import dummyData from "../../dummyData";
 import { ResolverFragment } from "../../types/schema.types";
 import {
     CreateJournalEntryArgs,
@@ -17,51 +16,56 @@ export default {
             _: undefined,
             {
                 journalId,
-                cursorTime = new Date().toISOString() as TimestampTzPg,
+                cursorTime = serializeDate(new Date()) as TimestampTzPg,
                 count,
             }: JournalEntriesArgs,
             contextValue: any,
             info: any
         ): Promise<Journal[]> => {
-            const userId = contextValue.req.session.userId;
+            try {
+                const userId = contextValue.req.session.userId;
 
-            const result: number = await prisma.$executeRaw`
-            BEGIN;
-            
-            -- 1. Confirm "User" owns "JournalId" 
-            IF NOT EXISTS (SELECT 1 FROM Journal WHERE id = ${journalId} AND userId = ${userId}) THEN
-                RAISE EXCEPTION 'Row with journalId=% and userId=% not found', ${journalId}, ${userId};
-                ROLLBACK;
-            END IF;
+                const result: Journal[] = await prisma.$queryRaw`
+                    BEGIN;
+                    
+                    -- 1. Confirm "User" owns "JournalId" 
+                    IF NOT EXISTS (SELECT 1 FROM ${process.env.DATABASE_SCHEMA}."Journal" WHERE id = ${journalId} AND userId = ${userId}) THEN
+                        RAISE EXCEPTION 'Row with journalId=% and userId=% not found', ${journalId}, ${userId};
+                        ROLLBACK;
+                    END IF;
 
-            COMMIT;`;
+                    -- Select Journal
+                    SELECT * FROM
+                      (
+                        SELECT * FROM ${process.env.DATABASE_SCHEMA}."Journal"
+                        WHERE "id" = ${journalId}
+                      ) j
+                    -- Join JournalEntry
+                    JOIN ${process.env.DATABASE_SCHEMA}."JournalEntry" je
+                      ON je."journalId" = j."id"
+                    -- Join Reflections
+                    JOIN (
+                      SELECT * FROM ${process.env.DATABASE_SCHEMA}."Reflection"
+                        -- at or older than 'cursorTime'
+                        WHERE "timeId" >= ${cursorTime}
+                        -- Limit to 'count'
+                        ORDER BY "timeId" DESC
+                        LIMIT ${count}
+                    ) r
+                      ON r."journalEntryId" = je."timeId"
+                    -- Join Thoughts
+                    JOIN ${process.env.DATABASE_SCHEMA}."Thought" t
+                      ON t."timeId" = r."thoughtId"
+                    ORDER BY r."timeId" DESC;
 
-            // console.log(dummyData.JournalEntries);
-            // return (
-            //     Object.values(dummyData.JournalEntries)
-            //         // Same journal id
-            //         .filter((je) => je.journalId === journalId)
-            //         // Time cursor
-            //         .filter(
-            //             (je) =>
-            //                 new Date(je.timeId).getTime() <=
-            //                 new Date(cursorTime).getTime()
-            //         )
-            //         // Add userId
-            //         .map((je) => ({
-            //             userId: dummyData.Journals[je.journalId].userId,
-            //             ...je,
-            //         }))
-            //         // Same userId
-            //         .filter((je) => je.userId === userId)
-            //         // Get most recent
-            //         .sort(
-            //             (a, b) =>
-            //                 new Date(a.timeId).getTime() -
-            //                 new Date(b.timeId).getTime()
-            //         )
-            //         .slice(0, count)
-            // );
+                    COMMIT;`;
+
+                console.log(result);
+
+                return result;
+            } catch (err) {
+                console.log(err);
+            }
 
             return [];
         },
@@ -71,27 +75,55 @@ export default {
             contextValue: any,
             info: any
         ): Promise<Thought[]> => {
-            const userId = contextValue.req.session.userId;
+            try {
+                const userId = contextValue.req.session.userId;
 
-            const result: number = await prisma.$executeRaw`
-            BEGIN;
-            
-            -- 1. Confirm "User" owns "JournalId" 
-            IF NOT EXISTS (SELECT 1 FROM Journal WHERE id = ${journalId} AND userId = ${userId}) THEN
-                RAISE EXCEPTION 'Row with journalId=% and userId=% not found', ${journalId}, ${userId};
-                ROLLBACK;
-            END IF;
+                const thoughtDateIds = thoughtIds.map(
+                    (id: TimestampTzPg) => new Date(id)
+                );
 
-            SELECT * FROM ${process.env.DATABASE_SCHEMA}."Thought"
-            WHERE "journalId" = ${journalId}
-              AND "timeId" = ANY('{${thoughtIds.join()}}')
-            JOIN ${process.env.DATABASE_SCHEMA}."Journal" j
-              ON j."id" = t."journalId"
-              AND j."userId" = ${userId};
+                // 1. Get Journal and join with Thoughts
+                const result = await prisma.thought.findMany({
+                    where: {
+                        journalId: journalId,
+                        thought_journalId: {
+                            userId,
+                        },
+                        timeId: {
+                            in: thoughtDateIds,
+                        },
+                    },
+                });
 
-            COMMIT;`;
+                console.log(result);
 
-            console.log(result);
+                return result;
+            } catch (err) {
+                console.log(err);
+            }
+
+            // const result1: number = await prisma.$executeRaw`
+            // BEGIN;
+
+            // -- 1. Confirm "User" owns "JournalId"
+            // IF NOT EXISTS (SELECT 1 FROM ${
+            //     process.env.DATABASE_SCHEMA
+            // }."Journal" WHERE id = ${journalId} AND userId = ${userId}) THEN
+            //     RAISE EXCEPTION 'Row with journalId=% and userId=% not found', ${journalId}, ${userId};
+            //     ROLLBACK;
+            // END IF;
+
+            // SELECT * FROM
+            //   (
+            //     SELECT * FROM ${process.env.DATABASE_SCHEMA}."Thought"
+            //     WHERE "journalId" = ${journalId}
+            //     AND "timeId" = ANY('{${thoughtIds.join()}}')
+            //   ) t
+            // JOIN ${process.env.DATABASE_SCHEMA}."Journal" j
+            //   ON j."id" = t."journalId"
+            //   AND j."userId" = ${userId};
+
+            // COMMIT;`;
 
             return [];
         },
@@ -115,11 +147,35 @@ export default {
                 const journalEntryId: string = serializeDate(new Date());
 
                 // Transaction: Do not convert Inklings to Thoughts unless this entire query succeeds
+                // await prisma.$transaction(async (prisma) => {
+                //     await prisma.inkling.deleteMany({
+                //         where: {
+                //             journalId,
+                //             inkling_journalId: {
+                //                 userId,
+                //             },
+                //         },
+                //        // Cannot return deleted rows
+                //         returning: true
+                //     });
+
+                //     await prisma.reflection.findMany({
+                //         where: {
+                //             journalId,
+                //             reflection_journalId: {
+                //                 userId,
+                //             },
+                //         },
+                //     });
+                // });
+
                 const result: number = await prisma.$executeRaw`
                     BEGIN;
                     
                     -- 1. Confirm "User" owns "JournalId" 
-                    IF NOT EXISTS (SELECT 1 FROM Journal WHERE id = ${journalId} AND userId = ${userId}) THEN
+                    IF NOT EXISTS (SELECT 1 FROM ${
+                        process.env.DATABASE_SCHEMA
+                    }."Journal" WHERE id = ${journalId} AND userId = ${userId}) THEN
                         RAISE EXCEPTION 'Row with journalId=% and userId=% not found', ${journalId}, ${userId};
                         ROLLBACK;
                     END IF;
@@ -139,7 +195,7 @@ export default {
                         process.env.DATABASE_SCHEMA
                     }."JournalEntry" ("timeId", "journalId") values (${journalEntryId}, ${journalId});
 
-                    -- 4. Create and Insert Reflection
+                    -- 4. Create and Insert Reflections
                     INSERT INTO ${
                         process.env.DATABASE_SCHEMA
                     }."Reflection" ("journalId", "thoughtId", "journalEntryId", decision)

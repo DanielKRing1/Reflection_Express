@@ -1,39 +1,62 @@
 import { Journal } from "@prisma/client";
-import dummyData from "../../dummyData";
+import prisma from "../../../prisma/client";
 import { ResolverFragment } from "../../types/schema.types";
 import { CreateJournalArgs, JournalsArgs } from "./schema.gql";
 
 export default {
     Query: {
-        journals: (
+        journals: async (
             _: undefined,
-            { userId }: JournalsArgs,
+            {}: JournalsArgs,
             contextValue: any,
             info: any
-        ): Journal[] => {
-            return Object.values(dummyData.Journals);
+        ): Promise<Journal[]> => {
+            try {
+                const userId = contextValue.req.session.userId;
+
+                // 1. Find all Journals that belong to userId
+                const result = await prisma.journal.findMany({
+                    where: {
+                        userId,
+                    },
+                });
+
+                console.log(result);
+
+                return result;
+            } catch (err) {
+                console.log(err);
+            }
+
+            return [];
         },
     },
     Mutation: {
-        createJournal: (
+        createJournal: async (
             _: undefined,
-            { userId, journalName }: CreateJournalArgs,
+            { journalName }: CreateJournalArgs,
             contextValue: any,
             info: any
-        ): number => {
-            // try {
-            //     const id: number = Date.now();
-            //     dummyData.Journals[id] = {
-            //         id,
-            //         userId,
-            //         name: journalName,
-            //     };
-            //     return id;
-            // } catch (err) {
-            //     return -1;
-            // }
+        ): Promise<boolean> => {
+            try {
+                const userId = contextValue.req.session.userId;
 
-            return 1;
+                // 1. Create Journal with autoincrement id
+                const result = prisma.journal.create({
+                    data: {
+                        userId,
+                        name: journalName,
+                    },
+                });
+
+                console.log(result);
+
+                return true;
+            } catch (err) {
+                console.log(err);
+            }
+
+            return false;
         },
     },
 } as ResolverFragment;

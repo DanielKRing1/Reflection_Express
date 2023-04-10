@@ -1,60 +1,85 @@
+import { Inkling, Journal } from "@prisma/client";
+import prisma from "../../../prisma/client";
+
 import { ResolverFragment } from "../../types/schema.types";
 import { CommitInklingsArgs, InklingsArgs } from "./schema.gql";
 
 export default {
     Query: {
-        inklings: (
+        inklings: async (
             _: undefined,
-            { userId, journalId }: InklingsArgs,
+            { journalId }: InklingsArgs,
             contextValue: any,
             info: any
-        ) => {
-            // try {
-            //     const journal: Journal = dummyData.Journals[journalId];
-            //     if (journal.userId !== userId)
-            //         throw new Error(
-            //             `inklings() received an invalid request to fetch from journal ${journalId}, which does not correspond with user ${userId}`
-            //         );
-            //     return Object.values(dummyData.Inklings).filter(
-            //         (i: Inkling) => i.journalId === journalId
-            //     );
-            // } catch (err) {
-            //     return [];
-            // }
+        ): Promise<Inkling[]> => {
+            try {
+                const userId = contextValue.req.session.userId;
+
+                // 1. Get Inklings whose journalId matches the provided journalId
+                //      and whose provided userId owns the Journal
+                const result = await prisma.inkling.findMany({
+                    where: {
+                        journalId: journalId,
+                        inkling_journalId: {
+                            userId: userId,
+                        },
+                    },
+                });
+
+                console.log(result);
+
+                return result;
+            } catch (err) {
+                console.log(err);
+            }
+
+            return [];
         },
     },
     Mutation: {
-        commitInklings: (
+        commitInklings: async (
             _: undefined,
-            { userId, journalId, inklingTexts }: CommitInklingsArgs,
+            { journalId, inklingTexts }: CommitInklingsArgs,
             contextValue: any,
             info: any
-        ) => {
-            /**
-        INSERT INTO Comment (postId, userId, text)
-        SELECT <postId>, <userId>, <commentText>
-        WHERE EXISTS (SELECT 1 FROM Post WHERE id = <postId> AND userId = <userId>)
-       */
-            // try {
-            //     const journal: Journal = dummyData.Journals[journalId];
-            //     if (journal.userId !== userId)
-            //         throw new Error(
-            //             `commitInklings() received an invalid request to insert into journal ${journalId}, which does not correspond with user ${userId}`
-            //         );
-            //     inklingTexts.forEach((text: string) => {
-            //         const id: TimestampTzPg = serializeDate(
-            //             new Date(Math.random() * 1000000)
-            //         );
-            //         dummyData.Inklings[id] = {
-            //             timeId: id,
-            //             journalId,
-            //             text,
-            //         };
-            //     });
-            //     return true;
-            // } catch (err) {
-            //     return false;
-            // }
+        ): Promise<boolean> => {
+            try {
+                const userId = contextValue.req.session.userId;
+
+                await prisma.$transaction(async (prisma) => {
+                    // 1. Get Journal
+                    const journal: Journal =
+                        await prisma.journal.findUniqueOrThrow({
+                            where: {
+                                id: journalId,
+                            },
+                        });
+
+                    // 2. User does not own Journal
+                    if (journal.userId !== userId)
+                        throw new Error(
+                            `commitInklings received a request to access Journal ${journalId}, which is not owned by User ${userId}`
+                        );
+
+                    // 3. Create Inklings
+                    const baseTime = new Date();
+                    const result = await prisma.inkling.createMany({
+                        data: inklingTexts.map((text: string, i: number) => ({
+                            timeId: new Date(baseTime.getTime() + i),
+                            journalId,
+                            text,
+                        })),
+                    });
+
+                    console.log(result);
+                });
+
+                return true;
+            } catch (err) {
+                console.log(err);
+            }
+
+            return false;
         },
     },
 } as ResolverFragment;

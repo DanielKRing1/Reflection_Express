@@ -20,6 +20,7 @@ import authorizeMiddleware from "./middlewares/session/genAuthorizeSession.middl
 // ROUTER
 import genLoginRouter from "./routes/Login";
 import genRefreshRouter from "./routes/Refresh";
+import axios from "axios";
 
 // APP
 const app: Express = express();
@@ -43,8 +44,8 @@ app.use(
 );
 app.use(loggingMiddleware);
 // // Auth routes
-app.use("/login", accessSession, genLoginRouter());
-app.use("/refresh", refreshSession, genRefreshRouter());
+app.use("/login", genLoginRouter());
+app.use("/refresh", genRefreshRouter());
 // Auth middleware
 app.use(authorizeMiddleware);
 // // All else
@@ -53,3 +54,21 @@ app.use(authorizeMiddleware);
 // GRAPHQL
 // Start GraphQL Server
 gqlServer(app, accessSession);
+
+setTimeout(async () => {
+  const res = await axios.post("http://localhost:4000/login/create-user", {
+    userId: "Daniel",
+    password: "password1",
+  });
+  console.log("axios response---------------------------");
+  console.log(res);
+
+  setTimeout(async () => {
+    const res = await axios.post("http://localhost:4000/login/create-user", {
+      userId: "Daniel",
+      password: "password1",
+    });
+    console.log("axios response---------------------------");
+    console.log(res);
+  }, 5000);
+}, 5000);

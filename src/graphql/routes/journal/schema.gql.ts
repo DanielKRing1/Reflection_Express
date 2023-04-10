@@ -23,13 +23,10 @@ export default {
 
 // QUERY RESOLVERS
 
-export type JournalsArgs = {
-    userId: string;
-};
+export type JournalsArgs = {};
 
 // MUTATION RESOLVERS
 
 export type CreateJournalArgs = {
-    userId: string;
     journalName: string;
 };

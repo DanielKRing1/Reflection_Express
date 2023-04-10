@@ -1,19 +1,31 @@
-import dummyData from "../../dummyData";
 import GqlContext from "../../types/context.types";
 import { ResolverFragment } from "../../types/schema.types";
 import { UserArgs } from "./schema.gql";
 
 import { User } from "@prisma/client";
+import prisma from "../../../prisma/client";
 
 const resolvers = {
     Query: {
-        user: (
+        user: async (
             _: undefined,
             { email }: UserArgs,
             contextValue: GqlContext,
             info: undefined
-        ): User | null => {
-            return dummyData.Users[email] || null;
+        ): Promise<User | null> => {
+            try {
+                const result = await prisma.user.findUniqueOrThrow({
+                    where: {
+                        email,
+                    },
+                });
+
+                return result;
+            } catch (err) {
+                console.log(err);
+            }
+
+            return null;
         },
     },
     Mutation: {},
