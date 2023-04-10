@@ -41,6 +41,8 @@ model Journal {
   journal_userId              User                @relation(name: "journal_userId", fields: [userId], references: [email], onDelete: Cascade, onUpdate: Cascade)
   userId                      String
 
+  // A User should not have any duplicate Journal names
+  @@unique([userId, name])
   @@index([userId])
 }
 
