@@ -39,14 +39,14 @@ const createUserController = async function (
 
         // 2. Check if user already exists
         const userAlreadyExists: boolean =
-            (await prisma.user.findUniqueOrThrow({
+            (await prisma.user.findUnique({
                 where: {
                     email: userId,
                 },
-            })) !== undefined;
+            })) !== null;
         if (userAlreadyExists)
             throw new Error(
-                `createUser() received an invalid request to create a user that already exists ${userId}`
+                `createUser() received an invalid request to create a user that already exists "${userId}"`
             );
 
         // 3. Hash password
@@ -69,6 +69,7 @@ const createUserController = async function (
         // 3. Login and get access and refresh tokens
         next();
     } catch (err) {
+        console.log(err);
         return res.status(409).send("Failed to create user");
     }
 };
