@@ -8,7 +8,7 @@
  * USER
  *
  * create table t2 (id bigserial primary key generated always as identity);
- * [serial id] pk [lastUsedJournalId] fk
+ * [email] pk [lastUsedJId] fk
  *
  * INKLINGS
  * [time id [journalId] fk] pk [data]

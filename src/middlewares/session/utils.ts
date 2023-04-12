@@ -4,7 +4,7 @@ import RedisStore from "connect-redis";
 import { Request } from "express";
 
 type CreateRedisSession = {
-  redisPrefix: string;
+    redisPrefix: string;
 } & Omit<CreateSession<RedisStore>, "sessionStore">;
 /**
  * Create express-session with Redis store
@@ -13,20 +13,20 @@ type CreateRedisSession = {
  * @returns
  */
 export const createRedisSession = ({
-  redisPrefix,
-  sessionName,
-  secret,
-  maxAge,
-  cookiePath,
-}: CreateRedisSession) => {
-  const redisStore: RedisStore = createRedisStore(redisPrefix);
-  return createSession({
+    redisPrefix,
     sessionName,
-    sessionStore: redisStore,
     secret,
     maxAge,
     cookiePath,
-  });
+}: CreateRedisSession) => {
+    const redisStore: RedisStore = createRedisStore(redisPrefix);
+    return createSession({
+        sessionName,
+        sessionStore: redisStore,
+        secret,
+        maxAge,
+        cookiePath,
+    });
 };
 
 /**
@@ -36,21 +36,21 @@ export const createRedisSession = ({
  * @returns
  */
 const createRedisStore = (prefix: string): RedisStore => {
-  let redisClient = createClient();
-  redisClient.connect().catch(console.error);
+    let redisClient = createClient();
+    redisClient.connect().catch(console.error);
 
-  return new RedisStore({
-    client: redisClient,
-    prefix,
-  });
+    return new RedisStore({
+        client: redisClient,
+        prefix,
+    });
 };
 
 type CreateSession<T> = {
-  sessionName: string;
-  sessionStore?: T;
-  secret: string;
-  maxAge: number;
-  cookiePath: string;
+    sessionName: string;
+    sessionStore?: T;
+    secret: string;
+    maxAge: number;
+    cookiePath: string;
 };
 /**
  * Create express-session
@@ -59,35 +59,35 @@ type CreateSession<T> = {
  * @returns
  */
 export const createSession = ({
-  sessionName,
-  sessionStore,
-  secret,
-  maxAge,
-  cookiePath,
-}: CreateSession<any>) => {
-  return session({
+    sessionName,
+    sessionStore,
     secret,
-    store: sessionStore,
-    name: sessionName,
-    resave: false, // Do not re-submit 'set' action to store when 'session' obj has not been modified
-    saveUninitialized: false, // Do not 'create' session in store when 'session' obj has not been modified
-    cookie: {
-      path: cookiePath,
-      // secure: true, // if true only transmit cookie over https
-      httpOnly: true, // if true prevent client side JS from reading the cookie
-      maxAge,
-    },
-  });
+    maxAge,
+    cookiePath,
+}: CreateSession<any>) => {
+    return session({
+        secret,
+        store: sessionStore,
+        name: sessionName,
+        resave: false, // Do not re-submit 'set' action to store when 'session' obj has not been modified
+        saveUninitialized: false, // Do not 'create' session in store when 'session' obj has not been modified
+        cookie: {
+            path: cookiePath,
+            // secure: true, // if true only transmit cookie over https
+            httpOnly: true, // if true prevent client side JS from reading the cookie
+            maxAge,
+        },
+    });
 };
 
 export const destroySession = async (req: Request) => {
-  await new Promise<boolean>((res, rej) => {
-    req.session.destroy((err) => {
-      if (err) return rej(err);
-      else return res(true);
+    await new Promise<boolean>((res, rej) => {
+        req.session.destroy((err) => {
+            if (err) return rej(err);
+            else return res(true);
+        });
+        // TODO: Check if this is necessary? Or does req.session.destroy() handle this?
+        // @ts-ignore
+        req.session = null; // Deletes the cookie.
     });
-    // TODO: Check if this is necessary? Or does req.session.destroy() handle this?
-    // @ts-ignore
-    req.session = null; // Deletes the cookie.
-  });
 };
