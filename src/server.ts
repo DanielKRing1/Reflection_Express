@@ -2,9 +2,8 @@
 import express, { Express } from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import * as dotenv from "dotenv"; // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
-dotenv.config();
-console.log(process.env); // remove this after you've confirmed it is working
+import configureDotEnv from "../env";
+configureDotEnv();
 
 // SERVER
 import gqlServer from "./gqlServer";
@@ -21,16 +20,17 @@ import authorizeMiddleware from "./middlewares/session/genAuthorizeSession.middl
 import genLoginRouter from "./routes/Login";
 import genRefreshRouter from "./routes/Refresh";
 import axios from "axios";
+import { GQL_PATH } from "./graphql/constants";
 
 // APP
 const app: Express = express();
 
 // MIDDLEWARE
 app.use(
-  cors({
-    // origin: "https://reflection.fly.dev/",
-    credentials: true, // <-- REQUIRED backend setting
-  })
+    cors({
+        // origin: "https://reflection.fly.dev/",
+        credentials: true, // <-- REQUIRED backend setting
+    })
 );
 // parse cookies - add to req.cookies
 app.use(cookieParser());
@@ -38,16 +38,16 @@ app.use(cookieParser());
 app.use(express.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(
-  express.urlencoded({
-    extended: true,
-  })
+    express.urlencoded({
+        extended: true,
+    })
 );
 app.use(loggingMiddleware);
 // // Auth routes
 app.use("/login", genLoginRouter());
 app.use("/refresh", genRefreshRouter());
 // Auth middleware
-app.use(authorizeMiddleware);
+// app.use(GQL_PATH, authorizeMiddleware);
 // // All else
 // app.use("/", routes);
 
@@ -55,20 +55,25 @@ app.use(authorizeMiddleware);
 // Start GraphQL Server
 gqlServer(app, accessSession);
 
-setTimeout(async () => {
-  const res = await axios.post("http://localhost:4000/login/create-user", {
-    userId: "Daniel",
-    password: "password1",
-  });
-  console.log("axios response---------------------------");
-  console.log(res);
+export default app;
 
-  setTimeout(async () => {
-    const res = await axios.post("http://localhost:4000/login/create-user", {
-      userId: "Daniel",
-      password: "password1",
-    });
-    console.log("axios response---------------------------");
-    console.log(res);
-  }, 5000);
-}, 5000);
+// setTimeout(async () => {
+//     const res = await axios.post("http://localhost:4000/login/create-user", {
+//         userId: "Daniel",
+//         password: "password1",
+//     });
+//     console.log("axios response---------------------------");
+//     console.log(res);
+
+//     setTimeout(async () => {
+//         const res = await axios.post(
+//             "http://localhost:4000/login/create-user",
+//             {
+//                 userId: "Daniel",
+//                 password: "password1",
+//             }
+//         );
+//         console.log("axios response---------------------------");
+//         console.log(res);
+//     }, 5000);
+// }, 5000);
