@@ -2,11 +2,6 @@ import { SchemaFragment } from "../../types/schema.types";
 
 export default {
     Types: `
-    type User {
-      id: Int!
-      lastUsedJournalId: Int
-    }
-
     type Journal {
       id: Int!
       userId: String!
@@ -14,10 +9,10 @@ export default {
     }
   `,
     Query: `
-    journals(userId: String!): [Journal]!
+    journals: [Journal]!
   `,
     Mutation: `
-    createJournal(userId: String!, journalName: String!): Int!
+    createJournal(journalName: String!): Int!
   `,
 } as SchemaFragment;
 

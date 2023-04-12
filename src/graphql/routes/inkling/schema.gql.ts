@@ -9,10 +9,10 @@ export default {
     }
   `,
     Query: `
-    inklings(userId: String!, journalId: Int!): [Inkling]
+    inklings(journalId: Int!): [Inkling]
   `,
     Mutation: `
-    commitInklings(userId: String!, journalId: Int!, inklingText: [String]!): Boolean
+    commitInklings(journalId: Int!, inklingText: [String]!): Boolean
   `,
 } as SchemaFragment;
 
