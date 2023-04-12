@@ -2,7 +2,7 @@ import { SchemaFragment } from "../../types/schema.types";
 
 // OPERATION NAMES
 
-const USER_QUERY_NAME = "User";
+const USER_QUERY_NAME = "user";
 const CREATE_USER_MUTATION_NAME = "createUser";
 const LOGIN_MUTATION_NAME = "login";
 
@@ -19,13 +19,12 @@ export const AUTH_OP_NAMES: Set<string> = new Set([
 export default {
     Types: `
     type User {
-      name: String!
       email: String!
-      lastUsedJId: String!
+      lastUsedJId: String
     }
   `,
     Query: `
-    ${USER_QUERY_NAME}(email: String!): User
+    user(email: String!): User
   `,
     Mutation: ``,
 } as SchemaFragment;

@@ -14,11 +14,14 @@ const resolvers = {
             info: undefined
         ): Promise<User | null> => {
             try {
+                console.log("GQL USER---------------------------");
                 const result = await prisma.user.findUniqueOrThrow({
                     where: {
                         email,
                     },
                 });
+
+                console.log(result);
 
                 return result;
             } catch (err) {
