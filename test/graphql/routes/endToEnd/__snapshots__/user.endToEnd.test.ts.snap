@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`User GraphQL server Should fail login with wrong password and then fail to get the created User without an access cookie 1`] = `
+"{"data":{"user":null}}
+"
+`;
+
+exports[`User GraphQL server Should fail login with wrong userId and then fail to get the created User without an access cookie 1`] = `
+"{"data":{"user":null}}
+"
+`;
+
+exports[`User GraphQL server Should fail to get the created User without an access cookie 1`] = `
+"{"data":{"user":null}}
+"
+`;
+
+exports[`User GraphQL server Should get the created User (this requires successfully sending an access session cookie with the request) 1`] = `
+"{"data":{"user":{"email":"1","lastUsedJId":null}}}
+"
+`;
+
+exports[`User GraphQL server Should login and then get the created User 1`] = `
+"{"data":{"user":{"email":"1","lastUsedJId":null}}}
+"
+`;

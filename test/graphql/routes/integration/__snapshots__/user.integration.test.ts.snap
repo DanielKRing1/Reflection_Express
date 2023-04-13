@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`User GraphQL api Should get the created User 1`] = `
+{
+  "body": {
+    "kind": "single",
+    "singleResult": {
+      "data": {
+        "user": {
+          "email": "1",
+          "lastUsedJId": null,
+        },
+      },
+      "errors": undefined,
+    },
+  },
+  "http": {
+    "headers": Map {
+      "cache-control" => "no-store",
+    },
+    "status": undefined,
+  },
+}
+`;
