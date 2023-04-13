@@ -9,15 +9,16 @@ const resolvers = {
     Query: {
         user: async (
             _: undefined,
-            { email }: UserArgs,
+            {}: UserArgs,
             contextValue: GqlContext,
             info: undefined
         ): Promise<User | null> => {
             try {
-                console.log("GQL USER---------------------------");
+                const userId = contextValue.req.session.userId;
+
                 const result = await prisma.user.findUniqueOrThrow({
                     where: {
-                        email,
+                        email: userId,
                     },
                 });
 

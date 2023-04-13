@@ -24,16 +24,14 @@ export default {
     }
   `,
     Query: `
-    user(email: String!): User
+    user: User
   `,
     Mutation: ``,
 } as SchemaFragment;
 
 // QUERY RESOLVERS
 
-export type UserArgs = {
-    email: string;
-};
+export type UserArgs = {};
 
 // MUTATION RESOLVERS
 
