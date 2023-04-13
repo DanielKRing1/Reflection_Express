@@ -64,8 +64,6 @@ const createUserController = async function (
             },
         });
 
-        console.log(createStatus);
-
         // 3. Login and get access and refresh tokens
         next();
     } catch (err) {
