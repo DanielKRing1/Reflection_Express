@@ -10,7 +10,6 @@ import resolvers from "./graphql/resolvers";
 import GqlContext, { RequestWGqlContext } from "./graphql/types/context.types";
 
 // CONFIG
-import { PORT } from "./config/server.config";
 import { GQL_PATH } from "./graphql/constants";
 
 export default async (
@@ -51,10 +50,5 @@ export default async (
         })
     );
 
-    // START SERVER
-    await new Promise<void>((resolve) =>
-        httpServer.listen({ port: PORT }, resolve)
-    );
-    console.log(`🚀 Server ready at http://localhost:${PORT}/graphql`);
-    // app.listen(PORT, () => console.log(`Server listening on port ${PORT}!`));
+    return httpServer;
 };
