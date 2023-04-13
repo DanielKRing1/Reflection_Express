@@ -51,8 +51,4 @@ app.use("/refresh", genRefreshRouter());
 // // All else
 // app.use("/", routes);
 
-// GRAPHQL
-// Start GraphQL Server
-gqlServer(app, accessSession);
-
 export default app;
