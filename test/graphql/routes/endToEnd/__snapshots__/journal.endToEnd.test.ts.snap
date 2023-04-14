@@ -1,17 +1,17 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Journal GraphQL server Should create Journal 1 1`] = `
-"{"data":{"createJournal":1}}
+"{"data":{"createJournal":true}}
 "
 `;
 
 exports[`Journal GraphQL server Should create Journal 2 and 3 1`] = `
-"{"data":{"create2":1,"create3":1}}
+"{"data":{"create2":true,"create3":true}}
 "
 `;
 
 exports[`Journal GraphQL server Should create Journal 4 and 5 1`] = `
-"{"data":{"create4":1,"create5":1}}
+"{"data":{"create4":true,"create5":true}}
 "
 `;
 
