@@ -1,17 +1,27 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Journal GraphQL server Should create Journal 1 1`] = `
-"{"data":{"createJournal":true}}
+"{"data":{"createJournal":{"id":"1","userId":"1","name":"Journal1"}}}
+"
+`;
+
+exports[`Journal GraphQL server Should create Journal 1 for User 2 1`] = `
+"{"data":{"createJournal":{"id":"8","userId":"2","name":"Journal1"}}}
 "
 `;
 
 exports[`Journal GraphQL server Should create Journal 2 and 3 1`] = `
-"{"data":{"create2":true,"create3":true}}
+"{"data":{"create2":{"id":"3","userId":"1","name":"Journal2"},"create3":{"id":"4","userId":"1","name":"Journal3"}}}
 "
 `;
 
 exports[`Journal GraphQL server Should create Journal 4 and 5 1`] = `
-"{"data":{"create4":true,"create5":true}}
+"{"data":{"create4":{"id":"6","userId":"2","name":"Journal4"},"create5":{"id":"7","userId":"2","name":"Journal5"}}}
+"
+`;
+
+exports[`Journal GraphQL server Should fail to create duplicate Journal 1 for User 1 1`] = `
+"{"data":{"createJournal":null}}
 "
 `;
 
@@ -26,16 +36,21 @@ exports[`Journal GraphQL server Should get Journal 1 1`] = `
 `;
 
 exports[`Journal GraphQL server Should get Journal 1, 2, and 3 1`] = `
-"{"data":{"journals":[{"id":"1","userId":"1","name":"Journal1"},{"id":"2","userId":"1","name":"Journal2"},{"id":"3","userId":"1","name":"Journal3"}]}}
+"{"data":{"journals":[{"id":"1","userId":"1","name":"Journal1"},{"id":"3","userId":"1","name":"Journal2"},{"id":"4","userId":"1","name":"Journal3"}]}}
 "
 `;
 
 exports[`Journal GraphQL server Should get Journal 4 and 5 1`] = `
-"{"data":{"journals":[{"id":"4","userId":"2","name":"Journal4"},{"id":"5","userId":"2","name":"Journal5"}]}}
+"{"data":{"journals":[{"id":"6","userId":"2","name":"Journal4"},{"id":"7","userId":"2","name":"Journal5"}]}}
 "
 `;
 
 exports[`Journal GraphQL server Should get no Journals (since none have been made yet) 1`] = `
 "{"data":{"journals":[]}}
+"
+`;
+
+exports[`Journal GraphQL server Should still fail to create duplicate Journal 1 for User 1 1`] = `
+"{"data":{"createJournal":null}}
 "
 `;

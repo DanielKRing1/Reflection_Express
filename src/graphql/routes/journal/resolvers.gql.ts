@@ -37,7 +37,7 @@ export default {
             { journalName }: CreateJournalArgs,
             contextValue: any,
             info: any
-        ): Promise<boolean> => {
+        ): Promise<Journal | null> => {
             try {
                 const userId = contextValue.req.session.userId;
 
@@ -51,12 +51,12 @@ export default {
 
                 console.log(result);
 
-                return true;
+                return result;
             } catch (err) {
                 console.log(err);
             }
 
-            return false;
+            return null;
         },
     },
 } as ResolverFragment;

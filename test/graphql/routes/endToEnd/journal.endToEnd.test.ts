@@ -53,7 +53,28 @@ describe("Journal GraphQL server", () => {
     it("Should create Journal 1", async () => {
         const queryData = {
             query: `mutation CreateJournal($journalName: String!) {
-                createJournal(journalName: $journalName)
+                createJournal(journalName: $journalName) {
+                    id
+                    userId
+                    name
+                }
+            }`,
+            variables: { journalName: JOURNAL_NAME1 },
+        };
+
+        const res = await agent.post("/graphql").send(queryData);
+
+        expect(res.text).toMatchSnapshot();
+    });
+
+    it("Should fail to create duplicate Journal 1 for User 1", async () => {
+        const queryData = {
+            query: `mutation CreateJournal($journalName: String!) {
+                createJournal(journalName: $journalName) {
+                    id
+                    userId
+                    name
+                }
               }`,
             variables: { journalName: JOURNAL_NAME1 },
         };
@@ -83,13 +104,38 @@ describe("Journal GraphQL server", () => {
     it("Should create Journal 2 and 3", async () => {
         const queryData = {
             query: `mutation CreateJournal($journalName2: String!, $journalName3: String!) {
-                create2: createJournal(journalName: $journalName2)
-                create3: createJournal(journalName: $journalName3)
+                create2: createJournal(journalName: $journalName2) {
+                    id
+                    userId
+                    name
+                }
+                create3: createJournal(journalName: $journalName3) {
+                    id
+                    userId
+                    name
+                }
               }`,
             variables: {
                 journalName2: JOURNAL_NAME2,
                 journalName3: JOURNAL_NAME3,
             },
+        };
+
+        const res = await agent.post("/graphql").send(queryData);
+
+        expect(res.text).toMatchSnapshot();
+    });
+
+    it("Should still fail to create duplicate Journal 1 for User 1", async () => {
+        const queryData = {
+            query: `mutation CreateJournal($journalName: String!) {
+                createJournal(journalName: $journalName) {
+                    id
+                    userId
+                    name
+                }
+              }`,
+            variables: { journalName: JOURNAL_NAME1 },
         };
 
         const res = await agent.post("/graphql").send(queryData);
@@ -144,8 +190,16 @@ describe("Journal GraphQL server", () => {
     it("Should create Journal 4 and 5", async () => {
         const queryData = {
             query: `mutation CreateJournal($journalName4: String!, $journalName5: String!) {
-                create4: createJournal(journalName: $journalName4)
-                create5: createJournal(journalName: $journalName5)
+                create4: createJournal(journalName: $journalName4) {
+                    id
+                    userId
+                    name
+                }
+                create5: createJournal(journalName: $journalName5) {
+                    id
+                    userId
+                    name
+                }
               }`,
             variables: {
                 journalName4: JOURNAL_NAME4,
@@ -168,6 +222,23 @@ describe("Journal GraphQL server", () => {
                 }
             }`,
             variables: {},
+        };
+
+        const res = await agent.post("/graphql").send(queryData);
+
+        expect(res.text).toMatchSnapshot();
+    });
+
+    it("Should create Journal 1 for User 2", async () => {
+        const queryData = {
+            query: `mutation CreateJournal($journalName: String!) {
+                createJournal(journalName: $journalName) {
+                    id
+                    userId
+                    name
+                }
+            }`,
+            variables: { journalName: JOURNAL_NAME1 },
         };
 
         const res = await agent.post("/graphql").send(queryData);
