@@ -9,22 +9,22 @@ export default {
     }
   `,
     Query: `
-    inklings(journalId: BigInt!): [Inkling]
+    inklings(journalId: BigInt!): [Inkling]!
   `,
     Mutation: `
-    commitInklings(journalId: BigInt!, inklingTexts: [String]!): Boolean!
+    commitInklings(journalId: BigInt!, inklingTexts: [String]!): [Inkling]!
   `,
 } as SchemaFragment;
 
 // QUERY RESOLVERS
 
 export type InklingsArgs = {
-    journalId: number;
+    journalId: string;
 };
 
 // MUTATION RESOLVERS
 
 export type CommitInklingsArgs = {
-    journalId: number;
+    journalId: string;
     inklingTexts: string[];
 };

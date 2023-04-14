@@ -19,7 +19,7 @@ export default {
                 //      and whose provided userId owns the Journal
                 const result = await prisma.inkling.findMany({
                     where: {
-                        journalId: journalId,
+                        journalId: BigInt(journalId),
                         inkling_journalId: {
                             userId: userId,
                         },
@@ -42,16 +42,20 @@ export default {
             { journalId, inklingTexts }: CommitInklingsArgs,
             contextValue: any,
             info: any
-        ): Promise<boolean> => {
+        ): Promise<Inkling[]> => {
             try {
+                // User id
                 const userId = contextValue.req.session.userId;
+
+                // Return data
+                let inklings: Inkling[] = [];
 
                 await prisma.$transaction(async (prisma) => {
                     // 1. Get Journal
                     const journal: Journal =
                         await prisma.journal.findUniqueOrThrow({
                             where: {
-                                id: journalId,
+                                id: BigInt(journalId),
                             },
                         });
 
@@ -63,23 +67,24 @@ export default {
 
                     // 3. Create Inklings
                     const baseTime = new Date();
+                    inklings = inklingTexts.map((text: string, i: number) => ({
+                        timeId: new Date(baseTime.getTime() + i),
+                        journalId: BigInt(journalId),
+                        text,
+                    }));
                     const result = await prisma.inkling.createMany({
-                        data: inklingTexts.map((text: string, i: number) => ({
-                            timeId: new Date(baseTime.getTime() + i),
-                            journalId,
-                            text,
-                        })),
+                        data: inklings,
                     });
 
                     console.log(result);
                 });
 
-                return true;
+                return inklings;
             } catch (err) {
                 console.log(err);
             }
 
-            return false;
+            return [];
         },
     },
 } as ResolverFragment;
