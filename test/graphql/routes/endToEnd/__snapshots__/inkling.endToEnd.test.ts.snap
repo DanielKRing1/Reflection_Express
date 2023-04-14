@@ -3,7 +3,33 @@
 exports[`Inkling GraphQL server Should create 5 User 1 Journal 1 Inklings 1`] = `
 {
   "data": {
-    "commitInklings": true,
+    "commitInklings": [
+      {
+        "journalId": "1",
+        "text": "User1 Inkling1 Journal1",
+        "timeId": 1681504601784,
+      },
+      {
+        "journalId": "1",
+        "text": "User1 Inkling2 Journal1",
+        "timeId": 1681504601785,
+      },
+      {
+        "journalId": "1",
+        "text": "User1 Inkling3 Journal1",
+        "timeId": 1681504601786,
+      },
+      {
+        "journalId": "1",
+        "text": "User1 Inkling4 Journal1",
+        "timeId": 1681504601787,
+      },
+      {
+        "journalId": "1",
+        "text": "User1 Inkling5 Journal1",
+        "timeId": 1681504601788,
+      },
+    ],
   },
 }
 `;
@@ -11,7 +37,33 @@ exports[`Inkling GraphQL server Should create 5 User 1 Journal 1 Inklings 1`] = 
 exports[`Inkling GraphQL server Should create 5 User 1 Journal 2 Inklings 1`] = `
 {
   "data": {
-    "commitInklings": true,
+    "commitInklings": [
+      {
+        "journalId": "2",
+        "text": "User1 Inkling6 Journal2",
+        "timeId": 1681504601876,
+      },
+      {
+        "journalId": "2",
+        "text": "User1 Inkling7 Journal2",
+        "timeId": 1681504601877,
+      },
+      {
+        "journalId": "2",
+        "text": "User1 Inkling3 Journal2",
+        "timeId": 1681504601878,
+      },
+      {
+        "journalId": "2",
+        "text": "User1 Inkling9 Journal2",
+        "timeId": 1681504601879,
+      },
+      {
+        "journalId": "2",
+        "text": "User1 Inkling10 Journal2",
+        "timeId": 1681504601880,
+      },
+    ],
   },
 }
 `;
@@ -19,7 +71,33 @@ exports[`Inkling GraphQL server Should create 5 User 1 Journal 2 Inklings 1`] = 
 exports[`Inkling GraphQL server Should create 5 more User 1 Journal 1 Inklings 1`] = `
 {
   "data": {
-    "commitInklings": true,
+    "commitInklings": [
+      {
+        "journalId": "1",
+        "text": "User1 Inkling6 Journal1",
+        "timeId": 1681504601819,
+      },
+      {
+        "journalId": "1",
+        "text": "User1 Inkling7 Journal1",
+        "timeId": 1681504601820,
+      },
+      {
+        "journalId": "1",
+        "text": "User1 Inkling8 Journal1",
+        "timeId": 1681504601821,
+      },
+      {
+        "journalId": "1",
+        "text": "User1 Inkling9 Journal1",
+        "timeId": 1681504601822,
+      },
+      {
+        "journalId": "1",
+        "text": "User1 Inkling10 Journal1",
+        "timeId": 1681504601823,
+      },
+    ],
   },
 }
 `;
@@ -27,7 +105,11 @@ exports[`Inkling GraphQL server Should create 5 more User 1 Journal 1 Inklings 1
 exports[`Inkling GraphQL server Should create User 1 Journal 1 1`] = `
 {
   "data": {
-    "createJournal": true,
+    "createJournal": {
+      "id": "1",
+      "name": "1",
+      "userId": "1",
+    },
   },
 }
 `;
@@ -35,7 +117,11 @@ exports[`Inkling GraphQL server Should create User 1 Journal 1 1`] = `
 exports[`Inkling GraphQL server Should create User 1 Journal 2 1`] = `
 {
   "data": {
-    "createJournal": true,
+    "createJournal": {
+      "id": "2",
+      "name": "2",
+      "userId": "1",
+    },
   },
 }
 `;
@@ -43,7 +129,11 @@ exports[`Inkling GraphQL server Should create User 1 Journal 2 1`] = `
 exports[`Inkling GraphQL server Should create User 2 Journal 3 1`] = `
 {
   "data": {
-    "createJournal": true,
+    "createJournal": {
+      "id": "3",
+      "name": "3",
+      "userId": "2",
+    },
   },
 }
 `;
@@ -51,7 +141,33 @@ exports[`Inkling GraphQL server Should create User 2 Journal 3 1`] = `
 exports[`Inkling GraphQL server Should create User 2 Journal 3 Inklings 1`] = `
 {
   "data": {
-    "commitInklings": true,
+    "commitInklings": [
+      {
+        "journalId": "3",
+        "text": "User2 Inkling1 Journal3",
+        "timeId": 1681504602071,
+      },
+      {
+        "journalId": "3",
+        "text": "User2 Inkling2 Journal3",
+        "timeId": 1681504602072,
+      },
+      {
+        "journalId": "3",
+        "text": "User2 Inkling3 Journal3",
+        "timeId": 1681504602073,
+      },
+      {
+        "journalId": "3",
+        "text": "User2 Inkling4 Journal3",
+        "timeId": 1681504602074,
+      },
+      {
+        "journalId": "3",
+        "text": "User2 Inkling5 Journal3",
+        "timeId": 1681504602075,
+      },
+    ],
   },
 }
 `;
@@ -95,27 +211,27 @@ exports[`Inkling GraphQL server Should get 5 User 1 Journal 1 Inklings 1`] = `
       {
         "journalId": "1",
         "text": "User1 Inkling1 Journal1",
-        "timeId": 1681455090690,
+        "timeId": 1681504601784,
       },
       {
         "journalId": "1",
         "text": "User1 Inkling2 Journal1",
-        "timeId": 1681455090691,
+        "timeId": 1681504601785,
       },
       {
         "journalId": "1",
         "text": "User1 Inkling3 Journal1",
-        "timeId": 1681455090692,
+        "timeId": 1681504601786,
       },
       {
         "journalId": "1",
         "text": "User1 Inkling4 Journal1",
-        "timeId": 1681455090693,
+        "timeId": 1681504601787,
       },
       {
         "journalId": "1",
         "text": "User1 Inkling5 Journal1",
-        "timeId": 1681455090694,
+        "timeId": 1681504601788,
       },
     ],
   },
@@ -129,27 +245,27 @@ exports[`Inkling GraphQL server Should get 5 User 1 Journal 2 Inklings 1`] = `
       {
         "journalId": "2",
         "text": "User1 Inkling6 Journal2",
-        "timeId": 1681455090776,
+        "timeId": 1681504601876,
       },
       {
         "journalId": "2",
         "text": "User1 Inkling7 Journal2",
-        "timeId": 1681455090777,
+        "timeId": 1681504601877,
       },
       {
         "journalId": "2",
         "text": "User1 Inkling3 Journal2",
-        "timeId": 1681455090778,
+        "timeId": 1681504601878,
       },
       {
         "journalId": "2",
         "text": "User1 Inkling9 Journal2",
-        "timeId": 1681455090779,
+        "timeId": 1681504601879,
       },
       {
         "journalId": "2",
         "text": "User1 Inkling10 Journal2",
-        "timeId": 1681455090780,
+        "timeId": 1681504601880,
       },
     ],
   },
@@ -163,27 +279,27 @@ exports[`Inkling GraphQL server Should get 5 User 2 Journal 3 Inklings 1`] = `
       {
         "journalId": "3",
         "text": "User2 Inkling1 Journal3",
-        "timeId": 1681455090967,
+        "timeId": 1681504602071,
       },
       {
         "journalId": "3",
         "text": "User2 Inkling2 Journal3",
-        "timeId": 1681455090968,
+        "timeId": 1681504602072,
       },
       {
         "journalId": "3",
         "text": "User2 Inkling3 Journal3",
-        "timeId": 1681455090969,
+        "timeId": 1681504602073,
       },
       {
         "journalId": "3",
         "text": "User2 Inkling4 Journal3",
-        "timeId": 1681455090970,
+        "timeId": 1681504602074,
       },
       {
         "journalId": "3",
         "text": "User2 Inkling5 Journal3",
-        "timeId": 1681455090971,
+        "timeId": 1681504602075,
       },
     ],
   },
@@ -197,52 +313,52 @@ exports[`Inkling GraphQL server Should get 10 User 1 Journal 1 Inklings 1`] = `
       {
         "journalId": "1",
         "text": "User1 Inkling1 Journal1",
-        "timeId": 1681455090690,
+        "timeId": 1681504601784,
       },
       {
         "journalId": "1",
         "text": "User1 Inkling2 Journal1",
-        "timeId": 1681455090691,
+        "timeId": 1681504601785,
       },
       {
         "journalId": "1",
         "text": "User1 Inkling3 Journal1",
-        "timeId": 1681455090692,
+        "timeId": 1681504601786,
       },
       {
         "journalId": "1",
         "text": "User1 Inkling4 Journal1",
-        "timeId": 1681455090693,
+        "timeId": 1681504601787,
       },
       {
         "journalId": "1",
         "text": "User1 Inkling5 Journal1",
-        "timeId": 1681455090694,
+        "timeId": 1681504601788,
       },
       {
         "journalId": "1",
         "text": "User1 Inkling6 Journal1",
-        "timeId": 1681455090720,
+        "timeId": 1681504601819,
       },
       {
         "journalId": "1",
         "text": "User1 Inkling7 Journal1",
-        "timeId": 1681455090721,
+        "timeId": 1681504601820,
       },
       {
         "journalId": "1",
         "text": "User1 Inkling8 Journal1",
-        "timeId": 1681455090722,
+        "timeId": 1681504601821,
       },
       {
         "journalId": "1",
         "text": "User1 Inkling9 Journal1",
-        "timeId": 1681455090723,
+        "timeId": 1681504601822,
       },
       {
         "journalId": "1",
         "text": "User1 Inkling10 Journal1",
-        "timeId": 1681455090724,
+        "timeId": 1681504601823,
       },
     ],
   },

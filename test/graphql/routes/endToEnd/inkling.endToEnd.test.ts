@@ -79,8 +79,12 @@ describe("Inkling GraphQL server", () => {
     it("Should create User 1 Journal 1", async () => {
         const queryData = {
             query: `mutation CreateJournal($journalName: String!) {
-                createJournal(journalName: $journalName)
-              }`,
+                createJournal(journalName: $journalName) {
+                    id
+                    userId
+                    name
+                }
+            }`,
             variables: {
                 journalName: JOURNAL_NAME1,
             },
@@ -94,7 +98,11 @@ describe("Inkling GraphQL server", () => {
     it("Should create 5 User 1 Journal 1 Inklings", async () => {
         const queryData = {
             query: `mutation CommitInklings($commitInklingsJournalId: BigInt!, $inklingTexts: [String]!) {
-                commitInklings(journalId: $commitInklingsJournalId, inklingTexts: $inklingTexts)
+                commitInklings(journalId: $commitInklingsJournalId, inklingTexts: $inklingTexts) {
+                    timeId
+                    journalId
+                    text
+                }
               }`,
             variables: {
                 commitInklingsJournalId: JOURNAL_NAME1,
@@ -128,8 +136,12 @@ describe("Inkling GraphQL server", () => {
     it("Should create 5 more User 1 Journal 1 Inklings", async () => {
         const queryData = {
             query: `mutation CommitInklings($commitInklingsJournalId: BigInt!, $inklingTexts: [String]!) {
-                commitInklings(journalId: $commitInklingsJournalId, inklingTexts: $inklingTexts)
-              }`,
+                commitInklings(journalId: $commitInklingsJournalId, inklingTexts: $inklingTexts) {
+                    timeId
+                    journalId
+                    text
+                }
+            }`,
             variables: {
                 commitInklingsJournalId: JOURNAL_NAME1,
                 inklingTexts: USER1_JOURNAL1_INKLINGS2,
@@ -162,8 +174,12 @@ describe("Inkling GraphQL server", () => {
     it("Should create User 1 Journal 2", async () => {
         const queryData = {
             query: `mutation CreateJournal($journalName: String!) {
-                createJournal(journalName: $journalName)
-              }`,
+                createJournal(journalName: $journalName) {
+                    id
+                    userId
+                    name
+                }
+            }`,
             variables: {
                 journalName: JOURNAL_NAME2,
             },
@@ -194,7 +210,11 @@ describe("Inkling GraphQL server", () => {
     it("Should create 5 User 1 Journal 2 Inklings", async () => {
         const queryData = {
             query: `mutation CommitInklings($commitInklingsJournalId: BigInt!, $inklingTexts: [String]!) {
-                commitInklings(journalId: $commitInklingsJournalId, inklingTexts: $inklingTexts)
+                commitInklings(journalId: $commitInklingsJournalId, inklingTexts: $inklingTexts) {
+                    timeId
+                    journalId
+                    text
+                }
               }`,
             variables: {
                 commitInklingsJournalId: JOURNAL_NAME2,
@@ -289,7 +309,11 @@ describe("Inkling GraphQL server", () => {
     it("Should create User 2 Journal 3", async () => {
         const queryData = {
             query: `mutation CreateJournal($journalName: String!) {
-                createJournal(journalName: $journalName)
+                createJournal(journalName: $journalName) {
+                    id
+                    userId
+                    name
+                }
               }`,
             variables: {
                 journalName: JOURNAL_NAME3,
@@ -304,7 +328,11 @@ describe("Inkling GraphQL server", () => {
     it("Should create User 2 Journal 3 Inklings", async () => {
         const queryData = {
             query: `mutation CommitInklings($commitInklingsJournalId: BigInt!, $inklingTexts: [String]!) {
-                commitInklings(journalId: $commitInklingsJournalId, inklingTexts: $inklingTexts)
+                commitInklings(journalId: $commitInklingsJournalId, inklingTexts: $inklingTexts) {
+                    timeId
+                    journalId
+                    text
+                }
               }`,
             variables: {
                 commitInklingsJournalId: JOURNAL_NAME3,
