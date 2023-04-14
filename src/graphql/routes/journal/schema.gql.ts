@@ -16,7 +16,7 @@ export default {
     journals: [Journal]!
   `,
     Mutation: `
-    createJournal(journalName: String!): Int!
+    createJournal(journalName: String!): Boolean!
   `,
 } as SchemaFragment;
 
