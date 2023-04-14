@@ -1,4 +1,5 @@
 import DateScalarFragment from "./scalars/date.gql";
+import BigIntScalarFragment from "./scalars/bigint.gql";
 
 import UserSchemaFragment from "./routes/user/resolvers.gql";
 import InklingSchemaFragment from "./routes/inkling/resolvers.gql";
@@ -7,6 +8,7 @@ import JournalSchemaFragment from "./routes/journal/resolvers.gql";
 
 export default {
     ...DateScalarFragment.Resolver,
+    ...BigIntScalarFragment.Resolver,
 
     Query: {
         ...UserSchemaFragment.Query,

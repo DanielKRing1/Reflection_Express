@@ -4,15 +4,15 @@ export default {
     Types: `
     type Inkling {
       timeId: DateTime!
-      journalId: Int!
+      journalId: BigInt!
       text: String!
     }
   `,
     Query: `
-    inklings(journalId: Int!): [Inkling]
+    inklings(journalId: BigInt!): [Inkling]
   `,
     Mutation: `
-    commitInklings(journalId: Int!, inklingText: [String]!): Boolean
+    commitInklings(journalId: BigInt!, inklingText: [String]!): Boolean
   `,
 } as SchemaFragment;
 

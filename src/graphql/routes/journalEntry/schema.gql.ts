@@ -5,13 +5,13 @@ export default {
     Types: `
     type JournalEntry {
       timeId: DateTime!
-      journalId: Int!
+      journalId: BigInt!
       reflections: [Reflection]!
     }
 
     type Thought {
       timeId: DateTime!
-      journalId: Int!
+      journalId: BigInt!
       text: String!
     }
 
@@ -21,11 +21,11 @@ export default {
     }
   `,
     Query: `
-    journalEntries(journalId: Int!, cursorTime: DateTime, count: Int): [JournalEntry]!
+    journalEntries(journalId: BigInt!, cursorTime: DateTime, count: Int): [JournalEntry]!
     thoughts(journalId: ID!, thoughtIds: [DateTime]!): [Thought]!
   `,
     Mutation: `
-    createJournalEntry(journalId: Int!, keepIdsInkling: [DateTime]!, keepIdsThought: [DateTime]!, discardIdsThought: [DateTime]!, discardIdsInkling: [DateTime]!): Boolean!
+    createJournalEntry(journalId: BigInt!, keepIdsInkling: [DateTime]!, keepIdsThought: [DateTime]!, discardIdsThought: [DateTime]!, discardIdsInkling: [DateTime]!): Boolean!
   `,
 } as SchemaFragment;
 

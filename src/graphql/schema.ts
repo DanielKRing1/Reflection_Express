@@ -1,4 +1,5 @@
 import DateScalarFragment from "./scalars/date.gql";
+import BigIntScalarFragment from "./scalars/bigint.gql";
 
 import UserSchemaFragment from "./routes/user/schema.gql";
 import InklingSchemaFragment from "./routes/inkling/schema.gql";
@@ -7,6 +8,7 @@ import JournalSchemaFragment from "./routes/journal/schema.gql";
 
 export default `
     ${DateScalarFragment.Schema}
+    ${BigIntScalarFragment.Schema}
 
     ${UserSchemaFragment.Types}
     ${InklingSchemaFragment.Types}
