@@ -42,7 +42,7 @@ export default {
                 const userId = contextValue.req.session.userId;
 
                 // 1. Create Journal with autoincrement id
-                const result = prisma.journal.create({
+                const result = await prisma.journal.create({
                     data: {
                         userId,
                         name: journalName,
