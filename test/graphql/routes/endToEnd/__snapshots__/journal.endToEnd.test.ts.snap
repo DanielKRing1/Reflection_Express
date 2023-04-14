@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Journal GraphQL server Should create Journal 1 1`] = `
+"{"data":{"createJournal":1}}
+"
+`;
+
+exports[`Journal GraphQL server Should create Journal 2 and 3 1`] = `
+"{"data":{"create2":1,"create3":1}}
+"
+`;
+
+exports[`Journal GraphQL server Should create Journal 4 and 5 1`] = `
+"{"data":{"create4":1,"create5":1}}
+"
+`;
+
+exports[`Journal GraphQL server Should fail to get any Journals as User2 1`] = `
+"{"data":{"journals":[]}}
+"
+`;
+
+exports[`Journal GraphQL server Should get Journal 1 1`] = `
+"{"data":{"journals":[{"id":"1","userId":"1","name":"Journal1"}]}}
+"
+`;
+
+exports[`Journal GraphQL server Should get Journal 1, 2, and 3 1`] = `
+"{"data":{"journals":[{"id":"1","userId":"1","name":"Journal1"},{"id":"2","userId":"1","name":"Journal2"},{"id":"3","userId":"1","name":"Journal3"}]}}
+"
+`;
+
+exports[`Journal GraphQL server Should get Journal 4 and 5 1`] = `
+"{"data":{"journals":[{"id":"4","userId":"2","name":"Journal4"},{"id":"5","userId":"2","name":"Journal5"}]}}
+"
+`;
+
+exports[`Journal GraphQL server Should get no Journals (since none have been made yet) 1`] = `
+"{"data":{"journals":[]}}
+"
+`;
