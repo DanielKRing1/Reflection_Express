@@ -1,0 +1,1007 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`JournalEntry GraphQL server Should create 5 User 1 Journal 1 Inklings 1`] = `
+{
+  "data": {
+    "commitInklings": [
+      {
+        "journalId": "1",
+        "text": "User1 Inkling1 Journal1",
+        "timeId": 1681628400000,
+      },
+      {
+        "journalId": "1",
+        "text": "User1 Inkling2 Journal1",
+        "timeId": 1681628400001,
+      },
+      {
+        "journalId": "1",
+        "text": "User1 Inkling3 Journal1",
+        "timeId": 1681628400002,
+      },
+      {
+        "journalId": "1",
+        "text": "User1 Inkling4 Journal1",
+        "timeId": 1681628400003,
+      },
+      {
+        "journalId": "1",
+        "text": "User1 Inkling5 Journal1",
+        "timeId": 1681628400004,
+      },
+    ],
+  },
+}
+`;
+
+exports[`JournalEntry GraphQL server Should create 5 User 1 Journal 2 Inklings 1`] = `
+{
+  "data": {
+    "commitInklings": [
+      {
+        "journalId": "2",
+        "text": "User1 Inkling6 Journal2",
+        "timeId": 1681628410000,
+      },
+      {
+        "journalId": "2",
+        "text": "User1 Inkling7 Journal2",
+        "timeId": 1681628410001,
+      },
+      {
+        "journalId": "2",
+        "text": "User1 Inkling3 Journal2",
+        "timeId": 1681628410002,
+      },
+      {
+        "journalId": "2",
+        "text": "User1 Inkling9 Journal2",
+        "timeId": 1681628410003,
+      },
+      {
+        "journalId": "2",
+        "text": "User1 Inkling10 Journal2",
+        "timeId": 1681628410004,
+      },
+    ],
+  },
+}
+`;
+
+exports[`JournalEntry GraphQL server Should create 5 User 2 Journal 3 Inklings 1`] = `
+{
+  "data": {
+    "commitInklings": [
+      {
+        "journalId": "3",
+        "text": "User2 Inkling1 Journal3",
+        "timeId": 1681628430000,
+      },
+      {
+        "journalId": "3",
+        "text": "User2 Inkling2 Journal3",
+        "timeId": 1681628430001,
+      },
+      {
+        "journalId": "3",
+        "text": "User2 Inkling3 Journal3",
+        "timeId": 1681628430002,
+      },
+      {
+        "journalId": "3",
+        "text": "User2 Inkling4 Journal3",
+        "timeId": 1681628430003,
+      },
+      {
+        "journalId": "3",
+        "text": "User2 Inkling5 Journal3",
+        "timeId": 1681628430004,
+      },
+    ],
+  },
+}
+`;
+
+exports[`JournalEntry GraphQL server Should create 5 more User 1 Journal 1 Inklings 1`] = `
+{
+  "data": {
+    "commitInklings": [
+      {
+        "journalId": "1",
+        "text": "User1 Inkling6 Journal1",
+        "timeId": 1681628410000,
+      },
+      {
+        "journalId": "1",
+        "text": "User1 Inkling7 Journal1",
+        "timeId": 1681628410001,
+      },
+      {
+        "journalId": "1",
+        "text": "User1 Inkling8 Journal1",
+        "timeId": 1681628410002,
+      },
+      {
+        "journalId": "1",
+        "text": "User1 Inkling9 Journal1",
+        "timeId": 1681628410003,
+      },
+      {
+        "journalId": "1",
+        "text": "User1 Inkling10 Journal1",
+        "timeId": 1681628410004,
+      },
+    ],
+  },
+}
+`;
+
+exports[`JournalEntry GraphQL server Should create User 1 Journal 1 1`] = `
+{
+  "data": {
+    "createJournal": {
+      "id": "1",
+      "name": "1",
+      "userId": "1",
+    },
+  },
+}
+`;
+
+exports[`JournalEntry GraphQL server Should create User 1 Journal 1 JournalEntry 2 1`] = `
+{
+  "data": {
+    "createJournalEntry": {
+      "journalId": "1",
+      "reflections": [],
+      "timeId": 1681628410000,
+    },
+  },
+}
+`;
+
+exports[`JournalEntry GraphQL server Should create User 1 Journal 2 1`] = `
+{
+  "data": {
+    "createJournal": {
+      "id": "2",
+      "name": "2",
+      "userId": "1",
+    },
+  },
+}
+`;
+
+exports[`JournalEntry GraphQL server Should create User 1 Journal 2 JournalEntry 1 1`] = `
+{
+  "data": {
+    "createJournalEntry": {
+      "journalId": "2",
+      "reflections": [],
+      "timeId": 1681628420000,
+    },
+  },
+}
+`;
+
+exports[`JournalEntry GraphQL server Should create User 2 Journal 3 1`] = `
+{
+  "data": {
+    "createJournal": {
+      "id": "3",
+      "name": "3",
+      "userId": "2",
+    },
+  },
+}
+`;
+
+exports[`JournalEntry GraphQL server Should create User 2 Journal 3 JournalEntry 1 1`] = `
+{
+  "data": {
+    "createJournalEntry": {
+      "journalId": "3",
+      "reflections": [],
+      "timeId": 1681628430000,
+    },
+  },
+}
+`;
+
+exports[`JournalEntry GraphQL server Should create User1 Journal 1 JournalEntry1 1`] = `
+{
+  "data": {
+    "createJournalEntry": {
+      "journalId": "1",
+      "reflections": [],
+      "timeId": 1681628400000,
+    },
+  },
+}
+`;
+
+exports[`JournalEntry GraphQL server Should fail to get User 1 Journal 1 JournalEntries as User 2 1`] = `
+{
+  "data": {
+    "journalEntries": [],
+  },
+}
+`;
+
+exports[`JournalEntry GraphQL server Should fail to get User 1 Journal 1 JournalEntry 1 or 2 with count 0 1`] = `
+{
+  "data": {
+    "journalEntries": [],
+  },
+}
+`;
+
+exports[`JournalEntry GraphQL server Should fail to get User 1 Journal 1 JournalEntry 1 with count 0 1`] = `
+{
+  "data": {
+    "journalEntries": [],
+  },
+}
+`;
+
+exports[`JournalEntry GraphQL server Should fail to get User 1 Journal 1 JournalEntry 1 with cursorTime PAST_DATE 1`] = `
+{
+  "data": {
+    "journalEntries": [],
+  },
+}
+`;
+
+exports[`JournalEntry GraphQL server Should fail to get User 1 Journal 1 JournalEntry 1 with cursorTime new PAST_DATE 1`] = `
+{
+  "data": {
+    "journalEntries": [],
+  },
+}
+`;
+
+exports[`JournalEntry GraphQL server Should fail to get User 1 Journal 2 JournalEntries as User 2 1`] = `
+{
+  "data": {
+    "journalEntries": [],
+  },
+}
+`;
+
+exports[`JournalEntry GraphQL server Should fail to get User 1 Journal 2 JournalEntry 1 with count 0 1`] = `
+{
+  "data": {
+    "journalEntries": [],
+  },
+}
+`;
+
+exports[`JournalEntry GraphQL server Should fail to get User 1 Journal 2 JournalEntry 1 with cursorTime PAST_DATE 1`] = `
+{
+  "data": {
+    "journalEntries": [],
+  },
+}
+`;
+
+exports[`JournalEntry GraphQL server Should fail to get User 1 Journal 2 JournalEntry 1 with cursorTime PAST_DATE 2`] = `
+{
+  "data": {
+    "journalEntries": [],
+  },
+}
+`;
+
+exports[`JournalEntry GraphQL server Should fail to get User 2 Journal 3 JournalEntry 1 with count 0 1`] = `
+{
+  "data": {
+    "journalEntries": [],
+  },
+}
+`;
+
+exports[`JournalEntry GraphQL server Should fail to get any User 1 Journal 1 JournalEntries with cursorTime PRESENT_DATE 1`] = `
+{
+  "data": {
+    "journalEntries": [],
+  },
+}
+`;
+
+exports[`JournalEntry GraphQL server Should get User 1 Journal 1 JournalEntry 1 and 2 with count 5 1`] = `
+{
+  "data": {
+    "journalEntries": [
+      {
+        "journalId": "1",
+        "reflections": [
+          {
+            "decision": 2,
+            "thoughtId": 1681628410000,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628410001,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628410002,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628410003,
+          },
+          {
+            "decision": 3,
+            "thoughtId": 1681628410004,
+          },
+        ],
+        "timeId": 1681628410000,
+      },
+      {
+        "journalId": "1",
+        "reflections": [
+          {
+            "decision": 2,
+            "thoughtId": 1681628400000,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628400001,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628400002,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628400003,
+          },
+          {
+            "decision": 3,
+            "thoughtId": 1681628400004,
+          },
+        ],
+        "timeId": 1681628400000,
+      },
+    ],
+  },
+}
+`;
+
+exports[`JournalEntry GraphQL server Should get User 1 Journal 1 JournalEntry 1 and 2 with cursorTime FUTURE_DATE 1`] = `
+{
+  "data": {
+    "journalEntries": [
+      {
+        "journalId": "1",
+        "reflections": [
+          {
+            "decision": 2,
+            "thoughtId": 1681628410000,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628410001,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628410002,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628410003,
+          },
+          {
+            "decision": 3,
+            "thoughtId": 1681628410004,
+          },
+        ],
+        "timeId": 1681628410000,
+      },
+      {
+        "journalId": "1",
+        "reflections": [
+          {
+            "decision": 2,
+            "thoughtId": 1681628400000,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628400001,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628400002,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628400003,
+          },
+          {
+            "decision": 3,
+            "thoughtId": 1681628400004,
+          },
+        ],
+        "timeId": 1681628400000,
+      },
+    ],
+  },
+}
+`;
+
+exports[`JournalEntry GraphQL server Should get User 1 Journal 1 JournalEntry 1 and 2 with cursorTime PRESENT_DATE + 10.001 seconds 1`] = `
+{
+  "data": {
+    "journalEntries": [
+      {
+        "journalId": "1",
+        "reflections": [
+          {
+            "decision": 2,
+            "thoughtId": 1681628410000,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628410001,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628410002,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628410003,
+          },
+          {
+            "decision": 3,
+            "thoughtId": 1681628410004,
+          },
+        ],
+        "timeId": 1681628410000,
+      },
+      {
+        "journalId": "1",
+        "reflections": [
+          {
+            "decision": 2,
+            "thoughtId": 1681628400000,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628400001,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628400002,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628400003,
+          },
+          {
+            "decision": 3,
+            "thoughtId": 1681628400004,
+          },
+        ],
+        "timeId": 1681628400000,
+      },
+    ],
+  },
+}
+`;
+
+exports[`JournalEntry GraphQL server Should get User 1 Journal 1 JournalEntry 1 with count 1 1`] = `
+{
+  "data": {
+    "journalEntries": [
+      {
+        "journalId": "1",
+        "reflections": [
+          {
+            "decision": 2,
+            "thoughtId": 1681628400000,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628400001,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628400002,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628400003,
+          },
+          {
+            "decision": 3,
+            "thoughtId": 1681628400004,
+          },
+        ],
+        "timeId": 1681628400000,
+      },
+    ],
+  },
+}
+`;
+
+exports[`JournalEntry GraphQL server Should get User 1 Journal 1 JournalEntry 1 with count 1 2`] = `
+{
+  "data": {
+    "journalEntries": [
+      {
+        "journalId": "1",
+        "reflections": [
+          {
+            "decision": 2,
+            "thoughtId": 1681628410000,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628410001,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628410002,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628410003,
+          },
+          {
+            "decision": 3,
+            "thoughtId": 1681628410004,
+          },
+        ],
+        "timeId": 1681628410000,
+      },
+    ],
+  },
+}
+`;
+
+exports[`JournalEntry GraphQL server Should get User 1 Journal 1 JournalEntry 1 with count 5 1`] = `
+{
+  "data": {
+    "journalEntries": [
+      {
+        "journalId": "1",
+        "reflections": [
+          {
+            "decision": 2,
+            "thoughtId": 1681628400000,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628400001,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628400002,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628400003,
+          },
+          {
+            "decision": 3,
+            "thoughtId": 1681628400004,
+          },
+        ],
+        "timeId": 1681628400000,
+      },
+    ],
+  },
+}
+`;
+
+exports[`JournalEntry GraphQL server Should get User 1 Journal 1 JournalEntry 1 with cursorTime FUTURE_DATE 1`] = `
+{
+  "data": {
+    "journalEntries": [
+      {
+        "journalId": "1",
+        "reflections": [
+          {
+            "decision": 2,
+            "thoughtId": 1681628400000,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628400001,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628400002,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628400003,
+          },
+          {
+            "decision": 3,
+            "thoughtId": 1681628400004,
+          },
+        ],
+        "timeId": 1681628400000,
+      },
+    ],
+  },
+}
+`;
+
+exports[`JournalEntry GraphQL server Should get User 1 Journal 1 JournalEntry 1 with cursorTime PRESENT_DATE + 10 seconds and count 1 1`] = `
+{
+  "data": {
+    "journalEntries": [
+      {
+        "journalId": "1",
+        "reflections": [
+          {
+            "decision": 2,
+            "thoughtId": 1681628400000,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628400001,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628400002,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628400003,
+          },
+          {
+            "decision": 3,
+            "thoughtId": 1681628400004,
+          },
+        ],
+        "timeId": 1681628400000,
+      },
+    ],
+  },
+}
+`;
+
+exports[`JournalEntry GraphQL server Should get User 1 Journal 1 JournalEntry 2 with cursorTime FUTURE_DATE + 10.001 seconds and count 1 1`] = `
+{
+  "data": {
+    "journalEntries": [
+      {
+        "journalId": "1",
+        "reflections": [
+          {
+            "decision": 2,
+            "thoughtId": 1681628410000,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628410001,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628410002,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628410003,
+          },
+          {
+            "decision": 3,
+            "thoughtId": 1681628410004,
+          },
+        ],
+        "timeId": 1681628410000,
+      },
+    ],
+  },
+}
+`;
+
+exports[`JournalEntry GraphQL server Should get User 1 Journal 1 JournalEntry 2 with cursorTime PRESENT_DATE + 10.001 seconds and count 1 1`] = `
+{
+  "data": {
+    "journalEntries": [
+      {
+        "journalId": "1",
+        "reflections": [
+          {
+            "decision": 2,
+            "thoughtId": 1681628410000,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628410001,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628410002,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628410003,
+          },
+          {
+            "decision": 3,
+            "thoughtId": 1681628410004,
+          },
+        ],
+        "timeId": 1681628410000,
+      },
+    ],
+  },
+}
+`;
+
+exports[`JournalEntry GraphQL server Should get User 1 Journal 2 JournalEntry 1 with count 1 1`] = `
+{
+  "data": {
+    "journalEntries": [
+      {
+        "journalId": "2",
+        "reflections": [
+          {
+            "decision": 2,
+            "thoughtId": 1681628410000,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628410000,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628410001,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628410001,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628410002,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628410002,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628410003,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628410003,
+          },
+          {
+            "decision": 3,
+            "thoughtId": 1681628410004,
+          },
+          {
+            "decision": 3,
+            "thoughtId": 1681628410004,
+          },
+        ],
+        "timeId": 1681628420000,
+      },
+    ],
+  },
+}
+`;
+
+exports[`JournalEntry GraphQL server Should get User 1 Journal 2 JournalEntry 1 with count 5 1`] = `
+{
+  "data": {
+    "journalEntries": [
+      {
+        "journalId": "2",
+        "reflections": [
+          {
+            "decision": 2,
+            "thoughtId": 1681628410000,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628410000,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628410001,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628410001,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628410002,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628410002,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628410003,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628410003,
+          },
+          {
+            "decision": 3,
+            "thoughtId": 1681628410004,
+          },
+          {
+            "decision": 3,
+            "thoughtId": 1681628410004,
+          },
+        ],
+        "timeId": 1681628420000,
+      },
+    ],
+  },
+}
+`;
+
+exports[`JournalEntry GraphQL server Should get User 1 Journal 2 JournalEntry 1 with cursorTime FUTURE_DATE 1`] = `
+{
+  "data": {
+    "journalEntries": [
+      {
+        "journalId": "2",
+        "reflections": [
+          {
+            "decision": 2,
+            "thoughtId": 1681628410000,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628410000,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628410001,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628410001,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628410002,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628410002,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628410003,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628410003,
+          },
+          {
+            "decision": 3,
+            "thoughtId": 1681628410004,
+          },
+          {
+            "decision": 3,
+            "thoughtId": 1681628410004,
+          },
+        ],
+        "timeId": 1681628420000,
+      },
+    ],
+  },
+}
+`;
+
+exports[`JournalEntry GraphQL server Should get User 2 Journal 3 JournalEntry 1 with count 1 1`] = `
+{
+  "data": {
+    "journalEntries": [
+      {
+        "journalId": "3",
+        "reflections": [
+          {
+            "decision": 2,
+            "thoughtId": 1681628430000,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628430001,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628430002,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628430003,
+          },
+          {
+            "decision": 3,
+            "thoughtId": 1681628430004,
+          },
+        ],
+        "timeId": 1681628430000,
+      },
+    ],
+  },
+}
+`;
+
+exports[`JournalEntry GraphQL server Should get User 2 Journal 3 JournalEntry 1 with count 5 1`] = `
+{
+  "data": {
+    "journalEntries": [
+      {
+        "journalId": "3",
+        "reflections": [
+          {
+            "decision": 2,
+            "thoughtId": 1681628430000,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628430001,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628430002,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628430003,
+          },
+          {
+            "decision": 3,
+            "thoughtId": 1681628430004,
+          },
+        ],
+        "timeId": 1681628430000,
+      },
+    ],
+  },
+}
+`;
+
+exports[`JournalEntry GraphQL server Should get User 2 Journal 3 JournalEntry 1 with cursorTime FUTURE_DATE 1`] = `
+{
+  "data": {
+    "journalEntries": [
+      {
+        "journalId": "3",
+        "reflections": [
+          {
+            "decision": 2,
+            "thoughtId": 1681628430000,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628430001,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628430002,
+          },
+          {
+            "decision": 2,
+            "thoughtId": 1681628430003,
+          },
+          {
+            "decision": 3,
+            "thoughtId": 1681628430004,
+          },
+        ],
+        "timeId": 1681628430000,
+      },
+    ],
+  },
+}
+`;

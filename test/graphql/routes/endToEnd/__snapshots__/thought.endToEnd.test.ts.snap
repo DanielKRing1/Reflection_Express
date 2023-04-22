@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Inkling GraphQL server Should create 5 User 1 Journal 1 Inklings 1`] = `
+exports[`JournalEntry GraphQL server Should create 5 User 1 Journal 1 Inklings 1`] = `
 {
   "data": {
     "commitInklings": [
@@ -34,7 +34,7 @@ exports[`Inkling GraphQL server Should create 5 User 1 Journal 1 Inklings 1`] = 
 }
 `;
 
-exports[`Inkling GraphQL server Should create 5 User 1 Journal 2 Inklings 1`] = `
+exports[`JournalEntry GraphQL server Should create 5 User 1 Journal 2 Inklings 1`] = `
 {
   "data": {
     "commitInklings": [
@@ -68,7 +68,41 @@ exports[`Inkling GraphQL server Should create 5 User 1 Journal 2 Inklings 1`] = 
 }
 `;
 
-exports[`Inkling GraphQL server Should create 5 more User 1 Journal 1 Inklings 1`] = `
+exports[`JournalEntry GraphQL server Should create 5 User 2 Journal 3 Inklings 1`] = `
+{
+  "data": {
+    "commitInklings": [
+      {
+        "journalId": "3",
+        "text": "User2 Inkling1 Journal3",
+        "timeId": 1684220410000,
+      },
+      {
+        "journalId": "3",
+        "text": "User2 Inkling2 Journal3",
+        "timeId": 1684220410001,
+      },
+      {
+        "journalId": "3",
+        "text": "User2 Inkling3 Journal3",
+        "timeId": 1684220410002,
+      },
+      {
+        "journalId": "3",
+        "text": "User2 Inkling4 Journal3",
+        "timeId": 1684220410003,
+      },
+      {
+        "journalId": "3",
+        "text": "User2 Inkling5 Journal3",
+        "timeId": 1684220410004,
+      },
+    ],
+  },
+}
+`;
+
+exports[`JournalEntry GraphQL server Should create 5 more User 1 Journal 1 Inklings 1`] = `
 {
   "data": {
     "commitInklings": [
@@ -102,7 +136,7 @@ exports[`Inkling GraphQL server Should create 5 more User 1 Journal 1 Inklings 1
 }
 `;
 
-exports[`Inkling GraphQL server Should create User 1 Journal 1 1`] = `
+exports[`JournalEntry GraphQL server Should create User 1 Journal 1 1`] = `
 {
   "data": {
     "createJournal": {
@@ -114,7 +148,7 @@ exports[`Inkling GraphQL server Should create User 1 Journal 1 1`] = `
 }
 `;
 
-exports[`Inkling GraphQL server Should create User 1 Journal 2 1`] = `
+exports[`JournalEntry GraphQL server Should create User 1 Journal 2 1`] = `
 {
   "data": {
     "createJournal": {
@@ -126,7 +160,7 @@ exports[`Inkling GraphQL server Should create User 1 Journal 2 1`] = `
 }
 `;
 
-exports[`Inkling GraphQL server Should create User 2 Journal 3 1`] = `
+exports[`JournalEntry GraphQL server Should create User 1 Journal 3 1`] = `
 {
   "data": {
     "createJournal": {
@@ -138,76 +172,18 @@ exports[`Inkling GraphQL server Should create User 2 Journal 3 1`] = `
 }
 `;
 
-exports[`Inkling GraphQL server Should create User 2 Journal 3 Inklings 1`] = `
+exports[`JournalEntry GraphQL server Should fail to get User 1 Journal 1 Thoughts 1`] = `
 {
   "data": {
-    "commitInklings": [
-      {
-        "journalId": "3",
-        "text": "User2 Inkling1 Journal3",
-        "timeId": 1684220410000,
-      },
-      {
-        "journalId": "3",
-        "text": "User2 Inkling2 Journal3",
-        "timeId": 1684220410001,
-      },
-      {
-        "journalId": "3",
-        "text": "User2 Inkling3 Journal3",
-        "timeId": 1684220410002,
-      },
-      {
-        "journalId": "3",
-        "text": "User2 Inkling4 Journal3",
-        "timeId": 1684220410003,
-      },
-      {
-        "journalId": "3",
-        "text": "User2 Inkling5 Journal3",
-        "timeId": 1684220410004,
-      },
-    ],
+    "thoughts": [],
   },
 }
 `;
 
-exports[`Inkling GraphQL server Should fail to get any User 1 Journal 1 Inklings before they are made 1`] = `
+exports[`JournalEntry GraphQL server Should get User 1 Journal 1 Thoughts 1 - 5 1`] = `
 {
   "data": {
-    "inklings": [],
-  },
-}
-`;
-
-exports[`Inkling GraphQL server Should fail to get any User1 Journal1 Inklings as User2 1`] = `
-{
-  "data": {
-    "inklings": [],
-  },
-}
-`;
-
-exports[`Inkling GraphQL server Should fail to get any User1 Journal2 Inklings as User2 1`] = `
-{
-  "data": {
-    "inklings": [],
-  },
-}
-`;
-
-exports[`Inkling GraphQL server Should fail to get any User2 Journal3 Inklings before they are made 1`] = `
-{
-  "data": {
-    "inklings": [],
-  },
-}
-`;
-
-exports[`Inkling GraphQL server Should get 5 User 1 Journal 1 Inklings 1`] = `
-{
-  "data": {
-    "inklings": [
+    "thoughts": [
       {
         "journalId": "1",
         "text": "User1 Inkling1 Journal1",
@@ -238,103 +214,10 @@ exports[`Inkling GraphQL server Should get 5 User 1 Journal 1 Inklings 1`] = `
 }
 `;
 
-exports[`Inkling GraphQL server Should get 5 User 1 Journal 2 Inklings 1`] = `
+exports[`JournalEntry GraphQL server Should get User 1 Journal 1 Thoughts 5 - 10 1`] = `
 {
   "data": {
-    "inklings": [
-      {
-        "journalId": "2",
-        "text": "User1 Inkling6 Journal2",
-        "timeId": 1684220410000,
-      },
-      {
-        "journalId": "2",
-        "text": "User1 Inkling7 Journal2",
-        "timeId": 1684220410001,
-      },
-      {
-        "journalId": "2",
-        "text": "User1 Inkling3 Journal2",
-        "timeId": 1684220410002,
-      },
-      {
-        "journalId": "2",
-        "text": "User1 Inkling9 Journal2",
-        "timeId": 1684220410003,
-      },
-      {
-        "journalId": "2",
-        "text": "User1 Inkling10 Journal2",
-        "timeId": 1684220410004,
-      },
-    ],
-  },
-}
-`;
-
-exports[`Inkling GraphQL server Should get 5 User 2 Journal 3 Inklings 1`] = `
-{
-  "data": {
-    "inklings": [
-      {
-        "journalId": "3",
-        "text": "User2 Inkling1 Journal3",
-        "timeId": 1684220410000,
-      },
-      {
-        "journalId": "3",
-        "text": "User2 Inkling2 Journal3",
-        "timeId": 1684220410001,
-      },
-      {
-        "journalId": "3",
-        "text": "User2 Inkling3 Journal3",
-        "timeId": 1684220410002,
-      },
-      {
-        "journalId": "3",
-        "text": "User2 Inkling4 Journal3",
-        "timeId": 1684220410003,
-      },
-      {
-        "journalId": "3",
-        "text": "User2 Inkling5 Journal3",
-        "timeId": 1684220410004,
-      },
-    ],
-  },
-}
-`;
-
-exports[`Inkling GraphQL server Should get 10 User 1 Journal 1 Inklings 1`] = `
-{
-  "data": {
-    "inklings": [
-      {
-        "journalId": "1",
-        "text": "User1 Inkling1 Journal1",
-        "timeId": 1684220400000,
-      },
-      {
-        "journalId": "1",
-        "text": "User1 Inkling2 Journal1",
-        "timeId": 1684220400001,
-      },
-      {
-        "journalId": "1",
-        "text": "User1 Inkling3 Journal1",
-        "timeId": 1684220400002,
-      },
-      {
-        "journalId": "1",
-        "text": "User1 Inkling4 Journal1",
-        "timeId": 1684220400003,
-      },
-      {
-        "journalId": "1",
-        "text": "User1 Inkling5 Journal1",
-        "timeId": 1684220400004,
-      },
+    "thoughts": [
       {
         "journalId": "1",
         "text": "User1 Inkling6 Journal1",
@@ -365,26 +248,146 @@ exports[`Inkling GraphQL server Should get 10 User 1 Journal 1 Inklings 1`] = `
 }
 `;
 
-exports[`Inkling GraphQL server Should get no User 1 Journal 2 Inklings (since none have been made yet) 1`] = `
+exports[`JournalEntry GraphQL server Should get User 1 Journal 1 Thoughts only 1 - 2 1`] = `
 {
   "data": {
-    "inklings": [],
+    "thoughts": [
+      {
+        "journalId": "1",
+        "text": "User1 Inkling1 Journal1",
+        "timeId": 1684220400000,
+      },
+      {
+        "journalId": "1",
+        "text": "User1 Inkling2 Journal1",
+        "timeId": 1684220400001,
+      },
+    ],
   },
 }
 `;
 
-exports[`Inkling GraphQL server Should still fail to get any User1 Journal1 Inklings as User2 1`] = `
+exports[`JournalEntry GraphQL server Should get User 1 Journal 1 Thoughts only 4 - 5 1`] = `
 {
   "data": {
-    "inklings": [],
+    "thoughts": [
+      {
+        "journalId": "1",
+        "text": "User1 Inkling9 Journal1",
+        "timeId": 1684220410003,
+      },
+      {
+        "journalId": "1",
+        "text": "User1 Inkling10 Journal1",
+        "timeId": 1684220410004,
+      },
+    ],
   },
 }
 `;
 
-exports[`Inkling GraphQL server Should still fail to get any User1 Journal2 Inklings as User2 1`] = `
+exports[`JournalEntry GraphQL server Should get User 1 Journal 2 Thoughts 1 - 5 1`] = `
 {
   "data": {
-    "inklings": [],
+    "thoughts": [
+      {
+        "journalId": "2",
+        "text": "User1 Inkling6 Journal2",
+        "timeId": 1684220410000,
+      },
+      {
+        "journalId": "2",
+        "text": "User1 Inkling7 Journal2",
+        "timeId": 1684220410001,
+      },
+      {
+        "journalId": "2",
+        "text": "User1 Inkling3 Journal2",
+        "timeId": 1684220410002,
+      },
+      {
+        "journalId": "2",
+        "text": "User1 Inkling9 Journal2",
+        "timeId": 1684220410003,
+      },
+      {
+        "journalId": "2",
+        "text": "User1 Inkling10 Journal2",
+        "timeId": 1684220410004,
+      },
+    ],
+  },
+}
+`;
+
+exports[`JournalEntry GraphQL server Should get User 1 Journal 2 Thoughts only 1 - 2 1`] = `
+{
+  "data": {
+    "thoughts": [
+      {
+        "journalId": "2",
+        "text": "User1 Inkling6 Journal2",
+        "timeId": 1684220410000,
+      },
+      {
+        "journalId": "2",
+        "text": "User1 Inkling7 Journal2",
+        "timeId": 1684220410001,
+      },
+    ],
+  },
+}
+`;
+
+exports[`JournalEntry GraphQL server Should get User 2 Journal 3 Thoughts 1 - 5 1`] = `
+{
+  "data": {
+    "thoughts": [
+      {
+        "journalId": "3",
+        "text": "User2 Inkling1 Journal3",
+        "timeId": 1684220410000,
+      },
+      {
+        "journalId": "3",
+        "text": "User2 Inkling2 Journal3",
+        "timeId": 1684220410001,
+      },
+      {
+        "journalId": "3",
+        "text": "User2 Inkling3 Journal3",
+        "timeId": 1684220410002,
+      },
+      {
+        "journalId": "3",
+        "text": "User2 Inkling4 Journal3",
+        "timeId": 1684220410003,
+      },
+      {
+        "journalId": "3",
+        "text": "User2 Inkling5 Journal3",
+        "timeId": 1684220410004,
+      },
+    ],
+  },
+}
+`;
+
+exports[`JournalEntry GraphQL server Should get User 2 Journal 3 Thoughts only 1 - 2 1`] = `
+{
+  "data": {
+    "thoughts": [
+      {
+        "journalId": "3",
+        "text": "User2 Inkling1 Journal3",
+        "timeId": 1684220410000,
+      },
+      {
+        "journalId": "3",
+        "text": "User2 Inkling2 Journal3",
+        "timeId": 1684220410001,
+      },
+    ],
   },
 }
 `;

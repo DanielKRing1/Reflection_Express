@@ -3,6 +3,11 @@ import supertest from "supertest";
 
 import server from "../../../../src/index";
 import prisma from "../../../../src/prisma/client";
+import {
+    advanceFakeTimer,
+    useFakeTimer,
+    useRealTimer,
+} from "../../../../jest/utils/time";
 
 const USER_ID1 = "1";
 const USER_ID2 = "2";
@@ -45,6 +50,9 @@ describe("Inkling GraphQL server", () => {
     let agent: supertest.SuperAgentTest;
 
     beforeAll(async () => {
+        // Mock Date constructor
+        useFakeTimer(new Date(2023, 4, 16));
+
         // Clear Database
         await prisma.$queryRaw`TRUNCATE TABLE "User" CASCADE;`;
         await prisma.$queryRaw`ALTER SEQUENCE "Journal_id_seq" RESTART WITH 1;`;
@@ -134,6 +142,9 @@ describe("Inkling GraphQL server", () => {
     });
 
     it("Should create 5 more User 1 Journal 1 Inklings", async () => {
+        // Advance 10 seconds
+        advanceFakeTimer(1000 * 10);
+
         const queryData = {
             query: `mutation CommitInklings($commitInklingsJournalId: BigInt!, $inklingTexts: [String]!) {
                 commitInklings(journalId: $commitInklingsJournalId, inklingTexts: $inklingTexts) {
@@ -245,7 +256,7 @@ describe("Inkling GraphQL server", () => {
         expect(JSON.parse(res.text).data.inklings.length).toBe(5);
     });
 
-    it("Should log in as another user", async () => {
+    it("Should log in as User 2", async () => {
         // "Logout"
         agent = supertest.agent(s);
 
@@ -398,6 +409,9 @@ describe("Inkling GraphQL server", () => {
     });
 
     afterAll(async () => {
+        // Unmock Date constructor
+        useRealTimer();
+
         // await prisma.$queryRaw`TRUNCATE TABLE "User" CASCADE;`;
         await prisma.$queryRaw`ALTER SEQUENCE "Journal_id_seq" RESTART WITH 1;`;
 
