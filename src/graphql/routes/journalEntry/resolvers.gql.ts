@@ -4,65 +4,89 @@ import { ResolverFragment } from "../../types/schema.types";
 import {
     CreateJournalEntryArgs,
     JournalEntriesArgs,
+    JournalEntryWReflection,
     ThoughtsArgs,
 } from "./schema.gql";
 import GqlContext from "../../types/context.types";
 import prisma from "../../../prisma/client";
-import { Journal, Thought } from "@prisma/client";
+import { Prisma, Reflection, Thought } from "@prisma/client";
+import { Dict } from "../../../types/global.types";
 
 export default {
     Query: {
         journalEntries: async (
             _: undefined,
-            {
-                journalId,
-                cursorTime = serializeDate(new Date()) as TimestampTzPg,
-                count,
-            }: JournalEntriesArgs,
+            { journalId, cursorTime = new Date(), count }: JournalEntriesArgs,
             contextValue: any,
             info: any
-        ): Promise<Journal[]> => {
+        ): Promise<JournalEntryWReflection[]> => {
             try {
                 const userId = contextValue.req.session.userId;
 
-                const result: Journal[] = await prisma.$queryRaw`
-                    BEGIN;
-                    
-                    -- 1. Confirm "User" owns "JournalId" 
-                    IF NOT EXISTS (SELECT 1 FROM ${process.env.DATABASE_SCHEMA}."Journal" WHERE id = ${journalId} AND userId = ${userId}) THEN
-                        RAISE EXCEPTION 'Row with journalId=% and userId=% not found', ${journalId}, ${userId};
-                        ROLLBACK;
-                    END IF;
+                // 1. Confirm "User" owns "JournalId"
+                await prisma.journal.findFirstOrThrow({
+                    where: {
+                        userId,
+                        id: journalId,
+                    },
+                });
 
-                    -- Select Journal
-                    SELECT * FROM
-                      (
-                        SELECT * FROM ${process.env.DATABASE_SCHEMA}."Journal"
-                        WHERE "id" = ${journalId}
-                      ) j
-                    -- Join JournalEntry
-                    JOIN ${process.env.DATABASE_SCHEMA}."JournalEntry" je
-                      ON je."journalId" = j."id"
-                    -- Join Reflections
-                    JOIN (
-                      SELECT * FROM ${process.env.DATABASE_SCHEMA}."Reflection"
-                        -- at or older than 'cursorTime'
-                        WHERE "timeId" >= ${cursorTime}
+                const result: Reflection[] = await prisma.$queryRaw`
+                    -- Select Journal Entries
+                    SELECT je."timeId" as "journalEntryId", t."timeId" as "thoughtId", r."decision" FROM
+                    (
+                        SELECT * FROM
+                        "JournalEntry" AS je
+                        WHERE je."journalId" = ${journalId}
+                        -- older than 'cursorTime'
+                        AND "timeId" < ${cursorTime}
                         -- Limit to 'count'
                         ORDER BY "timeId" DESC
                         LIMIT ${count}
+                    ) AS je
+                    -- Join Reflections
+                    JOIN (
+                      SELECT * FROM "Reflection"
+                        -- older than 'cursorTime'
+                        WHERE "journalEntryId" < ${cursorTime}
                     ) r
                       ON r."journalEntryId" = je."timeId"
                     -- Join Thoughts
-                    JOIN ${process.env.DATABASE_SCHEMA}."Thought" t
+                    JOIN "Thought" t
                       ON t."timeId" = r."thoughtId"
-                    ORDER BY r."timeId" DESC;
+                    ORDER BY r."journalEntryId" DESC;`;
 
-                    COMMIT;`;
+                const reflectionGroups: Dict<Reflection[]> = result.reduce<
+                    Dict<Reflection[]>
+                >((acc: Dict<Reflection[]>, cur: Reflection) => {
+                    if (
+                        acc[cur.journalEntryId as unknown as string] ===
+                        undefined
+                    )
+                        acc[cur.journalEntryId as unknown as string] = [];
+                    acc[cur.journalEntryId as unknown as string].push(cur);
 
-                console.log(result);
+                    return acc;
+                }, {});
 
-                return result;
+                const journalEntries: JournalEntryWReflection[] = Object.keys(
+                    reflectionGroups
+                )
+                    .sort((a, b) => (a < b ? 1 : -1))
+                    .reduce<JournalEntryWReflection[]>(
+                        (acc: JournalEntryWReflection[], key: any) => {
+                            acc.push({
+                                timeId: reflectionGroups[key][0].journalEntryId,
+                                journalId,
+                                reflections: reflectionGroups[key],
+                            });
+
+                            return acc;
+                        },
+                        []
+                    );
+
+                return journalEntries;
             } catch (err) {
                 console.log(err);
             }
@@ -85,7 +109,7 @@ export default {
                 // 1. Get Journal and join with Thoughts
                 const result = await prisma.thought.findMany({
                     where: {
-                        journalId: journalId,
+                        journalId: BigInt(journalId),
                         thought_journalId: {
                             userId,
                         },
@@ -95,40 +119,16 @@ export default {
                     },
                 });
 
-                console.log(result);
-
                 return result;
             } catch (err) {
                 console.log(err);
             }
 
-            // const result1: number = await prisma.$executeRaw`
-            // BEGIN;
-
-            // -- 1. Confirm "User" owns "JournalId"
-            // IF NOT EXISTS (SELECT 1 FROM ${
-            //     process.env.DATABASE_SCHEMA
-            // }."Journal" WHERE id = ${journalId} AND userId = ${userId}) THEN
-            //     RAISE EXCEPTION 'Row with journalId=% and userId=% not found', ${journalId}, ${userId};
-            //     ROLLBACK;
-            // END IF;
-
-            // SELECT * FROM
-            //   (
-            //     SELECT * FROM ${process.env.DATABASE_SCHEMA}."Thought"
-            //     WHERE "journalId" = ${journalId}
-            //     AND "timeId" = ANY('{${thoughtIds.join()}}')
-            //   ) t
-            // JOIN ${process.env.DATABASE_SCHEMA}."Journal" j
-            //   ON j."id" = t."journalId"
-            //   AND j."userId" = ${userId};
-
-            // COMMIT;`;
-
             return [];
         },
     },
     Mutation: {
+        // Returns empty Reflections every time
         createJournalEntry: async (
             _: undefined,
             {
@@ -140,11 +140,12 @@ export default {
             }: CreateJournalEntryArgs,
             contextValue: GqlContext,
             info: any
-        ): Promise<boolean> => {
+        ): Promise<JournalEntryWReflection | null> => {
             try {
                 const userId = contextValue.req.session.userId;
 
-                const journalEntryId: string = serializeDate(new Date());
+                const timestamp: Date = new Date();
+                const journalEntryId: string = serializeDate(timestamp);
 
                 // Transaction: Do not convert Inklings to Thoughts unless this entire query succeeds
                 // await prisma.$transaction(async (prisma) => {
@@ -169,60 +170,67 @@ export default {
                 //     });
                 // });
 
-                const result: number = await prisma.$executeRaw`
-                    BEGIN;
-                    
-                    -- 1. Confirm "User" owns "JournalId" 
-                    IF NOT EXISTS (SELECT 1 FROM ${
-                        process.env.DATABASE_SCHEMA
-                    }."Journal" WHERE id = ${journalId} AND userId = ${userId}) THEN
-                        RAISE EXCEPTION 'Row with journalId=% and userId=% not found', ${journalId}, ${userId};
-                        ROLLBACK;
-                    END IF;
-                            
+                // 1. Confirm "User" owns "JournalId"
+                await prisma.journal.findFirstOrThrow({
+                    where: {
+                        userId,
+                        id: journalId,
+                    },
+                });
+
+                const executeResult1: number = await prisma.$executeRaw`
                     WITH
-                        -- 2. Delete Inklings
-                        "deletedInklings" AS (DELETE FROM ${
-                            process.env.DATABASE_SCHEMA
-                        }."Inkling" WHERE "journalId" = ${journalId} RETURNING *)
-                        -- 3. Insert deleted Inklings into Thoughts
-                        INSERT INTO ${
-                            process.env.DATABASE_SCHEMA
-                        }."Thought" ("timeId", "journalId", text) SELECT * FROM "deletedInklings";
+                        -- 1. Delete Inklings
+                        "deletedInklings" AS (DELETE FROM "Inkling" WHERE "journalId" = ${journalId} RETURNING *),
+                        -- 2. Insert deleted Inklings into Thoughts
+                        "a" AS (INSERT INTO "Thought" ("timeId", "journalId", text) SELECT * FROM "deletedInklings")
                     
-                    -- 4. Create new JournalEntry
-                    INSERT INTO ${
-                        process.env.DATABASE_SCHEMA
-                    }."JournalEntry" ("timeId", "journalId") values (${journalEntryId}, ${journalId});
+                        -- 3. Create new JournalEntry
+                    INSERT INTO "JournalEntry" ("timeId", "journalId") values (${journalEntryId}::timestamptz, ${journalId})`;
 
-                    -- 4. Create and Insert Reflections
-                    INSERT INTO ${
-                        process.env.DATABASE_SCHEMA
-                    }."Reflection" ("journalId", "thoughtId", "journalEntryId", decision)
-                    SELECT ${journalId}, t."timeId", ${journalEntryId},
-                        CASE WHEN t."timeId" = ANY('{${discardIdsThought.join()}}') THEN 0
-                        WHEN t."timeId" = ANY('{${keepIdsThought.join()}}') THEN 1
-                        WHEN t."timeId" = ANY('{${keepIdsInkling.join()}}') THEN 2
-                        WHEN t."timeId" = ANY('{${discardIdsInkling.join()}}') THEN 3
-                        ELSE NULL END as decision
-                    FROM ${
-                        process.env.DATABASE_SCHEMA
-                    }."Thought" t ON t."timeId" = ANY('{${[
-                    ...discardIdsThought,
-                    ...keepIdsThought,
-                    ...keepIdsInkling,
-                    ...discardIdsInkling,
-                ].join()}}')
-                    AND t."journalId" = ${journalId};
-                    
-                    COMMIT;`;
+                const executeResult2: number = await prisma.$executeRaw`
+                -- 4. Create and Insert Reflections
+                INSERT INTO "Reflection" ("journalId", "thoughtId", "journalEntryId", decision)
+                        SELECT ${journalId}, t."timeId", ${journalEntryId}::timestamptz,
+                            CASE
+                                WHEN t."timeId" = ANY(ARRAY[${Prisma.join(
+                                    discardIdsThought.length === 0
+                                        ? [null]
+                                        : discardIdsThought
+                                )}]::timestamptz[]) THEN 0
+                                WHEN t."timeId" = ANY(ARRAY[${Prisma.join(
+                                    keepIdsThought.length === 0
+                                        ? [null]
+                                        : keepIdsThought
+                                )}]::timestamptz[]) THEN 1
+                                WHEN t."timeId" = ANY(ARRAY[${Prisma.join(
+                                    keepIdsInkling.length === 0
+                                        ? [null]
+                                        : keepIdsInkling
+                                )}]::timestamptz[]) THEN 2
+                                WHEN t."timeId" = ANY(ARRAY[${Prisma.join(
+                                    discardIdsInkling.length === 0
+                                        ? [null]
+                                        : discardIdsInkling
+                                )}]::timestamptz[]) THEN 3
+                            ELSE NULL END as decision
+                        FROM "Thought" t
+                        WHERE t."timeId" = ANY(ARRAY[${Prisma.join([
+                            ...discardIdsThought,
+                            ...keepIdsThought,
+                            ...keepIdsInkling,
+                            ...discardIdsInkling,
+                        ])}]::timestamptz[])
+                        AND t."journalId" = ${journalId};`;
 
-                console.log(`Prisma raw query result: ${result}`);
-
-                return true;
+                return {
+                    timeId: timestamp,
+                    journalId,
+                    reflections: [],
+                };
             } catch (err) {
                 console.log(err);
-                return false;
+                return null;
             }
         },
     },
