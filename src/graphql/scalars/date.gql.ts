@@ -1,4 +1,4 @@
-import { GraphQLScalarType, Kind } from "graphql";
+import { GraphQLError, GraphQLScalarType, Kind } from "graphql";
 import { instanceOf, InstanceType } from "../../utils/instanceof";
 import { ScalarFragment } from "../types/schema.types";
 
@@ -24,8 +24,13 @@ const datetimeScalar = new GraphQLScalarType({
         // 3. Number -> return raw number
         if (instanceOf(value, InstanceType.Number)) return value as number;
 
-        throw Error(
-            "GraphQL Date Scalar serializer expected a `ISO string | Date | number` data type"
+        throw new GraphQLError(
+            "GraphQL Date Scalar serializer expected a `ISO string | Date | number` data type",
+            {
+                extensions: {
+                    code: "GRAPHQL_PARSE_FAILED",
+                },
+            }
         );
     },
     parseValue(value): Date {
@@ -39,8 +44,13 @@ const datetimeScalar = new GraphQLScalarType({
         if (instanceOf(value, InstanceType.Number))
             return new Date(value as number); // Convert incoming integer to Date
 
-        throw new Error(
-            "GraphQL Date Scalar parser expected a `ISO string | number`"
+        throw new GraphQLError(
+            "GraphQL Date Scalar parser expected a `ISO string | number`",
+            {
+                extensions: {
+                    code: "GRAPHQL_PARSE_FAILED",
+                },
+            }
         );
     },
     parseLiteral(ast) {

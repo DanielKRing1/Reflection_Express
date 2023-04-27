@@ -5,13 +5,6 @@ import cors from "cors";
 import configureDotEnv from "../env";
 configureDotEnv();
 
-// SERVER
-import gqlServer from "./gqlServer";
-
-// SESSION
-import accessSession from "./middlewares/session/access";
-import refreshSession from "./middlewares/session/refresh";
-
 // MIDDLEWARE
 import loggingMiddleware from "./middlewares/logging.middleware";
 import authorizeMiddleware from "./middlewares/session/genAuthorizeSession.middleware";
@@ -19,7 +12,6 @@ import authorizeMiddleware from "./middlewares/session/genAuthorizeSession.middl
 // ROUTER
 import genLoginRouter from "./routes/Login";
 import genRefreshRouter from "./routes/Refresh";
-import axios from "axios";
 import { GQL_PATH } from "./graphql/constants";
 
 // APP
@@ -48,7 +40,7 @@ app.use("/login", genLoginRouter());
 app.use("/refresh", genRefreshRouter());
 // Auth middleware
 // app.use(GQL_PATH, authorizeMiddleware);
-// // All else
+// All else
 // app.use("/", routes);
 
 export default app;

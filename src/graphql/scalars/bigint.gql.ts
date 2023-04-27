@@ -1,5 +1,4 @@
-import { GraphQLScalarType, Kind } from "graphql";
-import { instanceOf, InstanceType } from "../../utils/instanceof";
+import { GraphQLError, GraphQLScalarType, Kind } from "graphql";
 import { ScalarFragment } from "../types/schema.types";
 
 // NAME
@@ -23,7 +22,7 @@ const bigintScalar = new GraphQLScalarType({
         }
 
         throw Error(
-            "GraphQL Date Scalar serializer expected a `ISO string | Date | number` data type"
+            "GraphQL Date Scalar serializer expected a `BigInt` data type"
         );
     },
     parseValue(value) {
@@ -33,8 +32,13 @@ const bigintScalar = new GraphQLScalarType({
             console.log(err);
         }
 
-        throw new Error(
-            "GraphQL Date Scalar parser expected a `ISO string | number`"
+        throw new GraphQLError(
+            "GraphQL Date Scalar parser expected a `string`",
+            {
+                extensions: {
+                    code: "GRAPHQL_PARSE_FAILED",
+                },
+            }
         );
     },
     parseLiteral(ast) {
