@@ -1,10 +1,17 @@
 import { Request, Response, Router } from "express";
 import axios from "axios";
 
-import refresh, { maxAge } from "../../middlewares/session/refresh";
+import refresh from "../../middlewares/session/refresh";
+import {
+    META_REFRESH_SESSION_COOKIE_NAME,
+    maxAge,
+} from "../../middlewares/session/refresh/constants";
 import verifyJwtMiddleware from "../../middlewares/jwt/verifyJwt.middleware";
 import { Dict } from "../../types/global.types";
-import { destroySession } from "../../middlewares/session/utils";
+import {
+    SessionCookieType,
+    destroySession,
+} from "../../middlewares/session/utils";
 import signJwt from "../../auth/jwt/sign.jwt";
 import { mergeCookies, HttpCookieResponse } from "../../utils/cookies";
 
@@ -12,12 +19,35 @@ export default (): Router => {
     const router: Router = Router({ mergeParams: true });
 
     router.route("/").post(refreshController);
+    router.route("/logout").post(logoutController);
 
     router.route("/get-refresh").post(getRefreshController);
 
     return router;
 };
 
+const logoutController = [
+    refresh,
+    async function (req: Request<{}, {}, {}>, res: Response) {
+        try {
+            console.log("refresh/logout---------------------------");
+
+            // 1. Destroy session and clear access session cookies from browser
+            await destroySession(req, res, SessionCookieType.Refresh);
+
+            return res.send("Success");
+        } catch (err) {
+            console.log(err);
+            return res.status(401).send("Unauthenticated");
+        }
+    },
+];
+
+/**
+ * Creates new access session
+ * AND
+ * Regenerates refresh session
+ */
 type LoginGetRefreshBody = {
     jwt: string;
 };
@@ -37,14 +67,8 @@ const refreshController = [
             if (
                 Date.now() - req.session?.cookie?.expires!.getTime() >
                 maxAge / 2
-            ) {
-                await new Promise((reject, resolve) =>
-                    req.session.regenerate((err) => {
-                        if (err) return reject(err);
-                        return resolve();
-                    })
-                );
-            }
+            )
+                await regenRefreshCookies(req, res);
 
             // 3. Get new access token
             // 3.1. Create jwt
@@ -71,8 +95,9 @@ const refreshController = [
             res.send("Success");
         } catch (err) {
             console.log(err);
-            // Destroy session on error
-            await destroySession(req);
+            // 1. Destroy session on error and clear refresh cookies from client
+            await destroySession(req, res, SessionCookieType.Refresh);
+
             return res.status(401).send("Unauthenticated");
         }
     },
@@ -92,13 +117,53 @@ const getRefreshController = [
             const { userId } = jwtPayload;
 
             // 3. Add userId to access session
-            req.session.userId = userId;
+            addRefreshCookies(userId, req, res);
 
             return res.send("Look for cookie");
         } catch (err) {
             console.log(err);
-            await destroySession(req);
+            // 1. Destroy session on error and clear access session cookies from browser
+            await destroySession(req, res, SessionCookieType.Refresh);
+
             return res.status(401).send("Unauthenticated");
         }
     },
 ];
+
+const addRefreshCookies = (userId: string, req: Request, res: Response) => {
+    // 1. Add non http-only 'meta' cookie (so client can check maxAge, etc...)
+    createMetaCookie(res);
+
+    // 2. Add refresh cookie
+    req.session.userId = userId;
+};
+
+const regenRefreshCookies = async (req: Request, res: Response) => {
+    // 1. Add non http-only 'meta' cookie (so client can check maxAge, etc...)
+    createMetaCookie(res);
+
+    // 2. Regen refresh cookie
+    new Promise((reject, resolve) =>
+        req.session.regenerate((err) => {
+            if (err) return reject(err);
+            return resolve();
+        })
+    );
+};
+
+/**
+ * Adds a cookie with 'expires' meta data to the Express Response object
+ *
+ * @param res Express Response object
+ */
+const createMetaCookie = (res: Response) => {
+    // 1. Add non http-only 'meta' cookie (so client can check maxAge, etc...)
+    res.cookie(
+        META_REFRESH_SESSION_COOKIE_NAME,
+        JSON.stringify({ expires: new Date(Date.now() + maxAge) }),
+        {
+            path: "/refresh",
+            httpOnly: false,
+        }
+    ); // options is optional
+};
