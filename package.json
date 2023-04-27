@@ -7,6 +7,7 @@
         "compile": "tsc",
         "start": "npm run compile && node ./dist/index.js",
         "dev": "set NODE_ENV=dev&&nodemon src/index.ts",
+        "local_dev": "set NODE_ENV=test&&nodemon src/index.ts",
         "test": "npx jest --setupFiles ./jest/setup.ts --runInBand",
         "migrate:dev": "dotenv -e env/.env.dev npx prisma migrate dev",
         "migrate:test": "dotenv -e env/.env.test npx prisma migrate dev"
