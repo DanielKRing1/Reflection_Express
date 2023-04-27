@@ -3,17 +3,21 @@ import prisma from "../../../prisma/client";
 
 import { ResolverFragment } from "../../types/schema.types";
 import { CommitInklingsArgs, InklingsArgs } from "./schema.gql";
+import { GraphQLError } from "graphql";
+import { getUserId } from "../../error/session";
+import { createResolverError } from "../../error/catch";
+import GqlContext from "../../types/context.types";
 
 export default {
     Query: {
         inklings: async (
             _: undefined,
             { journalId }: InklingsArgs,
-            contextValue: any,
+            contextValue: GqlContext,
             info: any
         ): Promise<Inkling[]> => {
             try {
-                const userId = contextValue.req.session.userId;
+                const userId = getUserId(contextValue);
 
                 // 1. Get Inklings whose journalId matches the provided journalId
                 //      and whose provided userId owns the Journal
@@ -30,10 +34,8 @@ export default {
 
                 return result;
             } catch (err) {
-                console.log(err);
+                throw createResolverError(err, contextValue);
             }
-
-            return [];
         },
     },
     Mutation: {
@@ -45,7 +47,7 @@ export default {
         ): Promise<Inkling[]> => {
             try {
                 // User id
-                const userId = contextValue.req.session.userId;
+                const userId = getUserId(contextValue);
 
                 // Return data
                 let inklings: Inkling[] = [];
@@ -61,8 +63,13 @@ export default {
 
                     // 2. User does not own Journal
                     if (journal.userId !== userId)
-                        throw new Error(
-                            `commitInklings received a request to access Journal ${journalId}, which is not owned by User ${userId}`
+                        throw new GraphQLError(
+                            `commitInklings received a request to access Journal ${journalId}, which is not owned by User ${userId}`,
+                            {
+                                extensions: {
+                                    code: "UNAUTHENTICATED",
+                                },
+                            }
                         );
 
                     // 3. Create Inklings
@@ -81,10 +88,8 @@ export default {
 
                 return inklings;
             } catch (err) {
-                console.log(err);
+                throw createResolverError(err, contextValue);
             }
-
-            return [];
         },
     },
 } as ResolverFragment;

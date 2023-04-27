@@ -4,6 +4,8 @@ import { UserArgs } from "./schema.gql";
 
 import { User } from "@prisma/client";
 import prisma from "../../../prisma/client";
+import { createResolverError } from "../../error/catch";
+import { getUserId } from "../../error/session";
 
 const resolvers = {
     Query: {
@@ -14,7 +16,7 @@ const resolvers = {
             info: undefined
         ): Promise<User | null> => {
             try {
-                const userId = contextValue.req.session.userId;
+                const userId = getUserId(contextValue);
 
                 const result = await prisma.user.findUniqueOrThrow({
                     where: {
@@ -26,10 +28,8 @@ const resolvers = {
 
                 return result;
             } catch (err) {
-                console.log(err);
+                throw createResolverError(err, contextValue);
             }
-
-            return null;
         },
     },
     Mutation: {},

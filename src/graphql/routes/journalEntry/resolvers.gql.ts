@@ -11,17 +11,19 @@ import GqlContext from "../../types/context.types";
 import prisma from "../../../prisma/client";
 import { Prisma, Reflection, Thought } from "@prisma/client";
 import { Dict } from "../../../types/global.types";
+import { getUserId } from "../../error/session";
+import { createResolverError } from "../../error/catch";
 
 export default {
     Query: {
         journalEntries: async (
             _: undefined,
             { journalId, cursorTime = new Date(), count }: JournalEntriesArgs,
-            contextValue: any,
+            contextValue: GqlContext,
             info: any
         ): Promise<JournalEntryWReflection[]> => {
             try {
-                const userId = contextValue.req.session.userId;
+                const userId = getUserId(contextValue);
 
                 // 1. Confirm "User" owns "JournalId"
                 await prisma.journal.findFirstOrThrow({
@@ -88,19 +90,17 @@ export default {
 
                 return journalEntries;
             } catch (err) {
-                console.log(err);
+                throw createResolverError(err, contextValue);
             }
-
-            return [];
         },
         thoughts: async (
             _: undefined,
             { journalId, thoughtIds }: ThoughtsArgs,
-            contextValue: any,
+            contextValue: GqlContext,
             info: any
         ): Promise<Thought[]> => {
             try {
-                const userId = contextValue.req.session.userId;
+                const userId = getUserId(contextValue);
 
                 const thoughtDateIds = thoughtIds.map(
                     (id: TimestampTzPg) => new Date(id)
@@ -121,10 +121,8 @@ export default {
 
                 return result;
             } catch (err) {
-                console.log(err);
+                throw createResolverError(err, contextValue);
             }
-
-            return [];
         },
     },
     Mutation: {
@@ -142,7 +140,7 @@ export default {
             info: any
         ): Promise<JournalEntryWReflection | null> => {
             try {
-                const userId = contextValue.req.session.userId;
+                const userId = getUserId(contextValue);
 
                 const timestamp: Date = new Date();
                 const journalEntryId: string = serializeDate(timestamp);
@@ -229,8 +227,7 @@ export default {
                     reflections: [],
                 };
             } catch (err) {
-                console.log(err);
-                return null;
+                throw createResolverError(err, contextValue);
             }
         },
     },
