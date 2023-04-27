@@ -1,7 +1,5 @@
 import { createSession, createRedisSession } from "../utils";
-
-export const ACCESS_SESSION_COOKIE_NAME = "rfltn-access";
-export const maxAge = 1000 * 60 * 60; // 1 hour
+import { ACCESS_SESSION_COOKIE_NAME, maxAge } from "./constants";
 
 // export default createRedisSession({
 //   redisPrefix: "rfltn-access:",

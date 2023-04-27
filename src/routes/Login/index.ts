@@ -7,7 +7,14 @@ import compare from "../../auth/password/compare";
 
 import verifyJwtMiddleware from "../../middlewares/jwt/verifyJwt.middleware";
 import access from "../../middlewares/session/access";
-import { destroySession } from "../../middlewares/session/utils";
+import {
+    maxAge,
+    META_ACCESS_SESSION_COOKIE_NAME,
+} from "../../middlewares/session/access/constants";
+import {
+    destroySession,
+    SessionCookieType,
+} from "../../middlewares/session/utils";
 import { Dict } from "../../types/global.types";
 import { HttpCookieResponse, mergeCookies } from "../../utils/cookies";
 import prisma from "../../prisma/client";
@@ -18,6 +25,7 @@ export default (): Router => {
 
     router.route("/create-user").post(createUserController, loginController);
     router.route("/").post(loginController);
+    router.route("/logout").post(logoutController);
     router.route("/get-access").post(getAccessController);
 
     return router;
@@ -103,7 +111,7 @@ const loginController = [
             }
 
             // 5. Create access session (and cookie)
-            req.session.userId = userId;
+            addAccessCookies(userId, req, res);
 
             // 6. Valid, get refresh cookie
             // 6.1. Create jwt
@@ -130,8 +138,26 @@ const loginController = [
             res.send("Success");
         } catch (err) {
             console.log(err);
-            // Destroy session on error
-            await destroySession(req);
+            // 1. Destroy session on error and clear access session cookies from browser
+            await destroySession(req, res, SessionCookieType.Access);
+
+            return res.status(401).send("Unauthenticated");
+        }
+    },
+];
+
+const logoutController = [
+    access,
+    async function (req: Request<{}, {}, {}>, res: Response) {
+        try {
+            console.log("access/logout---------------------------");
+
+            // 1. Destroy session and clear access session cookies from browser
+            await destroySession(req, res, SessionCookieType.Access);
+
+            return res.send("Success");
+        } catch (err) {
+            console.log(err);
             return res.status(401).send("Unauthenticated");
         }
     },
@@ -152,13 +178,39 @@ const getAccessController = [
             const { userId } = jwtPayload;
 
             // 3. Add userId to refresh session
-            req.session.userId = userId;
+            addAccessCookies(userId, req, res);
 
             return res.send("Look for cookie");
         } catch (err) {
             console.log(err);
-            await destroySession(req);
+            // 1. Destroy session on error and clear access session cookies from browser
+            await destroySession(req, res, SessionCookieType.Access);
+
             return res.status(401).send("Unauthenticated");
         }
     },
 ];
+
+const addAccessCookies = (userId: string, req: Request, res: Response) => {
+    // 1. Add non http-only 'meta' cookie (so client can check maxAge, etc...)
+    createMetaCookie(res);
+
+    // 2. Add access cookie
+    req.session.userId = userId;
+};
+
+/**
+ * Adds a cookie with 'expires' meta data to the Express Response object
+ *
+ * @param res Express Response object
+ */
+const createMetaCookie = (res: Response) => {
+    // 1. Add non http-only 'meta' cookie (so client can check maxAge, etc...)
+    res.cookie(
+        META_ACCESS_SESSION_COOKIE_NAME,
+        JSON.stringify({ expires: new Date(Date.now() + maxAge) }),
+        {
+            httpOnly: false,
+        }
+    ); // options is optional
+};

@@ -5,8 +5,14 @@ import setCookie from "set-cookie-parser";
 
 import server from "../../../../src/index";
 import prisma from "../../../../src/prisma/client";
-import { ACCESS_SESSION_COOKIE_NAME } from "../../../../src/middlewares/session/access";
-import { REFRESH_SESSION_COOKIE_NAME } from "../../../../src/middlewares/session/refresh";
+import {
+    ACCESS_SESSION_COOKIE_NAME,
+    META_ACCESS_SESSION_COOKIE_NAME,
+} from "../../../../src/middlewares/session/access/constants";
+import {
+    REFRESH_SESSION_COOKIE_NAME,
+    META_REFRESH_SESSION_COOKIE_NAME,
+} from "../../../../src/middlewares/session/refresh/constants";
 
 const USER_ID = "1";
 const PASSWORD = "123";
@@ -30,9 +36,13 @@ describe("User GraphQL server", () => {
         const cookies = setCookie
             .parse(res as any)
             .sort((a, b) => a.name.localeCompare(b.name));
-        expect(cookies.length).toBeGreaterThanOrEqual(2);
+        console.log(cookies);
+        expect(cookies.length).toBe(4);
+
         expect(cookies[0].name).toBe(ACCESS_SESSION_COOKIE_NAME);
-        expect(cookies[1].name).toBe(REFRESH_SESSION_COOKIE_NAME);
+        expect(cookies[1].name).toBe(META_ACCESS_SESSION_COOKIE_NAME);
+        expect(cookies[2].name).toBe(REFRESH_SESSION_COOKIE_NAME);
+        expect(cookies[3].name).toBe(META_REFRESH_SESSION_COOKIE_NAME);
     });
 
     it("Should get the created User (this requires successfully sending an access session cookie with the request)", async () => {
