@@ -26,7 +26,7 @@ export default {
     thoughts(journalId: ID!, thoughtIds: [DateTime]!): [Thought]!
   `,
     Mutation: `
-    createJournalEntry(journalId: BigInt!, keepIdsInkling: [DateTime]!, keepIdsThought: [DateTime]!, discardIdsThought: [DateTime]!, discardIdsInkling: [DateTime]!): JournalEntry
+    createJournalEntry(journalId: BigInt!, keepIdsInkling: [DateTime]!, keepIdsThought: [DateTime]!, discardIdsThought: [DateTime]!, discardIdsInkling: [DateTime]!): JournalEntry!
   `,
 } as SchemaFragment;
 
