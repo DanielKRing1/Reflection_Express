@@ -19,12 +19,19 @@ export const mergeCookies = (
     // 6.3. Strip refresh cookie from response
     // Get all cookies from cookie header
     const cookies = setCookie.parse(httpResponse as any);
-    console.log(cookies);
+    // console.log(cookies);
+    // console.log(expressRes.getHeader("Set-Cookie"));
 
     // 6.4. Attach refresh cookie to res.cookie
-    cookies.forEach((cookie) =>
-        expressRes.cookie(cookie.name, cookie.value, cookie as any)
-    );
+    cookies.forEach((cookie) => {
+        expressRes.cookie(cookie.name, cookie.value, {
+            expires: cookie.expires,
+            path: cookie.path,
+            httpOnly: cookie.httpOnly,
+        });
+    });
+
+    // console.log(expressRes.getHeader("Set-Cookie"));
 };
 
 export const clearCookieFromBrowser = (cookieName: string, res: Response) => {
