@@ -8,7 +8,7 @@ import compare from "../../auth/password/compare";
 import verifyJwtMiddleware from "../../middlewares/jwt/verifyJwt.middleware";
 import access from "../../middlewares/session/access";
 import {
-    maxAge,
+    maxAge as accessMaxAge,
     META_ACCESS_SESSION_COOKIE_NAME,
 } from "../../middlewares/session/access/constants";
 import {
@@ -19,6 +19,7 @@ import { Dict } from "../../types/global.types";
 import { HttpCookieResponse, mergeCookies } from "../../utils/cookies";
 import prisma from "../../prisma/client";
 import hashAndSalt from "../../auth/password/hash";
+import refresh from "../../middlewares/session/refresh";
 
 export default (): Router => {
     const router: Router = Router({ mergeParams: true });
@@ -208,8 +209,9 @@ const createMetaCookie = (res: Response) => {
     // 1. Add non http-only 'meta' cookie (so client can check maxAge, etc...)
     res.cookie(
         META_ACCESS_SESSION_COOKIE_NAME,
-        JSON.stringify({ expires: new Date(Date.now() + maxAge) }),
+        JSON.stringify({ expires: new Date(Date.now() + accessMaxAge) }),
         {
+            maxAge: accessMaxAge,
             httpOnly: false,
         }
     ); // options is optional

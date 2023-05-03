@@ -4,7 +4,7 @@ import axios from "axios";
 import refresh from "../../middlewares/session/refresh";
 import {
     META_REFRESH_SESSION_COOKIE_NAME,
-    maxAge,
+    maxAge as refreshMaxAge,
 } from "../../middlewares/session/refresh/constants";
 import verifyJwtMiddleware from "../../middlewares/jwt/verifyJwt.middleware";
 import { Dict } from "../../types/global.types";
@@ -66,7 +66,7 @@ const refreshController = [
             );
             if (
                 Date.now() - req.session?.cookie?.expires!.getTime() >
-                maxAge / 2
+                refreshMaxAge / 2
             )
                 await regenRefreshCookies(req, res);
 
@@ -160,9 +160,11 @@ const createMetaCookie = (res: Response) => {
     // 1. Add non http-only 'meta' cookie (so client can check maxAge, etc...)
     res.cookie(
         META_REFRESH_SESSION_COOKIE_NAME,
-        JSON.stringify({ expires: new Date(Date.now() + maxAge) }),
+        JSON.stringify({ expires: new Date(Date.now() + refreshMaxAge) }),
         {
-            path: "/refresh",
+            // Not "/refresh" bcus cookie should be accessible from any client page
+            path: "/",
+            maxAge: refreshMaxAge,
             httpOnly: false,
         }
     ); // options is optional
