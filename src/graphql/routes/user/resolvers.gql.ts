@@ -28,7 +28,7 @@ const resolvers = {
 
                 return result;
             } catch (err) {
-                throw createResolverError(err, contextValue);
+                throw await createResolverError(err, contextValue);
             }
         },
     },

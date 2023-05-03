@@ -34,7 +34,7 @@ export default {
 
                 return result;
             } catch (err) {
-                throw createResolverError(err, contextValue);
+                throw await createResolverError(err, contextValue);
             }
         },
     },
@@ -88,7 +88,7 @@ export default {
 
                 return inklings;
             } catch (err) {
-                throw createResolverError(err, contextValue);
+                throw await createResolverError(err, contextValue);
             }
         },
     },

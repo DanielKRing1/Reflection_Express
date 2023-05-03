@@ -28,7 +28,7 @@ export default {
 
                 return result;
             } catch (err) {
-                throw createResolverError(err, contextValue);
+                throw await createResolverError(err, contextValue);
             }
         },
     },
@@ -54,7 +54,7 @@ export default {
 
                 return result;
             } catch (err) {
-                throw createResolverError(err, contextValue);
+                throw await await createResolverError(err, contextValue);
             }
         },
     },

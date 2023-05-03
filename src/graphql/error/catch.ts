@@ -18,10 +18,10 @@ import GqlContext from "../types/context.types";
  * @param res
  * @returns
  */
-export const createResolverError = (
+export const createResolverError = async (
     err: any,
     gqlContext: GqlContext
-): GraphQLError => {
+): Promise<GraphQLError> => {
     console.log(err);
 
     // 1. Clear Access session cookies if unauthenticated
@@ -29,7 +29,7 @@ export const createResolverError = (
         err instanceof GraphQLError &&
         err.extensions.code === UNAUTHENTICATED_GQL_ERROR_CODE
     )
-        destroySession(
+        await destroySession(
             gqlContext.req,
             gqlContext.res,
             SessionCookieType.Access

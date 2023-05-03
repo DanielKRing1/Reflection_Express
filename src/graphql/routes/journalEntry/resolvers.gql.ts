@@ -90,7 +90,7 @@ export default {
 
                 return journalEntries;
             } catch (err) {
-                throw createResolverError(err, contextValue);
+                throw await createResolverError(err, contextValue);
             }
         },
         thoughts: async (
@@ -121,7 +121,7 @@ export default {
 
                 return result;
             } catch (err) {
-                throw createResolverError(err, contextValue);
+                throw await createResolverError(err, contextValue);
             }
         },
     },
@@ -227,7 +227,7 @@ export default {
                     reflections: [],
                 };
             } catch (err) {
-                throw createResolverError(err, contextValue);
+                throw await createResolverError(err, contextValue);
             }
         },
     },
