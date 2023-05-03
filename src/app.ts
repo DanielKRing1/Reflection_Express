@@ -20,6 +20,9 @@ const app: Express = express();
 // MIDDLEWARE
 app.use(
     cors({
+        // NECESSARY TO SAVE COOKIES TO BROWSER
+        origin: process.env.CORS_ORIGIN,
+        // origin: "http://localhost:3000",
         // origin: "https://reflection.fly.dev/",
         credentials: true, // <-- REQUIRED backend setting
     })
