@@ -11,6 +11,7 @@ import GqlContext, { RequestWGqlContext } from "./graphql/types/context.types";
 
 // CONFIG
 import { GQL_PATH } from "./graphql/constants";
+import { apolloLoggingPlugin } from "./logging/apollo";
 
 export default async (
     app: Express,
@@ -30,7 +31,10 @@ export default async (
     const server = new ApolloServer<GqlContext>({
         typeDefs,
         resolvers,
-        plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+        plugins: [
+            ApolloServerPluginDrainHttpServer({ httpServer }),
+            apolloLoggingPlugin,
+        ],
     });
 
     // Ensure we wait for our server to start
