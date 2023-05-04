@@ -54,7 +54,7 @@ export default {
 
                 return result;
             } catch (err) {
-                throw await await createResolverError(err, contextValue);
+                throw await createResolverError(err, contextValue);
             }
         },
     },
