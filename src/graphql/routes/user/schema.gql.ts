@@ -26,7 +26,9 @@ export default {
     Query: `
     user: User
   `,
-    Mutation: ``,
+    Mutation: `
+    updateLastUsedJournalId(journalName: String!): Boolean!
+    `,
 } as SchemaFragment;
 
 // QUERY RESOLVERS
@@ -43,4 +45,8 @@ export type CreateUserArgs = {
 export type LoginArgs = {
     email: string;
     password: string;
+};
+
+export type UpdateLastUsedJournalIdArgs = {
+    journalId: bigint;
 };

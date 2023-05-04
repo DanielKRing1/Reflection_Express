@@ -1,6 +1,6 @@
 import GqlContext from "../../types/context.types";
 import { ResolverFragment } from "../../types/schema.types";
-import { UserArgs } from "./schema.gql";
+import { UpdateLastUsedJournalIdArgs, UserArgs } from "./schema.gql";
 
 import { User } from "@prisma/client";
 import prisma from "../../../prisma/client";
@@ -32,7 +32,34 @@ const resolvers = {
             }
         },
     },
-    Mutation: {},
+    Mutation: {
+        updateLastUsedJournalId: async (
+            _: undefined,
+            { journalId }: UpdateLastUsedJournalIdArgs,
+            contextValue: GqlContext,
+            info: any
+        ): Promise<boolean> => {
+            try {
+                const userId = getUserId(contextValue);
+
+                // 1. Create Journal with autoincrement id
+                const result = await prisma.user.update({
+                    where: {
+                        email: userId,
+                    },
+                    data: {
+                        lastUsedJId: journalId,
+                    },
+                });
+
+                console.log(result);
+
+                return true;
+            } catch (err) {
+                throw await createResolverError(err, contextValue);
+            }
+        },
+    },
 } as ResolverFragment;
 
 export default resolvers;
