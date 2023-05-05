@@ -20,14 +20,14 @@ export default {
     Types: `
     type User {
       email: String!
-      lastUsedJId: String
+      lastUsedJId: BigInt
     }
   `,
     Query: `
     user: User
   `,
     Mutation: `
-    updateLastUsedJournalId(journalName: String!): Boolean!
+    updateLastUsedJournalId(journalId: BigInt!): Boolean!
     `,
 } as SchemaFragment;
 
