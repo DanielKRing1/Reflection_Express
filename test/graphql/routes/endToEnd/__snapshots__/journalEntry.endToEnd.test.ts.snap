@@ -222,9 +222,24 @@ exports[`JournalEntry GraphQL server Should create User1 Journal 1 JournalEntry1
 
 exports[`JournalEntry GraphQL server Should fail to get User 1 Journal 1 JournalEntries as User 2 1`] = `
 {
-  "data": {
-    "journalEntries": [],
-  },
+  "data": null,
+  "errors": [
+    {
+      "extensions": {
+        "code": "INTERNAL_SERVER_ERROR",
+      },
+      "locations": [
+        {
+          "column": 17,
+          "line": 2,
+        },
+      ],
+      "message": "No Journal found",
+      "path": [
+        "journalEntries",
+      ],
+    },
+  ],
 }
 `;
 
@@ -262,9 +277,24 @@ exports[`JournalEntry GraphQL server Should fail to get User 1 Journal 1 Journal
 
 exports[`JournalEntry GraphQL server Should fail to get User 1 Journal 2 JournalEntries as User 2 1`] = `
 {
-  "data": {
-    "journalEntries": [],
-  },
+  "data": null,
+  "errors": [
+    {
+      "extensions": {
+        "code": "INTERNAL_SERVER_ERROR",
+      },
+      "locations": [
+        {
+          "column": 17,
+          "line": 2,
+        },
+      ],
+      "message": "No Journal found",
+      "path": [
+        "journalEntries",
+      ],
+    },
+  ],
 }
 `;
 

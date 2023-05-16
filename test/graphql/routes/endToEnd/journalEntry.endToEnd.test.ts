@@ -1021,7 +1021,7 @@ describe("JournalEntry GraphQL server", () => {
         const res = await agent.post("/graphql").send(queryData);
 
         expect(JSON.parse(res.text)).toMatchSnapshot();
-        expect(JSON.parse(res.text).data.journalEntries.length).toBe(0);
+        expect(JSON.parse(res.text).data).toBe(null);
     });
 
     it("Should fail to get User 1 Journal 2 JournalEntries as User 2", async () => {
@@ -1046,7 +1046,7 @@ describe("JournalEntry GraphQL server", () => {
         const res = await agent.post("/graphql").send(queryData);
 
         expect(JSON.parse(res.text)).toMatchSnapshot();
-        expect(JSON.parse(res.text).data.journalEntries.length).toBe(0);
+        expect(JSON.parse(res.text).data).toBe(null);
     });
 
     afterAll(async () => {
