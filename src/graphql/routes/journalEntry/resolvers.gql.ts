@@ -102,6 +102,8 @@ export default {
             try {
                 const userId = getUserId(contextValue);
 
+                // Rm duplicates
+                thoughtIds = Array.from(new Set(thoughtIds));
                 const thoughtDateIds = thoughtIds.map(
                     (id: TimestampTzPg) => new Date(id)
                 );
