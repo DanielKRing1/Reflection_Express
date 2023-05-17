@@ -27,7 +27,7 @@ export default {
     user: User
   `,
     Mutation: `
-    updateLastUsedJournalId(journalId: BigInt!): Boolean!
+    updateLastUsedJournalId(journalId: BigInt): Boolean!
     `,
 } as SchemaFragment;
 
