@@ -1,7 +1,12 @@
 import { Journal } from "@prisma/client";
 import prisma from "../../../prisma/client";
 import { ResolverFragment } from "../../types/schema.types";
-import { CreateJournalArgs, JournalsArgs } from "./schema.gql";
+import {
+    CreateJournalArgs,
+    EditJournalArgs,
+    JournalsArgs,
+    RmJournalArgs,
+} from "./schema.gql";
 import { getUserId } from "../../error/session";
 import { createResolverError } from "../../error/catch";
 import GqlContext from "../../types/context.types";
@@ -53,6 +58,55 @@ export default {
                 console.log(result);
 
                 return result;
+            } catch (err) {
+                throw await createResolverError(err, contextValue);
+            }
+        },
+        editJournal: async (
+            _: undefined,
+            { journalId, journalEdits }: EditJournalArgs,
+            contextValue: GqlContext,
+            info: any
+        ): Promise<Journal | null> => {
+            try {
+                const userId = getUserId(contextValue);
+
+                // 1. Edit Journal, only if journal id belongs to userId
+                const result = await prisma.journal.update({
+                    where: {
+                        userId,
+                        id: journalId,
+                    },
+                    data: journalEdits,
+                });
+
+                console.log(result);
+
+                return result;
+            } catch (err) {
+                throw await createResolverError(err, contextValue);
+            }
+        },
+        rmJournal: async (
+            _: undefined,
+            { journalId }: RmJournalArgs,
+            contextValue: GqlContext,
+            info: any
+        ): Promise<boolean> => {
+            try {
+                const userId = getUserId(contextValue);
+
+                // 1. Delete Journal, only if id belongs to userId
+                const result = await prisma.journal.delete({
+                    where: {
+                        userId,
+                        id: journalId,
+                    },
+                });
+
+                console.log(result);
+
+                return true;
             } catch (err) {
                 throw await createResolverError(err, contextValue);
             }

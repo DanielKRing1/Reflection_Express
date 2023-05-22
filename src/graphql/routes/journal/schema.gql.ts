@@ -11,12 +11,17 @@ export default {
       userId: String!
       name: String!
     }
+    input JournalEdits {
+      name: String
+    }
   `,
     Query: `
     journals: [Journal]!
   `,
     Mutation: `
     createJournal(journalName: String!): Journal
+    editJournal(journalId: BigInt!, journalEdits: JournalEdits): Journal
+    rmJournal(journalId: BigInt!): Boolean
   `,
 } as SchemaFragment;
 
@@ -28,4 +33,15 @@ export type JournalsArgs = {};
 
 export type CreateJournalArgs = {
     journalName: string;
+};
+
+export type EditJournalArgs = {
+    journalId: bigint;
+    journalEdits: {
+        name: string;
+    };
+};
+
+export type RmJournalArgs = {
+    journalId: bigint;
 };
