@@ -6,7 +6,7 @@ import signJwt from "../../auth/jwt/sign.jwt";
 import compare from "../../auth/password/compare";
 
 import verifyJwtMiddleware from "../../middlewares/jwt/verifyJwt.middleware";
-import access from "../../middlewares/session/access";
+import accessPromise from "../../middlewares/session/access";
 import {
     maxAge as accessMaxAge,
     META_ACCESS_SESSION_COOKIE_NAME,
@@ -22,7 +22,121 @@ import hashAndSalt from "../../auth/password/hash";
 import refresh from "../../middlewares/session/refresh";
 import { COOKIE_ARGS_LAX } from "../../middlewares/session/constants";
 
-export default (): Router => {
+export default async (): Promise<Router> => {
+    const access = await accessPromise();
+
+    const loginController = [
+        access,
+        async function (req: Request<{}, {}, LoginBody>, res: Response) {
+            try {
+                console.log("/login---------------------------");
+
+                // 1. Get user credentials
+                const { userId, password } = req.body;
+
+                // 2. Get User's password hash from db
+                const passwordRow: Password =
+                    await prisma.password.findUniqueOrThrow({
+                        where: {
+                            userId,
+                        },
+                    });
+
+                // 3. Validate user credentials
+                const isValid = await compare(password, passwordRow.hash);
+                // 4. Invalid, destroy session and return error code
+                if (!isValid) {
+                    throw new Error(
+                        "/login controller determined that the provided user credentials are invalid"
+                    );
+                }
+
+                // 5. Create access session (and cookie)
+                addAccessCookies(userId, req, res);
+
+                // 6. Valid, get refresh cookie
+                // 6.1. Create jwt
+                const payload: Dict<any> = {
+                    userId,
+                };
+                const jwt: string = await signJwt(
+                    payload,
+                    process.env.JWT_SECRET!,
+                    {
+                        expiresIn: 10, // Expires in 10 secs
+                    }
+                );
+                // 6.2. Send jwt to '/refresh/get-refresh'
+                const responseWCookie = await axios.post(
+                    // TODO Put this in config file
+                    `http://localhost:4000/refresh/get-refresh`,
+                    { jwt }
+                );
+
+                // 7. Add refresh cookie to res.cookie
+                mergeCookies(responseWCookie as HttpCookieResponse, res);
+
+                res.send("Success");
+            } catch (err) {
+                console.log(err);
+                // 1. Destroy session on error and clear access session cookies from browser
+                await destroySession(req, res, SessionCookieType.Access);
+
+                return res.status(401).send("Unauthenticated");
+            }
+        },
+    ];
+
+    const logoutController = [
+        access,
+        async function (req: Request<{}, {}, {}>, res: Response) {
+            try {
+                console.log("access/logout---------------------------");
+
+                // 1. Destroy session and clear access session cookies from browser
+                await destroySession(req, res, SessionCookieType.Access);
+
+                return res.send("Success");
+            } catch (err) {
+                console.log(err);
+                return res.status(401).send("Unauthenticated");
+            }
+        },
+    ];
+
+    type RefreshGetAccessBody = { jwt: string };
+    const getAccessController = [
+        verifyJwtMiddleware,
+        access,
+        async function (
+            req: Request<{}, {}, RefreshGetAccessBody>,
+            res: Response
+        ) {
+            try {
+                console.log("/login/get-access---------------------------");
+
+                // 1. Get jwt
+                const jwtPayload = req.jwtPayload as Dict<any>;
+
+                // 2. Verify jwt
+                const { userId } = jwtPayload;
+
+                // 3. Add userId to refresh session
+                addAccessCookies(userId, req, res);
+
+                return res.send("Look for cookie");
+            } catch (err) {
+                console.log(err);
+                // 1. Destroy session on error and clear access session cookies from browser
+                await destroySession(req, res, SessionCookieType.Access);
+
+                return res.status(401).send("Unauthenticated");
+            }
+        },
+    ];
+
+    // ROUTER
+
     const router: Router = Router({ mergeParams: true });
 
     router.route("/create-user").post(createUserController, loginController);
@@ -31,6 +145,11 @@ export default (): Router => {
     router.route("/get-access").post(getAccessController);
 
     return router;
+};
+
+type LoginBody = {
+    userId: string;
+    password: string;
 };
 
 const createUserController = async function (
@@ -81,117 +200,6 @@ const createUserController = async function (
         return res.status(409).send("Failed to create user");
     }
 };
-
-type LoginBody = {
-    userId: string;
-    password: string;
-};
-const loginController = [
-    access,
-    async function (req: Request<{}, {}, LoginBody>, res: Response) {
-        try {
-            console.log("/login---------------------------");
-
-            // 1. Get user credentials
-            const { userId, password } = req.body;
-
-            // 2. Get User's password hash from db
-            const passwordRow: Password =
-                await prisma.password.findUniqueOrThrow({
-                    where: {
-                        userId,
-                    },
-                });
-
-            // 3. Validate user credentials
-            const isValid = await compare(password, passwordRow.hash);
-            // 4. Invalid, destroy session and return error code
-            if (!isValid) {
-                throw new Error(
-                    "/login controller determined that the provided user credentials are invalid"
-                );
-            }
-
-            // 5. Create access session (and cookie)
-            addAccessCookies(userId, req, res);
-
-            // 6. Valid, get refresh cookie
-            // 6.1. Create jwt
-            const payload: Dict<any> = {
-                userId,
-            };
-            const jwt: string = await signJwt(
-                payload,
-                process.env.JWT_SECRET!,
-                {
-                    expiresIn: 10, // Expires in 10 secs
-                }
-            );
-            // 6.2. Send jwt to '/refresh/get-refresh'
-            const responseWCookie = await axios.post(
-                // TODO Put this in config file
-                `http://localhost:4000/refresh/get-refresh`,
-                { jwt }
-            );
-
-            // 7. Add refresh cookie to res.cookie
-            mergeCookies(responseWCookie as HttpCookieResponse, res);
-
-            res.send("Success");
-        } catch (err) {
-            console.log(err);
-            // 1. Destroy session on error and clear access session cookies from browser
-            await destroySession(req, res, SessionCookieType.Access);
-
-            return res.status(401).send("Unauthenticated");
-        }
-    },
-];
-
-const logoutController = [
-    access,
-    async function (req: Request<{}, {}, {}>, res: Response) {
-        try {
-            console.log("access/logout---------------------------");
-
-            // 1. Destroy session and clear access session cookies from browser
-            await destroySession(req, res, SessionCookieType.Access);
-
-            return res.send("Success");
-        } catch (err) {
-            console.log(err);
-            return res.status(401).send("Unauthenticated");
-        }
-    },
-];
-
-type RefreshGetAccessBody = { jwt: string };
-const getAccessController = [
-    verifyJwtMiddleware,
-    access,
-    async function (req: Request<{}, {}, RefreshGetAccessBody>, res: Response) {
-        try {
-            console.log("/login/get-access---------------------------");
-
-            // 1. Get jwt
-            const jwtPayload = req.jwtPayload as Dict<any>;
-
-            // 2. Verify jwt
-            const { userId } = jwtPayload;
-
-            // 3. Add userId to refresh session
-            addAccessCookies(userId, req, res);
-
-            return res.send("Look for cookie");
-        } catch (err) {
-            console.log(err);
-            // 1. Destroy session on error and clear access session cookies from browser
-            await destroySession(req, res, SessionCookieType.Access);
-
-            return res.status(401).send("Unauthenticated");
-        }
-    },
-];
 
 const addAccessCookies = (userId: string, req: Request, res: Response) => {
     // 1. Add non http-only 'meta' cookie (so client can check maxAge, etc...)

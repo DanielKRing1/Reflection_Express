@@ -14,7 +14,7 @@ import genLoginRouter from "./routes/Login";
 import genRefreshRouter from "./routes/Refresh";
 import { GQL_PATH } from "./graphql/constants";
 
-export default () => {
+export default async () => {
     // APP
     const app: Express = express();
 
@@ -40,8 +40,10 @@ export default () => {
     );
     app.use(loggingMiddleware);
     // // Auth routes
-    app.use("/login", genLoginRouter());
-    app.use("/refresh", genRefreshRouter());
+    const loginRouter = await genLoginRouter();
+    const refreshRouter = await genRefreshRouter();
+    app.use("/login", loginRouter);
+    app.use("/refresh", refreshRouter);
     // Auth middleware
     // app.use(GQL_PATH, authorizeMiddleware);
     // All else

@@ -39,6 +39,7 @@ export const createRedisSession = async ({
     });
 };
 
+let redisStore: RedisStore;
 /**
  * Connect to Redis store
  *
@@ -46,17 +47,24 @@ export const createRedisSession = async ({
  * @returns
  */
 const createRedisStore = async (prefix: string): Promise<RedisStore> => {
-    let redisClient = createClient({
-        url: process.env.REDIS_URL,
-    });
-    redisClient.on("error", (err) => console.log(err));
-    await redisClient.connect();
-    // redisClient.connect().catch(console.error);
+    if (redisStore === undefined) {
+        const redisClient = createClient({
+            url: process.env.REDIS_URL,
+        });
+        // redisClient.connect().catch(console.error);
 
-    return new RedisStore({
-        client: redisClient,
-        prefix,
-    });
+        redisClient.on("error", (err: Error) => {
+            console.log(err);
+        });
+        await redisClient.connect();
+
+        redisStore = new RedisStore({
+            client: redisClient,
+            prefix,
+        });
+    }
+
+    return redisStore;
 };
 
 type CreateSession<T> = {
@@ -113,10 +121,11 @@ export const destroySession = async (
 ) => {
     // 1. Destroy session on server
     await new Promise<boolean>((res, rej) => {
-        req.session.destroy((err) => {
-            if (err) return rej(err);
-            else return res(true);
-        });
+        if (req && req.session)
+            req.session.destroy((err) => {
+                if (err) return rej(err);
+                else return res(true);
+            });
         // TODO: Check if this is necessary? Or does req.session.destroy() handle this?
         // @ts-ignore
         req.session = null; // Deletes the cookie.

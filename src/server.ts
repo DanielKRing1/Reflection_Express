@@ -1,6 +1,11 @@
-import expressApp from "./app";
+import genExpressApp from "./app";
 import gqlServer from "./gqlServer";
 
-import access from "./middlewares/session/access";
+import accessPromise from "./middlewares/session/access";
 
-export default gqlServer(expressApp, access);
+export default (async () => {
+    const app = await genExpressApp();
+    const access = await accessPromise();
+
+    return gqlServer(app, access);
+})();
