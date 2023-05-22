@@ -14,6 +14,7 @@ import {
 } from "../../middlewares/session/utils";
 import signJwt from "../../auth/jwt/sign.jwt";
 import { mergeCookies, HttpCookieResponse } from "../../utils/cookies";
+import { COOKIE_ARGS_LAX } from "../../middlewares/session/constants";
 
 export default (): Router => {
     const router: Router = Router({ mergeParams: true });
@@ -165,7 +166,7 @@ const createMetaCookie = (res: Response) => {
             // Not "/refresh" bcus cookie should be accessible from any client page
             path: "/",
             maxAge: refreshMaxAge,
-            httpOnly: false,
+            ...COOKIE_ARGS_LAX,
         }
     ); // options is optional
 };

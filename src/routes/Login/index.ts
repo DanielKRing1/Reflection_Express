@@ -20,6 +20,7 @@ import { HttpCookieResponse, mergeCookies } from "../../utils/cookies";
 import prisma from "../../prisma/client";
 import hashAndSalt from "../../auth/password/hash";
 import refresh from "../../middlewares/session/refresh";
+import { COOKIE_ARGS_LAX } from "../../middlewares/session/constants";
 
 export default (): Router => {
     const router: Router = Router({ mergeParams: true });
@@ -212,7 +213,7 @@ const createMetaCookie = (res: Response) => {
         JSON.stringify({ expires: new Date(Date.now() + accessMaxAge) }),
         {
             maxAge: accessMaxAge,
-            httpOnly: false,
+            ...COOKIE_ARGS_LAX,
         }
     ); // options is optional
 };

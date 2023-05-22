@@ -1,5 +1,6 @@
 import { Response } from "express";
 import setCookie from "set-cookie-parser";
+import { SameSite } from "../middlewares/session/types";
 
 export type HttpCookieResponse = {
     status: number;
@@ -26,7 +27,9 @@ export const mergeCookies = (
     cookies.forEach((cookie) => {
         expressRes.cookie(cookie.name, cookie.value, {
             expires: cookie.expires,
+            domain: cookie.domain,
             path: cookie.path,
+            sameSite: cookie.sameSite as SameSite,
             httpOnly: cookie.httpOnly,
         });
     });

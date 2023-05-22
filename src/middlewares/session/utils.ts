@@ -11,6 +11,7 @@ import {
     REFRESH_SESSION_COOKIE_NAME,
 } from "./refresh/constants";
 import { clearCookieFromBrowser } from "../../utils/cookies";
+import { COOKIE_ARGS_PROTECTED } from "./constants";
 
 type CreateRedisSession = {
     redisPrefix: string;
@@ -21,14 +22,14 @@ type CreateRedisSession = {
  * @param param0
  * @returns
  */
-export const createRedisSession = ({
+export const createRedisSession = async ({
     redisPrefix,
     sessionName,
     secret,
     maxAge,
     cookiePath,
 }: CreateRedisSession) => {
-    const redisStore: RedisStore = createRedisStore(redisPrefix);
+    const redisStore: RedisStore = await createRedisStore(redisPrefix);
     return createSession({
         sessionName,
         sessionStore: redisStore,
@@ -44,9 +45,13 @@ export const createRedisSession = ({
  * @param prefix
  * @returns
  */
-const createRedisStore = (prefix: string): RedisStore => {
-    let redisClient = createClient();
-    redisClient.connect().catch(console.error);
+const createRedisStore = async (prefix: string): Promise<RedisStore> => {
+    let redisClient = createClient({
+        url: process.env.REDIS_URL,
+    });
+    redisClient.on("error", (err) => console.log(err));
+    await redisClient.connect();
+    // redisClient.connect().catch(console.error);
 
     return new RedisStore({
         client: redisClient,
@@ -86,9 +91,8 @@ export const createSession = ({
         saveUninitialized: false, // Do not 'create' session in store when 'session' obj has not been modified
         cookie: {
             path: cookiePath,
-            // secure: true, // if true only transmit cookie over https
-            httpOnly: true, // if true prevent client side JS from reading the cookie
             maxAge,
+            ...COOKIE_ARGS_PROTECTED,
         },
     });
 };
