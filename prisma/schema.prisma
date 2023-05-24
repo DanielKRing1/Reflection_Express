@@ -8,7 +8,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://postgres:postgres@localhost:5432/postgres?schema=public"
+  url      = "postgresql://postgres:jOzOiIwC9PWRrjW@reflection-db.fly.dev:5432/mydb?schema=public"
   // env("DATABASE_URL")
 }
 

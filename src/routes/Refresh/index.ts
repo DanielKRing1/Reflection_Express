@@ -15,6 +15,7 @@ import {
 import signJwt from "../../auth/jwt/sign.jwt";
 import { mergeCookies, HttpCookieResponse } from "../../utils/cookies";
 import { COOKIE_ARGS_LAX } from "../../middlewares/session/constants";
+import { getFullHost } from "../../utils/path";
 
 export default async (): Promise<Router> => {
     const refresh = await refreshPromise();
@@ -79,7 +80,7 @@ export default async (): Promise<Router> => {
                 // 3.2. Send jwt to '/login/get-access'
                 const responseWCookie = await axios.post(
                     // TODO Put this in config file
-                    `http://localhost:4000/login/get-access`,
+                    `${getFullHost(req)}/login/get-access`,
                     { jwt }
                 );
 

@@ -19,8 +19,8 @@ import { Dict } from "../../types/global.types";
 import { HttpCookieResponse, mergeCookies } from "../../utils/cookies";
 import prisma from "../../prisma/client";
 import hashAndSalt from "../../auth/password/hash";
-import refresh from "../../middlewares/session/refresh";
 import { COOKIE_ARGS_LAX } from "../../middlewares/session/constants";
+import { getFullHost } from "../../utils/path";
 
 export default async (): Promise<Router> => {
     const access = await accessPromise();
@@ -69,7 +69,7 @@ export default async (): Promise<Router> => {
                 // 6.2. Send jwt to '/refresh/get-refresh'
                 const responseWCookie = await axios.post(
                     // TODO Put this in config file
-                    `http://localhost:4000/refresh/get-refresh`,
+                    `${getFullHost(req)}/refresh/get-refresh`,
                     { jwt }
                 );
 
