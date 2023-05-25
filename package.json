@@ -6,9 +6,10 @@
     "scripts": {
         "----VERSIONING": "...",
         "version": "echo %npm_package_version%",
-        "bump-patch": "npm version patch",
-        "bump-minor": "npm version minor",
-        "bump-major": "npm version major",
+        "commit": "git add . && git commit -m \"New build -> %npm_package_version%\"",
+        "bump-patch": "npm run commit && npm version patch",
+        "bump-minor": "npm run commit && npm version minor",
+        "bump-major": "npm run commit && npm version major",
         "----DEPLOYING": "",
         "t": ".\\start.sh",
         "compile": "npx tsc",
