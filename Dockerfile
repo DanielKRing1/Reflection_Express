@@ -33,4 +33,6 @@ WORKDIR /app
 ENV NODE_ENV prod
 ENV PATH /root/.volta/bin:$PATH
 
+RUN npx prisma generate
+
 CMD [ "npm", "run", "start_fly" ]
