@@ -2,7 +2,9 @@
 
 npm run bump-minor
 npm run compile
-docker build -t registry.fly.io/reflection-api:$npm_package_version .
-docker push registry.fly.io/reflection-api:$npm_package_version
+timestamp=$(date)
+image_name=registry.fly.io/reflection-api:$npm_package_version-$timestamp
+docker build -t  $image_name .
+docker push $image_name
 
 $SHELL
