@@ -11,6 +11,7 @@ export default (async (): Promise<http.Server> => {
     });
 
     console.log(`🚀 Server ready at http://localhost:${PORT}/graphql`);
+    console.log(process.env);
 
     return _;
 })();

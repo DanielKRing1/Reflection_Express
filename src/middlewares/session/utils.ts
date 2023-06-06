@@ -54,6 +54,9 @@ const createRedisStore = async (prefix: string): Promise<RedisStore> => {
         // redisClient.connect().catch(console.error);
 
         redisClient.on("error", (err: Error) => {
+            console.log("Redis client error:");
+            console.log(process.env);
+            console.log(process.env.REDIS_URL);
             console.log(err);
         });
         await redisClient.connect();
@@ -119,26 +122,30 @@ export const destroySession = async (
     res: Response,
     sessionCookieType: SessionCookieType
 ) => {
-    // 1. Destroy session on server
-    await new Promise<boolean>((res, rej) => {
-        if (req && req.session)
-            req.session.destroy((err) => {
-                if (err) return rej(err);
-                else return res(true);
-            });
-        // TODO: Check if this is necessary? Or does req.session.destroy() handle this?
-        // @ts-ignore
-        req.session = null; // Deletes the cookie.
-    });
+    try {
+        // 1. Destroy session on server
+        await new Promise<boolean>((res, rej) => {
+            if (req && req.session)
+                req.session.destroy((err) => {
+                    if (err) return rej(err);
+                    else return res(true);
+                });
+            // TODO: Check if this is necessary? Or does req.session.destroy() handle this?
+            // @ts-ignore
+            req.session = null; // Deletes the cookie.
+        });
 
-    // 2. Clear cookies from browser
-    switch (sessionCookieType) {
-        case SessionCookieType.Access:
-            clearAccessSessionCookies(res);
-            break;
-        case SessionCookieType.Refresh:
-            clearRefreshSessionCookies(res);
-            break;
+        // 2. Clear cookies from browser
+        switch (sessionCookieType) {
+            case SessionCookieType.Access:
+                clearAccessSessionCookies(res);
+                break;
+            case SessionCookieType.Refresh:
+                clearRefreshSessionCookies(res);
+                break;
+        }
+    } catch (err) {
+        console.log(err);
     }
 };
 

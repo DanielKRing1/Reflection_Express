@@ -34,6 +34,8 @@ export default async (): Promise<Router> => {
                 // 1. Get user credentials
                 const { userId, password } = req.body;
 
+                console.log("1");
+
                 // 2. Get User's password hash from db
                 const passwordRow: Password =
                     await prisma.password.findUniqueOrThrow({
@@ -42,8 +44,12 @@ export default async (): Promise<Router> => {
                         },
                     });
 
+                console.log("2");
+
                 // 3. Validate user credentials
                 const isValid = await compare(password, passwordRow.hash);
+                console.log("3");
+
                 // 4. Invalid, destroy session and return error code
                 if (!isValid) {
                     throw new Error(
@@ -51,9 +57,12 @@ export default async (): Promise<Router> => {
                     );
                 }
 
+                console.log("4");
+
                 // 5. Create access session (and cookie)
                 addAccessCookies(userId, req, res);
 
+                console.log("5");
                 // 6. Valid, get refresh cookie
                 // 6.1. Create jwt
                 const payload: Dict<any> = {
@@ -66,6 +75,12 @@ export default async (): Promise<Router> => {
                         expiresIn: 10, // Expires in 10 secs
                     }
                 );
+
+                console.log("6");
+                console.log(`${getFullHost(req)}/refresh/get-refresh`);
+                console.log(req.get("X-Forwarded-Protocol"));
+                console.log(req.secure);
+                console.log(req.protocol);
                 // 6.2. Send jwt to '/refresh/get-refresh'
                 const responseWCookie = await axios.post(
                     // TODO Put this in config file
@@ -73,8 +88,11 @@ export default async (): Promise<Router> => {
                     { jwt }
                 );
 
+                console.log("7");
                 // 7. Add refresh cookie to res.cookie
                 mergeCookies(responseWCookie as HttpCookieResponse, res);
+
+                console.log("8");
 
                 res.send("Success");
             } catch (err) {

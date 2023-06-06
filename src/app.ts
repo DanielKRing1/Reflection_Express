@@ -12,13 +12,14 @@ import authorizeMiddleware from "./middlewares/session/genAuthorizeSession.middl
 // ROUTER
 import genLoginRouter from "./routes/Login";
 import genRefreshRouter from "./routes/Refresh";
-import { GQL_PATH } from "./graphql/constants";
 
 export default async () => {
     // APP
     const app: Express = express();
+    app.enable("trust proxy");
 
     // MIDDLEWARE
+    console.log(process.env.CORS_ORIGIN);
     app.use(
         cors({
             // NECESSARY TO SAVE COOKIES TO BROWSER

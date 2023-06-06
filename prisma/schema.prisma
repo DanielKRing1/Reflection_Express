@@ -4,12 +4,12 @@
 generator client {
   provider = "prisma-client-js"
   previewFeatures = ["extendedWhereUnique"]
+  engineType = "binary"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://postgres:jOzOiIwC9PWRrjW@reflection-db.fly.dev:5432/mydb?schema=public"
-  // env("DATABASE_URL")
+  url      = env("DATABASE_URL")
 }
 
 model User {

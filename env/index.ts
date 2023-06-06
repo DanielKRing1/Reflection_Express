@@ -3,12 +3,20 @@ import * as dotenv from "dotenv"; // see https://github.com/motdotla/dotenv#how-
 
 // Jest sets NODE_ENV=test
 const configureDotEnv = () => {
-    const fileName: string = `.env.${(process.env.NODE_ENV as string).trim()}`;
-    dotenv.config({
-        path: path.resolve(__dirname, `./${fileName}`),
-    });
+    // if ((process.env.NODE_ENV as string) === "prod") return;
 
-    // console.log(process.env); // remove this after you've confirmed it is working
+    try {
+        const fileName: string = `.env.${(
+            process.env.NODE_ENV as string
+        ).trim()}`;
+        dotenv.config({
+            path: path.resolve(__dirname, `./${fileName}`),
+        });
+
+        // console.log(process.env); // remove this after you've confirmed it is working
+    } catch (err) {
+        console.log(err);
+    }
 };
 
 export default configureDotEnv;

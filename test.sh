@@ -1,14 +1,10 @@
 #!/bin/bash
 
-# var=Start
-# export var
+var=Test1
 
-# echo $var
-# ./test.sh
-# ./test2.sh
+echo $var
 
-. ./env/.env.prod
-npm run start_fly
+# npm run start_fly
 
 # timestamp=$(date -u '+%Y-%m-%dT%H-%M:%S.%3NZ')
 # timestamp=$(date -u '+%s.%3NZ')
@@ -16,5 +12,3 @@ npm run start_fly
 
 # test=registry.fly.io/reflection-api:v$npm_package_version-$timestamp
 # echo $test
-
-$SHELL

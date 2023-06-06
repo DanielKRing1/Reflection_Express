@@ -17,22 +17,43 @@ WORKDIR /app
 # to install all modules: "npm install --production=false".
 # Ref: https://docs.npmjs.com/cli/v9/commands/npm-install#description
 
-ENV NODE_ENV production
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+COPY package*.json ./
+COPY tsconfig.json ./
+COPY prisma ./prisma/
+
+RUN npm install
 
 COPY . .
 
-RUN npm install
-FROM debian:bullseye
+RUN npx prisma db push
+# RUN npx prisma generate
+# RUN npx prisma migrate dev
+# RUN npx prisma migrate deploy
+
+# RUN npm run compile
+FROM builder
+RUN npm run build
+# ENV NODE_PATH=./dist
+
+# FROM builder
+# COPY --from=builder /app/node_modules ./node_modules
+# COPY --from=builder /app/dist ./dist
+# COPY --from=builder /app /app
+# COPY --from=builder /app/packages/backend/node_modules/@prisma/client/ ./node_modules/@prisma/client/
+# COPY --from=builder /app/packages/backend/node_modules/.prisma/client/ ./node_modules/.prisma/client/
+# COPY --from=builder /app/packages/common/dist/ ./node_modules/common/dist/
 
 LABEL fly_launch_runtime="nodejs"
 
 COPY --from=builder /root/.volta /root/.volta
-COPY --from=builder /app /app
+# COPY --from=builder /app /app
 
 WORKDIR /app
+RUN ls
+# RUN ls node_modules
+RUN ls ..
 ENV NODE_ENV prod
 ENV PATH /root/.volta/bin:$PATH
 
-RUN npx prisma generate
-
-CMD [ "npm", "run", "start_fly" ]
+CMD [ "./start.sh" ]

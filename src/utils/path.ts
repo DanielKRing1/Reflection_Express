@@ -1,5 +1,7 @@
 import { Request } from "express";
-import { PORT } from "../config/server.config";
+
+export const getHttpType = (req: Request) =>
+    req.secure === true ? "https" : "http";
 
 export const getFullHost = (req: Request) =>
     `${req.protocol}://${req.get("host")}`;

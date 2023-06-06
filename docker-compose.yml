@@ -1,0 +1,6 @@
+# docker-compose.yml
+version: "1"
+services:
+    service-name:
+        env_file:
+            - ./env/.env.prod
