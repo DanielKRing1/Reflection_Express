@@ -5,7 +5,7 @@ export const COOKIE_ARGS_LAX = {
     secure: false, // if true only transmit cookie over https
     domain: process.env.COOKIE_DOMAIN,
     // secure: true, // if true only transmit cookie over https
-    httpOnly: true, // if true prevent client side JS from reading the cookie
+    httpOnly: false, // if true prevent client side JS from reading the cookie
 };
 
 export const COOKIE_ARGS_PROTECTED = {
