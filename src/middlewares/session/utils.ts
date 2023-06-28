@@ -92,6 +92,12 @@ export const createSession = ({
     maxAge,
     cookiePath,
 }: CreateSession<any>) => {
+    const cookie = {
+        ...COOKIE_ARGS_PROTECTED,
+        path: cookiePath,
+        maxAge,
+    };
+
     return session({
         secret,
         store: sessionStore,
@@ -100,11 +106,7 @@ export const createSession = ({
         rolling,
         resave: false, // Do not re-submit 'set' action to store when 'session' obj has not been modified
         saveUninitialized: false, // Do not 'create' session in store when 'session' obj has not been modified
-        cookie: {
-            path: cookiePath,
-            maxAge,
-            ...COOKIE_ARGS_PROTECTED,
-        },
+        cookie,
     });
 };
 
@@ -124,26 +126,25 @@ export const destroySession = async (
 ) => {
     try {
         // 1. Destroy session on server
-        await new Promise<boolean>((res, rej) => {
-            if (req && req.session)
-                req.session.destroy((err) => {
-                    if (err) return rej(err);
-                    else return res(true);
-                });
+        await new Promise<boolean>((resolve, reject) => {
+            req.session.destroy((err) => {
+                if (err) return reject(err);
+                else return resolve(true);
+            });
             // TODO: Check if this is necessary? Or does req.session.destroy() handle this?
             // @ts-ignore
             req.session = null; // Deletes the cookie.
-        });
 
-        // 2. Clear cookies from browser
-        switch (sessionCookieType) {
-            case SessionCookieType.Access:
-                clearAccessSessionCookies(res);
-                break;
-            case SessionCookieType.Refresh:
-                clearRefreshSessionCookies(res);
-                break;
-        }
+            // 2. Clear cookies from browser
+            switch (sessionCookieType) {
+                case SessionCookieType.Access:
+                    clearAccessSessionCookies(res);
+                    break;
+                case SessionCookieType.Refresh:
+                    clearRefreshSessionCookies(res);
+                    break;
+            }
+        });
     } catch (err) {
         console.log(err);
     }
