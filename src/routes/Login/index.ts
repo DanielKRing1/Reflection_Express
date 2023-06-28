@@ -78,7 +78,6 @@ export default async (): Promise<Router> => {
 
                 console.log("6");
                 console.log(`${getFullHost(req)}/refresh/get-refresh`);
-                console.log(req.get("X-Forwarded-Protocol"));
                 console.log(req.secure);
                 console.log(req.protocol);
                 // 6.2. Send jwt to '/refresh/get-refresh'

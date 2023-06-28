@@ -19,7 +19,6 @@ export default async () => {
     app.enable("trust proxy");
 
     // MIDDLEWARE
-    console.log(process.env.CORS_ORIGIN);
     app.use(
         cors({
             // NECESSARY TO SAVE COOKIES TO BROWSER
