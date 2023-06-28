@@ -1,4 +1,4 @@
-import { Response } from "express";
+import { CookieOptions, Response } from "express";
 import setCookie from "set-cookie-parser";
 import { SameSite } from "../middlewares/session/types";
 
@@ -20,6 +20,7 @@ export const mergeCookies = (
     // 6.3. Strip refresh cookie from response
     // Get all cookies from cookie header
     const cookies = setCookie.parse(httpResponse as any);
+    // console.log("refresh response cookies");
     // console.log(cookies);
     // console.log(expressRes.getHeader("Set-Cookie"));
 
@@ -34,9 +35,17 @@ export const mergeCookies = (
         });
     });
 
+    // console.log("new express response cookies");
     // console.log(expressRes.getHeader("Set-Cookie"));
 };
 
-export const clearCookieFromBrowser = (cookieName: string, res: Response) => {
-    res.clearCookie(cookieName, { expires: new Date(0) });
+export const clearCookieFromBrowser = (
+    cookieName: string,
+    res: Response,
+    cookieOptions: CookieOptions = { domain: process.env.COOKIE_DOMAIN }
+) => {
+    res.clearCookie(cookieName, {
+        ...cookieOptions,
+        expires: new Date(0),
+    });
 };
