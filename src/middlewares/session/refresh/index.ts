@@ -6,7 +6,7 @@ export default () =>
         redisPrefix: `${REFRESH_SESSION_COOKIE_NAME}:`,
         sessionName: REFRESH_SESSION_COOKIE_NAME,
         secret: process.env.SESSION_SECRET as string,
-        maxAge: 1000 * 60 * 60 * 24 * 30, // 30 days
+        maxAge, // 30 days
         // TODO Put in config file to use to also defined refresh route
         cookiePath: "/refresh",
     });

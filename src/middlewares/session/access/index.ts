@@ -6,7 +6,7 @@ export default () =>
         redisPrefix: `${ACCESS_SESSION_COOKIE_NAME}:`,
         sessionName: ACCESS_SESSION_COOKIE_NAME,
         secret: process.env.SESSION_SECRET as string,
-        maxAge: 1000 * 60 * 60, // 1 hour
+        maxAge, // 1 hour
         cookiePath: "/",
     });
 // TODO replace this with the redis session above ^ after testing
