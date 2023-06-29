@@ -1,26 +1,21 @@
 import { NextFunction, Request, Response, Router } from "express";
 import { Password } from "@prisma/client";
-import axios from "axios";
 
-import signJwt from "../../auth/jwt/sign.jwt";
 import compare from "../../auth/password/compare";
 
 import verifyJwtMiddleware from "../../middlewares/jwt/verifyJwt.middleware";
 import accessPromise from "../../middlewares/session/access";
 import {
-    maxAge as accessMaxAge,
-    META_ACCESS_SESSION_COOKIE_NAME,
-} from "../../middlewares/session/access/constants";
-import {
     destroySession,
     SessionCookieType,
 } from "../../middlewares/session/utils";
 import { Dict } from "../../types/global.types";
-import { HttpCookieResponse, mergeCookies } from "../../utils/cookies";
 import prisma from "../../prisma/client";
 import hashAndSalt from "../../auth/password/hash";
-import { COOKIE_ARGS_LAX } from "../../middlewares/session/constants";
-import { getFullHost } from "../../utils/path";
+import {
+    addAccessCookies,
+    addRefreshCookies,
+} from "../../utils/sessionCookies";
 
 export default async (): Promise<Router> => {
     const access = await accessPromise();
@@ -34,8 +29,6 @@ export default async (): Promise<Router> => {
                 // 1. Get user credentials
                 const { userId, password } = req.body;
 
-                console.log("1");
-
                 // 2. Get User's password hash from db
                 const passwordRow: Password =
                     await prisma.password.findUniqueOrThrow({
@@ -44,11 +37,8 @@ export default async (): Promise<Router> => {
                         },
                     });
 
-                console.log("2");
-
                 // 3. Validate user credentials
                 const isValid = await compare(password, passwordRow.hash);
-                console.log("3");
 
                 // 4. Invalid, destroy session and return error code
                 if (!isValid) {
@@ -57,41 +47,11 @@ export default async (): Promise<Router> => {
                     );
                 }
 
-                console.log("4");
-
                 // 5. Create access session (and cookie)
                 addAccessCookies(userId, req, res);
 
-                console.log("5");
-                // 6. Valid, get refresh cookie
-                // 6.1. Create jwt
-                const payload: Dict<any> = {
-                    userId,
-                };
-                const jwt: string = await signJwt(
-                    payload,
-                    process.env.JWT_SECRET!,
-                    {
-                        expiresIn: 10, // Expires in 10 secs
-                    }
-                );
-
-                console.log("6");
-                console.log(`${getFullHost(req)}/refresh/get-refresh`);
-                console.log(req.secure);
-                console.log(req.protocol);
-                // 6.2. Send jwt to '/refresh/get-refresh'
-                const responseWCookie = await axios.post(
-                    // TODO Put this in config file
-                    `${getFullHost(req)}/refresh/get-refresh`,
-                    { jwt }
-                );
-
-                console.log("7");
-                // 7. Add refresh cookie to res.cookie
-                mergeCookies(responseWCookie as HttpCookieResponse, res);
-
-                console.log("8");
+                // 6. Valid, create refresh cookies
+                await addRefreshCookies(userId, req, res);
 
                 res.send("Success");
             } catch (err) {
@@ -112,6 +72,7 @@ export default async (): Promise<Router> => {
 
                 // 1. Destroy session and clear access session cookies from browser
                 await destroySession(req, res, SessionCookieType.Access);
+                await destroySession(req, res, SessionCookieType.Refresh);
 
                 return res.send("Success");
             } catch (err) {
@@ -216,29 +177,4 @@ const createUserController = async function (
         console.log(err);
         return res.status(409).send("Failed to create user");
     }
-};
-
-const addAccessCookies = (userId: string, req: Request, res: Response) => {
-    // 1. Add non http-only 'meta' cookie (so client can check maxAge, etc...)
-    createMetaCookie(res);
-
-    // 2. Add access cookie
-    req.session.userId = userId;
-};
-
-/**
- * Adds a cookie with 'expires' meta data to the Express Response object
- *
- * @param res Express Response object
- */
-const createMetaCookie = (res: Response) => {
-    // 1. Add non http-only 'meta' cookie (so client can check maxAge, etc...)
-    res.cookie(
-        META_ACCESS_SESSION_COOKIE_NAME,
-        JSON.stringify({ expires: new Date(Date.now() + accessMaxAge) }),
-        {
-            maxAge: accessMaxAge,
-            ...COOKIE_ARGS_LAX,
-        }
-    ); // options is optional
 };
