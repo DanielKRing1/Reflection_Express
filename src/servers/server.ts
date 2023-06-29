@@ -1,7 +1,7 @@
 import genExpressApp from "./app";
 import gqlServer from "./gqlServer";
 
-import accessPromise from "./middlewares/session/access";
+import accessPromise from "../middlewares/session/access";
 
 export default (async () => {
     const app = await genExpressApp();

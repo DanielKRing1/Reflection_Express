@@ -1,6 +1,6 @@
 import http from "http";
 
-import server from "./server";
+import server from "./servers/server";
 
 import { PORT } from "./config/server.config";
 

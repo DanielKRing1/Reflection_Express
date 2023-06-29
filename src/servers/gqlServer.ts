@@ -5,13 +5,13 @@ import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
 import http from "http";
-import typeDefs from "./graphql/schema";
-import resolvers from "./graphql/resolvers";
-import GqlContext, { RequestWGqlContext } from "./graphql/types/context.types";
+import typeDefs from "../graphql/schema";
+import resolvers from "../graphql/resolvers";
+import GqlContext, { RequestWGqlContext } from "../graphql/types/context.types";
 
 // CONFIG
-import { GQL_PATH } from "./graphql/constants";
-import { apolloLoggingPlugin } from "./logging/apollo";
+import { GQL_PATH } from "../graphql/constants";
+import { apolloLoggingPlugin } from "../logging/apollo";
 
 export default async (
     app: Express,

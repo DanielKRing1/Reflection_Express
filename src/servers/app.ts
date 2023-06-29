@@ -2,16 +2,16 @@
 import express, { Express } from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import configureDotEnv from "../env";
+import configureDotEnv from "../../env";
 configureDotEnv();
 
 // MIDDLEWARE
-import loggingMiddleware from "./middlewares/logging.middleware";
-import authorizeMiddleware from "./middlewares/session/genAuthorizeSession.middleware";
+import loggingMiddleware from "../middlewares/logging.middleware";
+import authorizeMiddleware from "../middlewares/session/genAuthorizeSession.middleware";
 
 // ROUTER
-import genLoginRouter from "./routes/Login";
-import genRefreshRouter from "./routes/Refresh";
+import genLoginRouter from "../routes/Login";
+import genRefreshRouter from "../routes/Refresh";
 
 export default async () => {
     // APP
