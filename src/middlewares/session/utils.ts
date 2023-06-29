@@ -10,7 +10,7 @@ import {
     META_REFRESH_SESSION_COOKIE_NAME,
     REFRESH_SESSION_COOKIE_NAME,
 } from "./refresh/constants";
-import { clearCookieFromBrowser } from "../../utils/cookies";
+import { COOKIE_DOMAIN, clearCookieFromBrowser } from "../../utils/cookies";
 import { COOKIE_ARGS_PROTECTED } from "./constants";
 
 type CreateRedisSession = {
@@ -131,20 +131,25 @@ export const destroySession = async (
                 if (err) return reject(err);
                 else return resolve(true);
             });
-            // TODO: Check if this is necessary? Or does req.session.destroy() handle this?
-            // @ts-ignore
-            req.session = null; // Deletes the cookie.
-
-            // 2. Clear cookies from browser
-            switch (sessionCookieType) {
-                case SessionCookieType.Access:
-                    clearAccessSessionCookies(res);
-                    break;
-                case SessionCookieType.Refresh:
-                    clearRefreshSessionCookies(res);
-                    break;
-            }
         });
+    } catch (err) {
+        console.log(err);
+    }
+
+    try {
+        // TODO: Check if this is necessary? Or does req.session.destroy() handle this?
+        // @ts-ignore
+        req.session = null; // Deletes the cookie.
+
+        // 2. Clear cookies from browser
+        switch (sessionCookieType) {
+            case SessionCookieType.Access:
+                clearAccessSessionCookies(res);
+                break;
+            case SessionCookieType.Refresh:
+                clearRefreshSessionCookies(res);
+                break;
+        }
     } catch (err) {
         console.log(err);
     }
@@ -156,6 +161,9 @@ const clearAccessSessionCookies = (res: Response) => {
 };
 
 const clearRefreshSessionCookies = (res: Response) => {
-    clearCookieFromBrowser(REFRESH_SESSION_COOKIE_NAME, res);
+    clearCookieFromBrowser(REFRESH_SESSION_COOKIE_NAME, res, {
+        path: "/refresh",
+        domain: COOKIE_DOMAIN,
+    });
     clearCookieFromBrowser(META_REFRESH_SESSION_COOKIE_NAME, res);
 };
