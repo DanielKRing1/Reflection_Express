@@ -13,6 +13,7 @@ import {
     REFRESH_SESSION_COOKIE_NAME,
     META_REFRESH_SESSION_COOKIE_NAME,
 } from "../../src/middlewares/session/refresh/constants";
+import { COOKIE_DOMAIN } from "../../src/utils/cookies";
 
 const USER_ID = "1";
 const PASSWORD = "123";
@@ -36,7 +37,7 @@ describe("User GraphQL server", () => {
         const cookies = setCookie
             .parse(res as any)
             .sort((a, b) => a.name.localeCompare(b.name));
-        console.log(cookies);
+        // console.log(cookies);
         expect(cookies.length).toBe(4);
 
         expect(cookies[0].name).toBe(ACCESS_SESSION_COOKIE_NAME);
@@ -49,40 +50,58 @@ describe("User GraphQL server", () => {
         let res;
         let cookies;
 
+        // console.log(
+        //     agent.jar.getCookies({
+        //         path: "/",
+        //         domain: COOKIE_DOMAIN,
+        //         secure: false,
+        //         script: false,
+        //     })
+        // );
+
         res = await agent.post("/login/logout").send();
         cookies = setCookie
             .parse(res as any)
             .sort((a, b) => a.name.localeCompare(b.name));
-        console.log(cookies);
+        // console.log(cookies);
         // expect(cookies.length).toBe(4);
+        // console.log(
+        //     agent.jar.getCookies({
+        //         path: "/",
+        //         domain: COOKIE_DOMAIN,
+        //         secure: false,
+        //         script: false,
+        //     })
+        // );
+        // console.log(
+        //     agent.jar.getCookies({
+        //         path: "/refresh",
+        //         domain: COOKIE_DOMAIN,
+        //         secure: false,
+        //         script: false,
+        //     })
+        // );
         expect(
             agent.jar.getCookies({
                 path: "/",
-                domain: ".asianpersonn.top",
+                domain: COOKIE_DOMAIN,
                 secure: false,
                 script: false,
             }).length
-        ).toBe(2);
+        ).toBe(0);
 
-        res = await agent.post("/refresh/logout").send();
-        cookies = setCookie
-            .parse(res as any)
-            .sort((a, b) => a.name.localeCompare(b.name));
-        console.log(cookies);
-        // expect(cookies.length).toBe(4);
-
-        console.log(
-            agent.jar.getCookies({
-                path: "/",
-                domain: ".asianpersonn.top",
-                secure: false,
-                script: false,
-            })
-        );
+        // console.log(
+        //     agent.jar.getCookies({
+        //         path: "/refresh",
+        //         domain: COOKIE_DOMAIN,
+        //         secure: false,
+        //         script: false,
+        //     })
+        // );
         expect(
             agent.jar.getCookies({
-                path: "/",
-                domain: ".asianpersonn.top",
+                path: "/refresh",
+                domain: COOKIE_DOMAIN,
                 secure: false,
                 script: false,
             }).length

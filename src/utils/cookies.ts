@@ -42,10 +42,15 @@ export const mergeCookies = (
 export const clearCookieFromBrowser = (
     cookieName: string,
     res: Response,
-    cookieOptions: CookieOptions = { domain: process.env.COOKIE_DOMAIN }
+    cookieOptions: CookieOptions = {
+        domain: COOKIE_DOMAIN,
+    }
 ) => {
     res.clearCookie(cookieName, {
         ...cookieOptions,
         expires: new Date(0),
     });
 };
+
+export const COOKIE_DOMAIN: string =
+    process.env.ENV === "prod" ? process.env.COOKIE_DOMAIN || "" : `.`;
