@@ -102,6 +102,75 @@ exports[`Inkling GraphQL server Should create 5 more User 1 Journal 1 Inklings 1
 }
 `;
 
+exports[`Inkling GraphQL server Should create 5 more User 1 Journal 1 Inklings 2`] = `
+{
+  "data": null,
+  "errors": [
+    {
+      "extensions": {
+        "code": "UNAUTHENTICATED",
+      },
+      "locations": [
+        {
+          "column": 17,
+          "line": 2,
+        },
+      ],
+      "message": "you must be logged in to query this schema",
+      "path": [
+        "commitInklings",
+      ],
+    },
+  ],
+}
+`;
+
+exports[`Inkling GraphQL server Should create 5 more User 1 Journal 1 Inklings 3`] = `
+{
+  "data": null,
+  "errors": [
+    {
+      "extensions": {
+        "code": "UNAUTHENTICATED",
+      },
+      "locations": [
+        {
+          "column": 17,
+          "line": 2,
+        },
+      ],
+      "message": "you must be logged in to query this schema",
+      "path": [
+        "inklings",
+      ],
+    },
+  ],
+}
+`;
+
+exports[`Inkling GraphQL server Should create 5 more User 1 Journal 1 Inklings 4`] = `
+{
+  "data": null,
+  "errors": [
+    {
+      "extensions": {
+        "code": "UNAUTHENTICATED",
+      },
+      "locations": [
+        {
+          "column": 17,
+          "line": 2,
+        },
+      ],
+      "message": "you must be logged in to query this schema",
+      "path": [
+        "inklings",
+      ],
+    },
+  ],
+}
+`;
+
 exports[`Inkling GraphQL server Should create User 1 Journal 1 1`] = `
 {
   "data": {

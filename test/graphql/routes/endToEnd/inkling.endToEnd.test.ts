@@ -50,16 +50,21 @@ describe("Inkling GraphQL server", () => {
     let agent: supertest.SuperAgentTest;
 
     beforeAll(async () => {
+        console.log(1);
         // Mock Date constructor
-        useFakeTimer(new Date(2023, 4, 16));
+        console.log(2);
 
         // Clear Database
         await prisma.$queryRaw`TRUNCATE TABLE "User" CASCADE;`;
+        console.log(3);
         await prisma.$queryRaw`ALTER SEQUENCE "Journal_id_seq" RESTART WITH 1;`;
+        console.log(4);
 
         // Create agent
         s = await server;
+        console.log(5);
         agent = supertest.agent(s);
+        console.log(6);
 
         // Create User/ Login
         await agent
@@ -68,6 +73,8 @@ describe("Inkling GraphQL server", () => {
     });
 
     it("Should fail to get any User 1 Journal 1 Inklings before they are made", async () => {
+        useFakeTimer(new Date(2023, 4, 16));
+
         const queryData = {
             query: `query Inklings($journalId: BigInt!) {
                 inklings(journalId: $journalId) {
