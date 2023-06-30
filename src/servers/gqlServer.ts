@@ -41,9 +41,10 @@ export default async (
     await server.start();
     // expressMiddleware accepts the same arguments:
     // an Apollo Server instance and optional configuration options
+
+    app.use(GQL_PATH, ...middlewares);
     app.use(
         GQL_PATH,
-        ...middlewares,
         expressMiddleware(server, {
             // TODO Add 'gqlContext' object to req object in auth middleware
             context: async ({ req, res }): Promise<GqlContext> => ({
