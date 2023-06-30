@@ -53,4 +53,4 @@ export const clearCookieFromBrowser = (
 };
 
 export const COOKIE_DOMAIN: string =
-    process.env.ENV === "prod" ? process.env.COOKIE_DOMAIN || "" : `.`;
+    process.env.NODE_ENV === "prod" ? process.env.COOKIE_DOMAIN || "" : `.`;
