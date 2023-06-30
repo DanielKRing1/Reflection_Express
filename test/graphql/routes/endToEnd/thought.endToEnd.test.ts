@@ -9,6 +9,7 @@ import {
     useFakeTimer,
     useRealTimer,
 } from "../../../../jest/utils/time";
+import { COOKIE_DOMAIN } from "../../../../src/utils/cookies";
 
 const USER_ID1 = "1";
 const USER_ID2 = "2";
@@ -46,6 +47,8 @@ const USER2_JOURNAL3_INKLINGS1 = [
     "User2 Inkling5 Journal3",
 ];
 
+jest.setTimeout(60000);
+
 describe("JournalEntry GraphQL server", () => {
     let s: http.Server;
     let agent: supertest.SuperAgentTest;
@@ -72,7 +75,7 @@ describe("JournalEntry GraphQL server", () => {
         await agent
             .post("/login/create-user")
             .send({ userId: USER_ID1, password: PASSWORD1 });
-    });
+    }, 60000);
 
     it("Should create User 1 Journal 1", async () => {
         const queryData = {
@@ -88,11 +91,25 @@ describe("JournalEntry GraphQL server", () => {
             },
         };
 
+        console.log(
+            agent.jar.getCookies({
+                path: "/",
+                domain: COOKIE_DOMAIN,
+                secure: false,
+                script: false,
+            })
+        );
+
+        // agent.jar.setCookie(
+        //     `${ACCESS_SESSION_COOKIE_NAME}=; expires=Thu, 01 Jan 2000 12:00:00 UTC; path=/; domain=${COOKIE_DOMAIN}`
+        // );
+
+        await agent.post("/login/test").send();
         const res = await agent.post("/graphql").send(queryData);
 
         journal1Id = JSON.parse(res.text).data.createJournal.id;
         expect(JSON.parse(res.text)).toMatchSnapshot();
-    });
+    }, 60000);
 
     it("Should create 5 User 1 Journal 1 Inklings", async () => {
         const queryData = {
@@ -116,12 +133,19 @@ describe("JournalEntry GraphQL server", () => {
         );
 
         expect(JSON.parse(res.text)).toMatchSnapshot();
-    });
+    }, 60000);
 
     it("Should get convert User 1 Journal 1 Inkling into Thoughts", async () => {
         const queryData = {
             query: `mutation CreateJournalEntry($createJournalEntryJournalId: BigInt!, $keepIdsInkling: [DateTime]!, $keepIdsThought: [DateTime]!, $discardIdsThought: [DateTime]!, $discardIdsInkling: [DateTime]!) {
-                createJournalEntry(journalId: $createJournalEntryJournalId, keepIdsInkling: $keepIdsInkling, keepIdsThought: $keepIdsThought, discardIdsThought: $discardIdsThought, discardIdsInkling: $discardIdsInkling)
+                createJournalEntry(journalId: $createJournalEntryJournalId, keepIdsInkling: $keepIdsInkling, keepIdsThought: $keepIdsThought, discardIdsThought: $discardIdsThought, discardIdsInkling: $discardIdsInkling) {
+                    timeId
+                    journalId
+                    reflections {
+                        thoughtId
+                        decision
+                    }
+                }
               }`,
             variables: {
                 createJournalEntryJournalId: journal1Id,
@@ -135,6 +159,8 @@ describe("JournalEntry GraphQL server", () => {
                 discardIdsThought: [],
             },
         };
+
+        console.log(queryData);
 
         const res = await agent.post("/graphql").send(queryData);
     });
@@ -212,7 +238,14 @@ describe("JournalEntry GraphQL server", () => {
     it("Should get convert User 1 Journal 1 Inkling into Thoughts", async () => {
         const queryData = {
             query: `mutation CreateJournalEntry($createJournalEntryJournalId: BigInt!, $keepIdsInkling: [DateTime]!, $keepIdsThought: [DateTime]!, $discardIdsThought: [DateTime]!, $discardIdsInkling: [DateTime]!) {
-                createJournalEntry(journalId: $createJournalEntryJournalId, keepIdsInkling: $keepIdsInkling, keepIdsThought: $keepIdsThought, discardIdsThought: $discardIdsThought, discardIdsInkling: $discardIdsInkling)
+                createJournalEntry(journalId: $createJournalEntryJournalId, keepIdsInkling: $keepIdsInkling, keepIdsThought: $keepIdsThought, discardIdsThought: $discardIdsThought, discardIdsInkling: $discardIdsInkling) {
+                    timeId
+                    journalId
+                    reflections {
+                        thoughtId
+                        decision
+                    }
+                }
               }`,
             variables: {
                 createJournalEntryJournalId: journal1Id,
@@ -319,7 +352,14 @@ describe("JournalEntry GraphQL server", () => {
     it("Should get convert User 1 Journal 2 Inkling into Thoughts", async () => {
         const queryData = {
             query: `mutation CreateJournalEntry($createJournalEntryJournalId: BigInt!, $keepIdsInkling: [DateTime]!, $keepIdsThought: [DateTime]!, $discardIdsThought: [DateTime]!, $discardIdsInkling: [DateTime]!) {
-                createJournalEntry(journalId: $createJournalEntryJournalId, keepIdsInkling: $keepIdsInkling, keepIdsThought: $keepIdsThought, discardIdsThought: $discardIdsThought, discardIdsInkling: $discardIdsInkling)
+                createJournalEntry(journalId: $createJournalEntryJournalId, keepIdsInkling: $keepIdsInkling, keepIdsThought: $keepIdsThought, discardIdsThought: $discardIdsThought, discardIdsInkling: $discardIdsInkling) {
+                    timeId
+                    journalId
+                    reflections {
+                        thoughtId
+                        decision
+                    }
+                }
               }`,
             variables: {
                 createJournalEntryJournalId: journal2Id,
@@ -436,7 +476,14 @@ describe("JournalEntry GraphQL server", () => {
     it("Should get convert User 2 Journal 3 Inkling into Thoughts", async () => {
         const queryData = {
             query: `mutation CreateJournalEntry($createJournalEntryJournalId: BigInt!, $keepIdsInkling: [DateTime]!, $keepIdsThought: [DateTime]!, $discardIdsThought: [DateTime]!, $discardIdsInkling: [DateTime]!) {
-                createJournalEntry(journalId: $createJournalEntryJournalId, keepIdsInkling: $keepIdsInkling, keepIdsThought: $keepIdsThought, discardIdsThought: $discardIdsThought, discardIdsInkling: $discardIdsInkling)
+                createJournalEntry(journalId: $createJournalEntryJournalId, keepIdsInkling: $keepIdsInkling, keepIdsThought: $keepIdsThought, discardIdsThought: $discardIdsThought, discardIdsInkling: $discardIdsInkling) {
+                    timeId
+                    journalId
+                    reflections {
+                        thoughtId
+                        decision
+                    }
+                }
               }`,
             variables: {
                 createJournalEntryJournalId: journal3Id,

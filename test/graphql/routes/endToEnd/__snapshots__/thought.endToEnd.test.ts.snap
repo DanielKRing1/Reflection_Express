@@ -160,7 +160,7 @@ exports[`JournalEntry GraphQL server Should create User 1 Journal 2 1`] = `
 }
 `;
 
-exports[`JournalEntry GraphQL server Should create User 1 Journal 3 1`] = `
+exports[`JournalEntry GraphQL server Should create User 2 Journal 3 1`] = `
 {
   "data": {
     "createJournal": {
