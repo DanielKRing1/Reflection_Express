@@ -82,37 +82,6 @@ export default async (): Promise<Router> => {
         },
     ];
 
-    type RefreshGetAccessBody = { jwt: string };
-    const getAccessController = [
-        verifyJwtMiddleware,
-        access,
-        async function (
-            req: Request<{}, {}, RefreshGetAccessBody>,
-            res: Response
-        ) {
-            try {
-                console.log("/login/get-access---------------------------");
-
-                // 1. Get jwt
-                const jwtPayload = req.jwtPayload as Dict<any>;
-
-                // 2. Verify jwt
-                const { userId } = jwtPayload;
-
-                // 3. Add userId to refresh session
-                addAccessCookies(userId, req, res);
-
-                return res.send("Look for cookie");
-            } catch (err) {
-                console.log(err);
-                // 1. Destroy session on error and clear access session cookies from browser
-                await destroySession(req, res, SessionCookieType.Access);
-
-                return res.status(401).send("Unauthenticated");
-            }
-        },
-    ];
-
     // ROUTER
 
     const router: Router = Router({ mergeParams: true });
@@ -120,7 +89,6 @@ export default async (): Promise<Router> => {
     router.route("/create-user").post(createUserController, loginController);
     router.route("/").post(loginController);
     router.route("/logout").post(logoutController);
-    router.route("/get-access").post(getAccessController);
 
     return router;
 };
