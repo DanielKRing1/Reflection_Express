@@ -48,6 +48,8 @@ export default async (): Promise<Router> => {
                 );
 
                 const userId: string = refreshCookie.userId;
+                // console.log("refresh userId:");
+                // console.log(userId);
 
                 // 3. Regen any existing access cookies
                 //      Or create new new ones
@@ -55,7 +57,7 @@ export default async (): Promise<Router> => {
 
                 // 4. Regenerate refresh cookie if > half expired
                 if (refreshCookie.expiresIn - Date.now() < refreshMaxAge / 2) {
-                    console.log("adding refresh cookies");
+                    console.log("regenerating refresh cookies");
                     await addRefreshCookies(userId, req, res);
                 }
 

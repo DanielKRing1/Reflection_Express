@@ -55,7 +55,7 @@ export default {
                     },
                 });
 
-                console.log(result);
+                // console.log(result);
 
                 return result;
             } catch (err) {
