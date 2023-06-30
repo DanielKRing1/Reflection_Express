@@ -21,7 +21,7 @@ exports[`Journal GraphQL server Should create Journal 4 and 5 1`] = `
 `;
 
 exports[`Journal GraphQL server Should fail to create duplicate Journal 1 for User 1 1`] = `
-"{"data":{"createJournal":null}}
+"{"errors":[{"message":"\\nInvalid \`prisma.journal.create()\` invocation in\\nC:\\\\Users\\\\Danie\\\\DesktopLocal\\\\Projects\\\\JournalApp\\\\Express\\\\src\\\\graphql\\\\routes\\\\journal\\\\resolvers.gql.ts:51:53\\n\\n  48 const userId = getUserId(contextValue);\\n  49 \\n  50 // 1. Create Journal with autoincrement id\\n→ 51 const result = await prisma.journal.create(\\nUnique constraint failed on the fields: (\`userId\`,\`name\`)","locations":[{"line":2,"column":17}],"path":["createJournal"],"extensions":{"code":"INTERNAL_SERVER_ERROR"}}],"data":{"createJournal":null}}
 "
 `;
 
@@ -51,6 +51,6 @@ exports[`Journal GraphQL server Should get no Journals (since none have been mad
 `;
 
 exports[`Journal GraphQL server Should still fail to create duplicate Journal 1 for User 1 1`] = `
-"{"data":{"createJournal":null}}
+"{"errors":[{"message":"\\nInvalid \`prisma.journal.create()\` invocation in\\nC:\\\\Users\\\\Danie\\\\DesktopLocal\\\\Projects\\\\JournalApp\\\\Express\\\\src\\\\graphql\\\\routes\\\\journal\\\\resolvers.gql.ts:51:53\\n\\n  48 const userId = getUserId(contextValue);\\n  49 \\n  50 // 1. Create Journal with autoincrement id\\n→ 51 const result = await prisma.journal.create(\\nUnique constraint failed on the fields: (\`userId\`,\`name\`)","locations":[{"line":2,"column":17}],"path":["createJournal"],"extensions":{"code":"INTERNAL_SERVER_ERROR"}}],"data":{"createJournal":null}}
 "
 `;

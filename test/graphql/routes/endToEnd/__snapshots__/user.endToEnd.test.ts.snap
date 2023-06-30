@@ -1,17 +1,17 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`User GraphQL server Should fail login with wrong password and then fail to get the created User without an access cookie 1`] = `
-"{"data":{"user":null}}
+"{"errors":[{"message":"you must be logged in to query this schema","locations":[{"line":2,"column":17}],"path":["user"],"extensions":{"code":"UNAUTHENTICATED"}}],"data":{"user":null}}
 "
 `;
 
 exports[`User GraphQL server Should fail login with wrong userId and then fail to get the created User without an access cookie 1`] = `
-"{"data":{"user":null}}
+"{"errors":[{"message":"you must be logged in to query this schema","locations":[{"line":2,"column":17}],"path":["user"],"extensions":{"code":"UNAUTHENTICATED"}}],"data":{"user":null}}
 "
 `;
 
 exports[`User GraphQL server Should fail to get the created User without an access cookie 1`] = `
-"{"data":{"user":null}}
+"{"errors":[{"message":"you must be logged in to query this schema","locations":[{"line":2,"column":17}],"path":["user"],"extensions":{"code":"UNAUTHENTICATED"}}],"data":{"user":null}}
 "
 `;
 

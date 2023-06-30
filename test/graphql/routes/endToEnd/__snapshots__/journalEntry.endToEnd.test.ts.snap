@@ -529,12 +529,12 @@ exports[`JournalEntry GraphQL server Should get User 1 Journal 1 JournalEntry 1 
         "journalId": "1",
         "reflections": [
           {
-            "decision": 2,
-            "thoughtId": 1681628400000,
+            "decision": 3,
+            "thoughtId": 1681628400004,
           },
           {
             "decision": 2,
-            "thoughtId": 1681628400001,
+            "thoughtId": 1681628400003,
           },
           {
             "decision": 2,
@@ -542,11 +542,11 @@ exports[`JournalEntry GraphQL server Should get User 1 Journal 1 JournalEntry 1 
           },
           {
             "decision": 2,
-            "thoughtId": 1681628400003,
+            "thoughtId": 1681628400001,
           },
           {
-            "decision": 3,
-            "thoughtId": 1681628400004,
+            "decision": 2,
+            "thoughtId": 1681628400000,
           },
         ],
         "timeId": 1681628400000,
@@ -599,12 +599,12 @@ exports[`JournalEntry GraphQL server Should get User 1 Journal 1 JournalEntry 1 
         "journalId": "1",
         "reflections": [
           {
-            "decision": 2,
-            "thoughtId": 1681628400000,
+            "decision": 3,
+            "thoughtId": 1681628400004,
           },
           {
             "decision": 2,
-            "thoughtId": 1681628400001,
+            "thoughtId": 1681628400003,
           },
           {
             "decision": 2,
@@ -612,11 +612,11 @@ exports[`JournalEntry GraphQL server Should get User 1 Journal 1 JournalEntry 1 
           },
           {
             "decision": 2,
-            "thoughtId": 1681628400003,
+            "thoughtId": 1681628400001,
           },
           {
-            "decision": 3,
-            "thoughtId": 1681628400004,
+            "decision": 2,
+            "thoughtId": 1681628400000,
           },
         ],
         "timeId": 1681628400000,
@@ -634,12 +634,12 @@ exports[`JournalEntry GraphQL server Should get User 1 Journal 1 JournalEntry 1 
         "journalId": "1",
         "reflections": [
           {
-            "decision": 2,
-            "thoughtId": 1681628400000,
+            "decision": 3,
+            "thoughtId": 1681628400004,
           },
           {
             "decision": 2,
-            "thoughtId": 1681628400001,
+            "thoughtId": 1681628400003,
           },
           {
             "decision": 2,
@@ -647,11 +647,11 @@ exports[`JournalEntry GraphQL server Should get User 1 Journal 1 JournalEntry 1 
           },
           {
             "decision": 2,
-            "thoughtId": 1681628400003,
+            "thoughtId": 1681628400001,
           },
           {
-            "decision": 3,
-            "thoughtId": 1681628400004,
+            "decision": 2,
+            "thoughtId": 1681628400000,
           },
         ],
         "timeId": 1681628400000,
