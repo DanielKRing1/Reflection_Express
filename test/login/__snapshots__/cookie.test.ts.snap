@@ -1,0 +1,6 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`User GraphQL server Should get the created User (this requires successfully sending an access session cookie with the request) 1`] = `
+"{"data":{"user":{"email":"1","lastUsedJId":null}}}
+"
+`;

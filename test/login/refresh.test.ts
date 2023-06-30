@@ -153,72 +153,72 @@ describe("User GraphQL server", () => {
         // );
     });
 
-    // it("Should refresh without access cookies and fetch new access cookies", async () => {
-    //     let res;
-    //     let cookies;
+    it("Should refresh without access cookies and fetch new access cookies", async () => {
+        let res;
+        let cookies;
 
-    //     // Remove access cookies
-    //     agent.jar.setCookie(
-    //         `${ACCESS_SESSION_COOKIE_NAME}=; expires=Thu, 01 Jan 2000 12:00:00 UTC; path=/; domain=${COOKIE_DOMAIN}`
-    //     );
-    //     agent.jar.setCookie(
-    //         `${META_ACCESS_SESSION_COOKIE_NAME}=; expires=Thu, 01 Jan 2000 12:00:00 UTC; path=/; domain=${COOKIE_DOMAIN}`
-    //     );
+        // Remove access cookies
+        agent.jar.setCookie(
+            `${ACCESS_SESSION_COOKIE_NAME}=; expires=Thu, 01 Jan 2000 12:00:00 UTC; path=/; domain=${COOKIE_DOMAIN}`
+        );
+        agent.jar.setCookie(
+            `${META_ACCESS_SESSION_COOKIE_NAME}=; expires=Thu, 01 Jan 2000 12:00:00 UTC; path=/; domain=${COOKIE_DOMAIN}`
+        );
 
-    //     console.log(
-    //         agent.jar.getCookies({
-    //             path: "/",
-    //             domain: ".",
-    //             secure: false,
-    //             script: false,
-    //         })
-    //     );
+        console.log(
+            agent.jar.getCookies({
+                path: "/",
+                domain: ".",
+                secure: false,
+                script: false,
+            })
+        );
 
-    //     res = await agent.post("/refresh").withCredentials(true).send();
-    //     cookies = setCookie
-    //         .parse(res as any)
-    //         .sort((a, b) => a.name.localeCompare(b.name));
-    //     console.log(cookies);
+        res = await agent.post("/refresh").send();
+        cookies = setCookie
+            .parse(res as any)
+            .sort((a, b) => a.name.localeCompare(b.name));
+        console.log(cookies);
 
-    //     console.log(
-    //         agent.jar.getCookies({
-    //             path: "/",
-    //             domain: COOKIE_DOMAIN,
-    //             secure: false,
-    //             script: false,
-    //         })
-    //     );
-    //     console.log(
-    //         agent.jar.getCookies({
-    //             path: "/refresh",
-    //             domain: COOKIE_DOMAIN,
-    //             secure: false,
-    //             script: false,
-    //         })
-    //     );
+        console.log(
+            agent.jar.getCookies({
+                path: "/",
+                domain: COOKIE_DOMAIN,
+                secure: false,
+                script: false,
+            })
+        );
+        console.log(
+            agent.jar.getCookies({
+                path: "/refresh",
+                domain: COOKIE_DOMAIN,
+                secure: false,
+                script: false,
+            })
+        );
 
-    //     expect(
-    //         agent.jar
-    //             .getCookies({
-    //                 path: "/",
-    //                 domain: COOKIE_DOMAIN,
-    //                 secure: false,
-    //                 script: false,
-    //             })
-    //             .filter((c: CookieOptions) => c.path === "/").length
-    //     ).toBe(3);
+        expect(
+            agent.jar
+                .getCookies({
+                    path: "/",
+                    domain: COOKIE_DOMAIN,
+                    secure: false,
+                    script: false,
+                })
+                .filter((c: CookieOptions) => c.path === "/").length
+        ).toBe(3);
 
-    //     expect(
-    //         agent.jar
-    //             .getCookies({
-    //                 path: "/refresh",
-    //                 domain: COOKIE_DOMAIN,
-    //                 secure: false,
-    //                 script: false,
-    //             })
-    //             .filter((c: CookieOptions) => c.path === "/refresh").length
-    //     ).toBe(1);
-    // });
+        expect(
+            agent.jar
+                .getCookies({
+                    path: "/refresh",
+                    domain: COOKIE_DOMAIN,
+                    secure: false,
+                    script: false,
+                })
+                .filter((c: CookieOptions) => c.path === "/refresh").length
+        ).toBe(1);
+    });
 
     afterAll(async () => {
         await prisma.$queryRaw`TRUNCATE TABLE "User" CASCADE;`;
