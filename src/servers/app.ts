@@ -12,6 +12,7 @@ import authorizeMiddleware from "../middlewares/session/genAuthorizeSession.midd
 // ROUTER
 import genLoginRouter from "../routes/Login";
 import genRefreshRouter from "../routes/Refresh";
+import { CORS_ORIGIN } from "../utils/cors";
 
 export default async () => {
     // APP
@@ -22,7 +23,7 @@ export default async () => {
     app.use(
         cors({
             // NECESSARY TO SAVE COOKIES TO BROWSER
-            origin: process.env.CORS_ORIGIN,
+            origin: CORS_ORIGIN,
             // origin: "http://localhost:3000",
             // origin: "https://reflection.fly.dev/",
             credentials: true, // <-- REQUIRED backend setting

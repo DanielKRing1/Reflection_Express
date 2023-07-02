@@ -52,5 +52,15 @@ export const clearCookieFromBrowser = (
     });
 };
 
-export const COOKIE_DOMAIN: string =
-    process.env.NODE_ENV === "prod" ? process.env.COOKIE_DOMAIN || "" : `.`;
+export const COOKIE_DOMAIN: string = (() => {
+    switch (process.env.NODE_ENV) {
+        case "prod":
+            return process.env.COOKIE_DOMAIN || ".";
+        case "dev":
+            return ".localhost";
+
+        case "test":
+        default:
+            return ".";
+    }
+})();
