@@ -15,6 +15,7 @@
         "build": "tsc -p .",
         "build_docker": ".\\build_docker.sh",
         "deploy_fly": ".\\deploy_fly.sh",
+        "restart_fly": "fly apps restart reflection-api",
         "deploy": "deprecated npm run build & fly deploy",
         "----STARTING JS": "...",
         "start_dev": "npm run build & node ./dist/src/index.js",
