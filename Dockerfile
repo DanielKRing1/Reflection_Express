@@ -26,7 +26,10 @@ RUN npm install
 
 COPY . .
 
-RUN npx prisma db push
+# MAY NEED THIS LINE ON A FRESH MACHINE
+# ----
+# RUN npx prisma db push
+# ----
 # RUN npx prisma generate
 # RUN npx prisma migrate dev
 # RUN npx prisma migrate deploy
